@@ -1,0 +1,5187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e3323">
+<title>稳稳AI选题库</title>
+<style>
+/* ============================================================
+   稳稳AI选题库 · 设计系统 v3
+   浅色 / 深色 · 8px 间距网格 · 三态交互（默认/hover/按下）
+   ============================================================ */
+
+:root{
+  /* ---- 间距系统（8px 基准） ---- */
+  --s1:4px;  --s2:8px;  --s3:12px; --s4:16px;
+  --s5:20px; --s6:24px; --s7:32px; --s8:40px;
+
+  /* ---- 圆角 ---- */
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
+
+  /* ---- 浅色配色 ---- */
+  --bg:#f5f7f3;
+  --bg-grad:radial-gradient(1100px 520px at 78% -8%,#eaf2ea,transparent 58%),
+            radial-gradient(700px 400px at 8% 100%,#f2f3ea,transparent 60%);
+  --surface:#ffffff;
+  --surface-2:#fafbf8;
+  --surface-3:#f1f4ef;
+  --line:#e6ebe4;
+  --line-strong:#d4dcd3;
+
+  --text:#0d1a13;
+  --text-2:#39463e;
+  --muted:#6c7a71;
+  --muted-2:#9aa59d;
+
+  --brand:#14663f;
+  --brand-2:#1b7d4e;
+  --brand-soft:#e7f3ec;
+  --brand-line:#cde3d6;
+
+  --gold:#9c7726;
+  --gold-2:#c39a3f;
+  --gold-soft:#fbf4e3;
+  --gold-line:#ecdcb4;
+
+  --danger:#b4472b;
+
+  --header-from:#052418;
+  --header-mid:#0d3a26;
+  --header-to:#145334;
+  --on-brand:#ffffff;
+  --code-bg:#0b1710;
+  --code-fg:#cfe3d6;
+
+  /* ---- 阴影：多层叠，避免死板 ---- */
+  --sh-inset:inset 0 1px 0 rgba(255,255,255,.7);
+  --sh-xs:0 1px 2px rgba(13,32,22,.045);
+  --sh-sm:0 1px 2px rgba(13,32,22,.05), 0 2px 6px rgba(13,32,22,.04);
+  --sh-md:0 2px 4px rgba(13,32,22,.04), 0 6px 18px rgba(13,32,22,.07);
+  --sh-lg:0 4px 8px rgba(13,32,22,.05), 0 16px 42px rgba(13,32,22,.11);
+  --sh-brand:0 4px 16px rgba(20,102,63,.18);
+  --glow:none;
+
+  --ease:cubic-bezier(.2,.8,.3,1);
+  --ease-back:cubic-bezier(.34,1.56,.64,1);
+}
+
+/* ---- 深色（跟随系统） ---- */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#060a08;
+    --bg-grad:radial-gradient(1000px 520px at 76% -10%,rgba(78,197,138,.08),transparent 60%),
+              radial-gradient(600px 380px at 10% 100%,rgba(195,154,63,.05),transparent 60%);
+    --surface:#0d1411;
+    --surface-2:#111a16;
+    --surface-3:#16211b;
+    --line:#1d2922;
+    --line-strong:#2b3a31;
+
+    --text:#e9f2ec;
+    --text-2:#b6c4bb;
+    --muted:#839088;
+    --muted-2:#5c6761;
+
+    --brand:#4ec58a;
+    --brand-2:#5fd698;
+    --brand-soft:#10241a;
+    --brand-line:#1e3d2c;
+
+    --gold:#e0b95c;
+    --gold-2:#f0cb72;
+    --gold-soft:#241d0e;
+    --gold-line:#3d3218;
+
+    --danger:#e0755a;
+
+    --header-from:#03150d;
+    --header-mid:#08281a;
+    --header-to:#0d3724;
+    --on-brand:#04170d;
+    --code-bg:#040a07;
+    --code-fg:#b9d6c5;
+
+    --sh-inset:inset 0 1px 0 rgba(255,255,255,.04);
+    --sh-xs:0 1px 2px rgba(0,0,0,.45);
+    --sh-sm:0 1px 2px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.32);
+    --sh-md:0 2px 6px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.45);
+    --sh-lg:0 6px 14px rgba(0,0,0,.45), 0 20px 50px rgba(0,0,0,.6);
+    --sh-brand:0 4px 18px rgba(78,197,138,.26);
+    --glow:0 0 0 1px rgba(78,197,138,.13), 0 0 30px rgba(78,197,138,.09);
+  }
+}
+
+/* ---- 手动强制 ---- */
+html[data-theme="light"]{
+  --bg:#f5f7f3; --surface:#fff; --surface-2:#fafbf8; --surface-3:#f1f4ef;
+  --line:#e6ebe4; --line-strong:#d4dcd3; --text:#0d1a13; --text-2:#39463e;
+  --muted:#6c7a71; --muted-2:#9aa59d;
+  --brand:#14663f; --brand-2:#1b7d4e; --brand-soft:#e7f3ec; --brand-line:#cde3d6;
+  --gold:#9c7726; --gold-2:#c39a3f; --gold-soft:#fbf4e3; --gold-line:#ecdcb4;
+  --danger:#b4472b;
+  --header-from:#052418; --header-mid:#0d3a26; --header-to:#145334; --on-brand:#fff;
+  --code-bg:#0b1710; --code-fg:#cfe3d6;
+  --sh-inset:inset 0 1px 0 rgba(255,255,255,.7);
+  --sh-xs:0 1px 2px rgba(13,32,22,.045);
+  --sh-sm:0 1px 2px rgba(13,32,22,.05), 0 2px 6px rgba(13,32,22,.04);
+  --sh-md:0 2px 4px rgba(13,32,22,.04), 0 6px 18px rgba(13,32,22,.07);
+  --sh-lg:0 4px 8px rgba(13,32,22,.05), 0 16px 42px rgba(13,32,22,.11);
+  --sh-brand:0 4px 16px rgba(20,102,63,.18); --glow:none;
+  --bg-grad:radial-gradient(1100px 520px at 78% -8%,#eaf2ea,transparent 58%),radial-gradient(700px 400px at 8% 100%,#f2f3ea,transparent 60%);
+}
+html[data-theme="dark"]{
+  --bg:#060a08; --surface:#0d1411; --surface-2:#111a16; --surface-3:#16211b;
+  --line:#1d2922; --line-strong:#2b3a31; --text:#e9f2ec; --text-2:#b6c4bb;
+  --muted:#839088; --muted-2:#5c6761;
+  --brand:#4ec58a; --brand-2:#5fd698; --brand-soft:#10241a; --brand-line:#1e3d2c;
+  --gold:#e0b95c; --gold-2:#f0cb72; --gold-soft:#241d0e; --gold-line:#3d3218;
+  --danger:#e0755a;
+  --header-from:#03150d; --header-mid:#08281a; --header-to:#0d3724; --on-brand:#04170d;
+  --code-bg:#040a07; --code-fg:#b9d6c5;
+  --sh-inset:inset 0 1px 0 rgba(255,255,255,.04);
+  --sh-xs:0 1px 2px rgba(0,0,0,.45);
+  --sh-sm:0 1px 2px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.32);
+  --sh-md:0 2px 6px rgba(0,0,0,.4), 0 8px 22px rgba(0,0,0,.45);
+  --sh-lg:0 6px 14px rgba(0,0,0,.45), 0 20px 50px rgba(0,0,0,.6);
+  --sh-brand:0 4px 18px rgba(78,197,138,.26);
+  --glow:0 0 0 1px rgba(78,197,138,.13), 0 0 30px rgba(78,197,138,.09);
+  --bg-grad:radial-gradient(1000px 520px at 76% -10%,rgba(78,197,138,.08),transparent 60%),radial-gradient(600px 380px at 10% 100%,rgba(195,154,63,.05),transparent 60%);
+}
+
+/* ============================================================ 基础 */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--text);
+  background-color:var(--bg);
+  background-image:var(--bg-grad);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  transition:background-color .35s ease,color .35s ease;
+}
+::selection{background:var(--brand);color:var(--on-brand)}
+
+/* ============================================================ 顶栏 */
+header{
+  position:sticky;top:0;z-index:50;
+  display:flex;justify-content:space-between;align-items:center;gap:var(--s3);
+  padding:var(--s3) var(--s6);
+  background:linear-gradient(105deg,var(--header-from) 0%,var(--header-mid) 52%,var(--header-to) 100%);
+  color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 3px 20px rgba(0,0,0,.26);
+  overflow:hidden;
+}
+header::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(560px 160px at 90% -70%,rgba(255,255,255,.17),transparent 72%),
+    radial-gradient(420px 200px at 6% 150%,rgba(78,197,138,.2),transparent 70%);
+}
+.brand{display:flex;gap:var(--s3);align-items:center;position:relative;z-index:1;min-width:0}
+.logo{
+  flex:0 0 auto;display:grid;place-items:center;
+  width:38px;height:38px;border-radius:11px;
+  background:linear-gradient(160deg,#fff 0%,#d9efe1 100%);
+  color:#08291a;
+  font-weight:800;font-size:18px;letter-spacing:-.5px;
+  box-shadow:0 2px 6px rgba(0,0,0,.3), inset 0 -1px 0 rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.9);
+  transition:transform .3s var(--ease-back);
+}
+.brand:hover .logo{transform:rotate(-6deg) scale(1.05)}
+header h1{margin:0;font-size:16.5px;font-weight:650;letter-spacing:-.2px;white-space:nowrap}
+.sub{margin:0;font-size:11px;opacity:.65;letter-spacing:.3px;white-space:nowrap}
+.hd-right{display:flex;align-items:center;gap:var(--s2);position:relative;z-index:1}
+.status{
+  font-size:11.5px;font-weight:600;letter-spacing:.2px;
+  padding:5px 11px;border-radius:var(--r-xs);
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.13);
+  white-space:nowrap;
+  transition:all .25s var(--ease);
+}
+.status.ok{background:#39c47f;border-color:#2fae6d;color:#04210f;box-shadow:0 0 16px rgba(57,196,127,.45)}
+.status.bad{background:rgba(255,255,255,.08);color:#ffd9c7}
+.theme-btn{
+  flex:0 0 auto;width:34px;height:34px;border-radius:var(--r-xs);
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.13);
+  color:#fff;cursor:pointer;font-size:15px;line-height:1;
+  transition:all .22s var(--ease);
+}
+.theme-btn:hover{background:rgba(255,255,255,.2);transform:rotate(20deg) scale(1.06)}
+.theme-btn:active{transform:rotate(20deg) scale(.94)}
+
+/* 顶栏版本角标 */
+.ver{
+  display:inline-block;margin-left:7px;
+  font-size:9.5px;font-weight:700;letter-spacing:.3px;
+  padding:1.5px 6px;border-radius:5px;
+  background:rgba(255,255,255,.14);color:rgba(255,255,255,.85);
+  vertical-align:middle;
+}
+.ver:empty{display:none}
+
+/* ============================================================ 导航 */
+nav.tabs{
+  position:sticky;top:64px;z-index:40;
+  display:flex;gap:var(--s1);padding:0 var(--s5);
+  background:color-mix(in srgb,var(--surface) 80%,transparent);
+  background:var(--surface);
+  backdrop-filter:saturate(180%) blur(18px);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid var(--line);
+  overflow-x:auto;scrollbar-width:none;
+}
+@supports (background:color-mix(in srgb,red 50%,blue)){
+  nav.tabs{background:color-mix(in srgb,var(--surface) 80%,transparent)}
+}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{
+  position:relative;border:0;background:transparent;
+  padding:13px 14px;
+  font:inherit;font-size:13.5px;font-weight:550;letter-spacing:.1px;
+  color:var(--muted);cursor:pointer;white-space:nowrap;
+  transition:color .2s var(--ease),background .2s;
+  border-radius:var(--r-xs) var(--r-xs) 0 0;
+}
+nav.tabs button:hover{color:var(--text);background:var(--surface-3)}
+nav.tabs button:active{transform:scale(.97)}
+nav.tabs button.active{color:var(--brand);font-weight:700;background:transparent}
+nav.tabs button.active::after{
+  content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2.5px;
+  border-radius:2px 2px 0 0;
+  background:var(--brand);
+  box-shadow:0 0 12px color-mix(in srgb,var(--brand) 60%,transparent);
+  animation:tabIn .25s var(--ease) both;
+}
+@keyframes tabIn{from{transform:scaleX(.4);opacity:.4}to{transform:scaleX(1);opacity:1}}
+
+/* ============================================================ 布局 */
+main{padding:var(--s5) var(--s4) var(--s8);max-width:1080px;margin:0 auto}
+.tab{display:none}
+.tab.active{display:block;animation:rise .3s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ============================================================ 面板 */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-lg);
+  padding:var(--s5);
+  margin-bottom:var(--s3);
+  box-shadow:var(--sh-sm),var(--sh-inset),var(--glow);
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease);
+}
+.panel h3{
+  margin:0 0 var(--s3);font-size:14px;font-weight:650;letter-spacing:-.1px;
+  color:var(--text);
+  display:flex;align-items:center;gap:9px;
+}
+.panel h3::before{
+  content:"";width:2.5px;height:14px;border-radius:2px;
+  background:linear-gradient(var(--brand),color-mix(in srgb,var(--brand) 30%,transparent));
+  transition:transform .25s var(--ease);
+}
+.panel:hover h3::before{transform:scaleY(1.15)}
+.panel > p{margin:0 0 var(--s3);color:var(--text-2)}
+
+/* ============================================================ 表单 */
+label{display:block;font-size:12px;font-weight:600;letter-spacing:.2px;color:var(--muted);margin-bottom:var(--s3);transition:color .2s}
+label:focus-within{color:var(--brand)}
+label.inline{display:inline-flex;gap:var(--s2);align-items:center;margin:0 var(--s3) 0 0;font-weight:500;color:var(--text-2)}
+input,textarea,select{
+  width:100%;margin-top:6px;
+  padding:11px 13px;
+  border:1px solid var(--line-strong);
+  border-radius:var(--r-sm);
+  font:inherit;font-size:14px;color:var(--text);
+  background:var(--surface-2);
+  transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s;
+}
+input::placeholder,textarea::placeholder{color:var(--muted-2)}
+input:hover,textarea:hover,select:hover{border-color:color-mix(in srgb,var(--brand) 30%,var(--line-strong));background:var(--surface)}
+input:focus,textarea:focus,select:focus{
+  outline:none;
+  border-color:var(--brand);
+  background:var(--surface);
+  box-shadow:0 0 0 3.5px color-mix(in srgb,var(--brand) 15%,transparent), var(--sh-xs);
+}
+textarea{resize:vertical;line-height:1.65;min-height:70px}
+select{
+  cursor:pointer;appearance:none;padding-right:34px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='11' height='7'><path d='M1 1l4.5 4.5L10 1' stroke='%23839088' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center;
+}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 var(--s4)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:0 var(--s4)}
+@media(max-width:780px){.grid2,.grid3{grid-template-columns:1fr;gap:0}}
+.row{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap;margin:var(--s3) 0}
+.row.between{justify-content:space-between;align-items:flex-end;gap:var(--s4)}
+
+/* ============================================================ 按钮（三态） */
+.btn{
+  position:relative;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:1px solid var(--line-strong);
+  background:var(--surface);
+  padding:9.5px 17px;
+  border-radius:var(--r-sm);
+  font:inherit;font-size:13.5px;font-weight:600;letter-spacing:-.1px;
+  color:var(--text-2);
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+  box-shadow:var(--sh-xs),var(--sh-inset);
+  transition:transform .16s var(--ease),box-shadow .2s var(--ease),
+             background .2s,border-color .2s,color .2s;
+  will-change:transform;
+}
+.btn:hover{
+  background:var(--surface-3);
+  border-color:color-mix(in srgb,var(--brand) 34%,var(--line-strong));
+  color:var(--text);
+  transform:translateY(-1.5px);
+  box-shadow:var(--sh-md);
+}
+.btn:active{
+  transform:translateY(0) scale(.975);
+  box-shadow:inset 0 2px 5px rgba(13,32,22,.13);
+  transition-duration:.06s;
+}
+.btn:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+.btn.primary{
+  background:linear-gradient(180deg,var(--brand-2) 0%,var(--brand) 100%);
+  border-color:color-mix(in srgb,var(--brand) 68%,#000);
+  color:var(--on-brand);
+  box-shadow:0 1px 2px rgba(0,0,0,.16), var(--sh-brand), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.btn.primary:hover{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--brand-2) 85%,#fff) 0%,var(--brand-2) 100%);
+  color:var(--on-brand);
+  transform:translateY(-2px);
+  box-shadow:0 2px 4px rgba(0,0,0,.18), 0 10px 26px color-mix(in srgb,var(--brand) 40%,transparent), inset 0 1px 0 rgba(255,255,255,.24);
+}
+.btn.primary:active{
+  transform:translateY(0) scale(.975);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.24);
+  background:linear-gradient(180deg,var(--brand-2) 0%,var(--brand) 100%);
+}
+
+.btn.ghost{
+  background:transparent;border-color:transparent;color:var(--muted);
+  box-shadow:none;
+}
+.btn.ghost:hover{background:var(--surface-3);color:var(--text);transform:none;box-shadow:none}
+.btn.ghost:active{transform:scale(.97);background:var(--line)}
+
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn.mini{padding:5.5px 11px;font-size:12px;border-radius:var(--r-xs)}
+.actions .btn.mini{padding:6px 12px;font-size:12.5px}
+
+/* ============================================================ 标签 */
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.chip{
+  padding:6.5px 13px;
+  border:1px solid var(--line-strong);
+  border-radius:100px;
+  font-size:12.5px;font-weight:550;
+  cursor:pointer;background:var(--surface-2);color:var(--muted);
+  user-select:none;
+  transition:all .16s var(--ease);
+}
+.chip:hover{
+  border-color:color-mix(in srgb,var(--brand) 45%,var(--line-strong));
+  color:var(--text);background:var(--surface);
+  transform:translateY(-1px);
+  box-shadow:0 2px 8px color-mix(in srgb,var(--brand) 12%,transparent);
+}
+.chip:active{transform:translateY(0) scale(.95)}
+.chip.on{
+  background:var(--brand);color:var(--on-brand);border-color:var(--brand);
+  box-shadow:0 1px 3px color-mix(in srgb,var(--brand) 45%,transparent), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.chip.on:hover{background:var(--brand-2);box-shadow:0 3px 10px color-mix(in srgb,var(--brand) 45%,transparent)}
+
+/* ============================================================ 提示 */
+.hint{font-size:12.5px;color:var(--muted);margin:var(--s2) 0 0;line-height:1.65}
+.warn-panel{background:var(--gold-soft)!important;border-color:var(--gold-line)!important}
+.warn-panel h3{color:var(--gold)!important}
+.warn-panel h3::before{background:var(--gold-2)}
+.warn-panel p{margin:0;font-size:13.5px;color:var(--text-2)}
+.empty-tip{
+  border:1.5px dashed var(--line-strong);
+  border-radius:var(--r-lg);
+  padding:var(--s8) var(--s5);text-align:center;
+  color:var(--muted-2);font-size:13.5px;line-height:1.85;
+  background:var(--surface-2);
+  transition:border-color .25s,background .25s;
+}
+.empty-tip:hover{border-color:var(--brand-line);background:var(--surface)}
+.empty-tip b{display:block;font-size:14.5px;color:var(--muted);margin-bottom:7px;font-weight:650}
+.empty-tip.mini{padding:var(--s5) var(--s3);font-size:12.5px;border-radius:var(--r-md)}
+
+/* ============================================================ 结果卡片 */
+.list{display:grid;gap:var(--s3)}
+.card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  padding:var(--s4) 18px;
+  box-shadow:var(--sh-xs),var(--sh-inset);
+  transition:transform .22s var(--ease),box-shadow .22s var(--ease),border-color .22s;
+  will-change:transform;
+}
+.card::before{
+  content:"";position:absolute;left:0;top:16px;bottom:16px;width:3px;
+  border-radius:0 3px 3px 0;
+  background:var(--brand);
+  opacity:0;transform:scaleY(.35);
+  transition:opacity .22s var(--ease),transform .26s var(--ease);
+}
+.card:hover{
+  border-color:color-mix(in srgb,var(--brand) 32%,var(--line));
+  box-shadow:var(--sh-md),var(--glow);
+  transform:translateY(-3px);
+}
+.card:hover::before{opacity:1;transform:scaleY(1)}
+.card h4{
+  margin:0 0 10px;
+  font-size:15.5px;font-weight:650;line-height:1.5;letter-spacing:-.15px;
+  color:var(--text);
+  transition:color .18s;
+}
+.card:hover h4{color:var(--brand)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.tag{
+  font-size:11px;font-weight:600;letter-spacing:.15px;
+  padding:3px 8px;border-radius:var(--r-xs);
+  background:var(--brand-soft);color:var(--brand);
+  border:1px solid var(--brand-line);
+  transition:transform .16s var(--ease);
+}
+.tag:hover{transform:translateY(-1px)}
+.tag.warn{background:var(--gold-soft);color:var(--gold);border-color:var(--gold-line)}
+.tag.gold{background:var(--text);color:var(--bg);border-color:var(--text);font-weight:700}
+.tag.dark{background:var(--text);color:var(--bg);border-color:var(--text)}
+.tag.th{
+  background:transparent;color:var(--muted);
+  border:1px dashed var(--line-strong);
+  font-weight:500;
+}
+
+.meta{font-size:13px;color:var(--text-2);margin:5px 0;line-height:1.7}
+.meta b{color:var(--brand);font-weight:700;margin-right:2px}
+.save-line b{color:var(--gold)}
+.save-line{color:var(--text-2)}
+
+/* ---- 评分徽章：改成琥珀金，更"评级"感 ---- */
+.score{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:11.5px;font-weight:800;letter-spacing:.2px;
+  color:#2a1d05;
+  background:linear-gradient(135deg,var(--gold-2),var(--gold));
+  padding:3px 9px;border-radius:var(--r-xs);
+  font-variant-numeric:tabular-nums;
+  box-shadow:0 1px 4px color-mix(in srgb,var(--gold) 40%,transparent), inset 0 1px 0 rgba(255,255,255,.4);
+  transition:transform .18s var(--ease-back),box-shadow .18s;
+}
+.card:hover .score{transform:scale(1.06);box-shadow:0 2px 10px color-mix(in srgb,var(--gold) 50%,transparent)}
+@media (prefers-color-scheme: dark){
+  .score{color:#1a1204}
+}
+html[data-theme="dark"] .score{color:#1a1204}
+html[data-theme="light"] .score{color:#2a1d05}
+.score-detail{
+  font-size:11px;color:var(--muted);
+  letter-spacing:.1px;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.score-detail:hover{color:var(--text-2)}
+.actions{display:flex;gap:7px;margin-top:var(--s3);flex-wrap:wrap;align-items:center}
+.actions .spacer{flex:1 1 auto;min-width:0}
+
+/* ============================================================ 代码块 */
+pre{
+  background:var(--code-bg);
+  color:var(--code-fg);
+  padding:16px 18px;border-radius:var(--r-md);
+  overflow:auto;margin:0;
+  font-size:12.5px;line-height:1.75;
+  white-space:pre-wrap;word-break:break-word;
+  font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,monospace;
+  border:1px solid rgba(255,255,255,.06);
+  transition:border-color .22s;
+}
+pre:hover{border-color:color-mix(in srgb,var(--brand) 30%,transparent)}
+.codebox{position:relative}
+.codebox .btn.copy{
+  position:absolute;top:11px;right:11px;z-index:2;
+  padding:5.5px 11px;font-size:11.5px;font-weight:600;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.16);
+  color:#fff;box-shadow:none;
+  backdrop-filter:blur(8px);
+}
+.codebox .btn.copy:hover{background:rgba(255,255,255,.24);color:#fff;transform:none}
+.codebox .btn.copy:active{transform:scale(.95)}
+
+/* ============================================================ 词频 */
+.bars{display:grid;gap:7px}
+.bar{display:grid;grid-template-columns:92px 1fr 36px;gap:var(--s3);align-items:center;font-size:12.5px}
+.bar > span:first-child{color:var(--text-2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar > span:last-child{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;font-size:11.5px}
+.bar .fill{
+  height:19px;border-radius:5px;min-width:5px;
+  background:linear-gradient(90deg,var(--brand) 0%,color-mix(in srgb,var(--brand) 45%,#fff) 100%);
+  box-shadow:0 1px 3px color-mix(in srgb,var(--brand) 25%,transparent);
+  transition:width .5s var(--ease),filter .2s;
+}
+.bar:hover .fill{filter:brightness(1.12)}
+
+/* ============================================================ 表格 */
+table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  font-size:13px;margin-top:9px;
+  border:1px solid var(--line);border-radius:var(--r-md);
+  overflow:hidden;background:var(--surface);
+}
+th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{
+  background:var(--surface-3);color:var(--text);
+  font-weight:650;font-size:11.5px;letter-spacing:.3px;white-space:nowrap;
+}
+tr:last-child td{border-bottom:0}
+tbody tr td{transition:background .14s}
+tbody tr:hover td{background:var(--surface-2)}
+tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--brand)}
+td:first-child{color:var(--muted);font-weight:600}
+
+/* ============================================================ 分段选择器 */
+.seg{
+  display:inline-flex;padding:3px;gap:2px;
+  background:var(--surface-3);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+}
+.seg-btn{
+  border:0;background:transparent;
+  padding:8px 15px;border-radius:7px;
+  font:inherit;font-size:12.5px;font-weight:600;letter-spacing:-.1px;
+  color:var(--muted);cursor:pointer;
+  display:inline-flex;flex-direction:column;align-items:center;gap:1px;
+  line-height:1.25;white-space:nowrap;
+  transition:all .18s var(--ease);
+}
+.seg-btn span{font-size:10px;font-weight:500;color:var(--muted-2);letter-spacing:.2px}
+.seg-btn:hover{color:var(--text);background:color-mix(in srgb,var(--surface) 65%,transparent)}
+.seg-btn:active{transform:scale(.96)}
+.seg-btn.active{
+  background:var(--surface);color:var(--brand);font-weight:700;
+  box-shadow:var(--sh-sm),0 0 0 1px var(--brand-line);
+}
+.seg-btn.active span{color:var(--brand);opacity:.72}
+
+.result-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:var(--s3);flex-wrap:wrap;
+  padding-bottom:var(--s3);margin-bottom:var(--s4);
+  border-bottom:1px solid var(--line);
+}
+.result-head h3{margin:0;padding:0}
+.result-head h3::before{display:none}
+.len-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11.5px;font-weight:700;letter-spacing:.2px;
+  padding:4px 10px;border-radius:var(--r-xs);
+  background:var(--brand-soft);color:var(--brand);
+  border:1px solid var(--brand-line);
+}
+.len-chip.standard{background:var(--surface-3);color:var(--text-2);border-color:var(--line-strong)}
+.len-chip.long{background:var(--gold-soft);color:var(--gold);border-color:var(--gold-line)}
+.len-chip.mini{font-size:10px;padding:2px 7px;border-radius:5px}
+
+/* ============================================================ 两列 */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);align-items:start}
+.col{min-width:0}
+.col-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:var(--s2);padding:0 3px}
+.col-title{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;letter-spacing:-.1px;color:var(--text)}
+.col-badge{
+  font-size:10px;font-weight:700;letter-spacing:.3px;
+  padding:2px 7px;border-radius:5px;
+  background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);
+}
+.col-badge.ai{background:var(--gold-soft);color:var(--gold);border-color:var(--gold-line)}
+.col-actions{display:flex;align-items:center;gap:7px}
+.col-count{font-size:11px;color:var(--muted-2);font-variant-numeric:tabular-nums;font-weight:600}
+.two-col .card{padding:14px 15px}
+.two-col .card h4{font-size:14px;line-height:1.5}
+.two-col .empty-tip{padding:var(--s7) var(--s3);font-size:12.5px}
+.two-col .empty-tip b{font-size:13.5px}
+@media (max-width:900px){
+  .two-col{grid-template-columns:1fr;gap:var(--s5)}
+  .two-col .card{padding:var(--s4) 16px}
+  .two-col .card h4{font-size:15px}
+}
+
+/* ============================================================ 内联历史区 */
+.hist-inline{margin-top:var(--s3)}
+.hist-panel{padding:0;overflow:hidden;box-shadow:var(--sh-xs)}
+.hist-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  padding:13px 18px;cursor:pointer;user-select:none;
+  transition:background .18s;
+}
+.hist-bar:hover{background:var(--surface-2)}
+.hist-bar:active{background:var(--surface-3)}
+.hist-bar-l{display:flex;align-items:center;gap:9px;min-width:0}
+.hist-caret{font-size:10px;color:var(--muted-2);width:10px;display:inline-block}
+.hist-bar-l b{font-size:13.5px;font-weight:650;color:var(--text)}
+.hist-count{font-size:11.5px;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.hist-bar-r{font-size:11.5px;color:var(--muted-2);flex:0 0 auto}
+.hist-body-wrap{padding:0 var(--s3) var(--s4)}
+
+.hist-card{
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:var(--r-sm);
+  margin-bottom:var(--s2);
+  overflow:hidden;
+  transition:border-color .18s,box-shadow .18s,transform .18s var(--ease);
+}
+.hist-card:last-child{margin-bottom:0}
+.hist-card:hover{border-color:var(--brand-line);box-shadow:var(--sh-xs);transform:translateX(2px)}
+.hist-head{
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  padding:11px 14px;cursor:pointer;user-select:none;
+}
+.hist-title{display:flex;align-items:center;gap:var(--s2);min-width:0;flex:1}
+.hist-topic{
+  font-size:13.5px;font-weight:550;color:var(--text-2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  transition:color .16s;
+}
+.hist-card:hover .hist-topic{color:var(--text)}
+.hist-meta{display:flex;align-items:center;gap:9px;flex:0 0 auto;font-size:11px;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.chev{transition:transform .22s var(--ease);display:inline-block;font-size:10px;color:var(--muted)}
+.hist-card.open .chev{transform:rotate(180deg)}
+.hist-body{padding:2px 14px var(--s4);border-top:1px solid var(--line);animation:rise .22s var(--ease) both}
+.hist-body table{margin-top:10px}
+
+/* ============================================================ 加载 */
+.loading{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:13px;padding:var(--s5) 0}
+.spin{
+  width:16px;height:16px;flex:0 0 auto;
+  border:2px solid var(--line-strong);
+  border-top-color:var(--brand);
+  border-radius:50%;animation:sp .7s linear infinite;
+}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+
+
+/* ============================================================ 排期表 */
+.sc-wrap{max-height:58vh;overflow:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
+.sc-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0;border:0}
+.sc-table td{border-bottom:1px solid var(--line);padding:7px 10px;vertical-align:top}
+.sc-table tr:last-child td{border-bottom:0}
+.sc-day{white-space:nowrap;font-weight:700;color:var(--brand);font-size:11.5px;width:64px}
+.sc-date{white-space:nowrap;color:var(--text-2);font-variant-numeric:tabular-nums;width:78px;font-size:12px}
+.sc-date span{font-size:10.5px;color:var(--muted-2)}
+.sc-title{font-weight:550}
+.sc-el{width:56px;font-size:11px;color:var(--muted);white-space:nowrap}
+.sc-table .cb{width:26px;text-align:center;color:var(--muted-2);font-size:13px}
+.sc-rest td,.sc-empty td{background:var(--surface-2)}
+.sc-dim{color:var(--muted-2);font-size:11.5px;font-style:italic}
+.sc-empty .sc-dim{color:var(--gold)}
+
+@media (max-width:720px){
+  .sc-table{font-size:12px}
+  .sc-table td{padding:6px 8px}
+  .sc-day{width:52px;font-size:11px}
+  .sc-date{width:66px;font-size:11.5px}
+  .sc-el{display:none}
+}
+
+
+.phone-url{
+  display:flex;align-items:center;gap:10px;justify-content:space-between;
+  padding:12px 14px;margin:8px 0;
+  background:var(--brand-soft);border:1px solid var(--brand-line);
+  border-radius:var(--r-sm);
+}
+.phone-url b{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:15px;font-weight:700;color:var(--brand);
+  word-break:break-all;
+}
+
+
+/* ============================================================ 专业选品 */
+.pk-group{
+  border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:12px 14px 2px;margin-bottom:var(--s3);
+  background:var(--surface-2);
+}
+.pk-group-hd{
+  font-size:12px;font-weight:700;color:var(--brand);
+  letter-spacing:.2px;margin-bottom:8px;
+}
+.pk-group label{margin-bottom:12px}
+
+.pick-card{border-left:3px solid var(--line)}
+.pick-card.ok{border-left-color:var(--brand)}
+.pick-card.warn{border-left-color:var(--gold)}
+.pick-card.bad{border-left-color:var(--danger)}
+
+.pk-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:9px}
+.pk-name{font-size:15px;font-weight:650;color:var(--text);line-height:1.5;min-width:0}
+.pk-score{
+  flex:0 0 auto;display:flex;align-items:baseline;gap:1px;
+  font-size:22px;font-weight:800;letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;position:relative;
+}
+.pk-score span{font-size:10px;font-weight:600;color:var(--muted-2)}
+.pk-score.ok{color:var(--brand)}
+.pk-score.warn{color:var(--gold)}
+.pk-score.bad{color:var(--danger)}
+.pk-red-ico{
+  position:absolute;left:-14px;top:0;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--danger);color:#fff;
+  font-size:8px;font-weight:800;
+  display:grid;place-items:center;
+}
+
+.pk-status{
+  width:auto;margin:0;padding:2px 6px;
+  font-size:11px;border-radius:5px;
+  background:var(--surface-2);border:1px solid var(--line-strong);
+}
+
+.pk-red{
+  padding:8px 11px;margin-bottom:10px;border-radius:8px;
+  background:color-mix(in srgb,var(--danger) 8%,transparent);
+  border-left:2.5px solid var(--danger);
+  font-size:12px;color:var(--danger);line-height:1.7;
+}
+
+.pk-dims{display:grid;gap:5px;margin:10px 0 2px}
+.dim{display:flex;align-items:center;gap:8px}
+.dim-v{
+  flex:0 0 52px;text-align:right;
+  font-size:11.5px;font-weight:700;color:var(--text-2);
+  font-variant-numeric:tabular-nums;
+}
+.dim-v i{font-style:normal;font-size:9.5px;color:var(--muted-2);font-weight:500}
+.dim-track{flex:1;height:7px;border-radius:4px;background:var(--surface-3);overflow:hidden}
+.dim-fill{height:100%;border-radius:4px;transition:width .4s var(--ease)}
+.dim-fill.profit{background:linear-gradient(90deg,#1b7d4e,#4ec58a)}
+.dim-fill.market{background:linear-gradient(90deg,#2563a8,#5aa4e0)}
+.dim-fill.fit{background:linear-gradient(90deg,#9c7726,#d8b158)}
+.dim-fill.risk{background:linear-gradient(90deg,#8a5a8a,#b98ab9)}
+.pk-dim-labels{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:5px;margin-bottom:10px;padding-left:60px;
+}
+.pk-dim-labels span{font-size:9.5px;color:var(--muted-2);text-align:center}
+
+.pk-grid{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.pk-grid b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+
+.pk-good{font-size:12px;color:var(--brand);line-height:1.75;margin-bottom:6px}
+.pk-issues{
+  font-size:11.5px;color:var(--text-2);line-height:1.75;
+  padding:7px 10px;border-radius:8px;background:var(--surface-2);
+  border-left:2px solid var(--gold-line);margin-bottom:6px;
+}
+.pk-issues b{color:var(--gold)}
+.pk-todo{
+  font-size:11.5px;color:var(--text-2);line-height:1.75;
+  padding:7px 10px;border-radius:8px;
+  background:var(--brand-soft);border-left:2px solid var(--brand);
+}
+.pk-todo b{color:var(--brand)}
+
+@media (max-width:720px){
+  .pk-grid{gap:10px;font-size:12px}
+  .pk-score{font-size:19px}
+  .pk-group{padding:10px 11px 0}
+  .pk-dim-labels{padding-left:48px}
+  .dim-v{flex-basis:44px;font-size:11px}
+}
+
+/* ============================================================ 发布复盘 */
+.rv-overview{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2);
+}
+.rv-card{
+  padding:14px 12px;border-radius:var(--r-md);
+  background:var(--surface-2);border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:3px;
+  transition:transform .18s var(--ease),border-color .18s;
+}
+.rv-card:hover{transform:translateY(-2px);border-color:var(--brand-line)}
+.rv-card span{font-size:11px;color:var(--muted);letter-spacing:.2px}
+.rv-card b{font-size:20px;font-weight:800;color:var(--brand);font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+
+.rv-bars{display:grid;gap:7px;margin-top:10px}
+.rv-bar{display:grid;grid-template-columns:92px 1fr 52px 44px;gap:10px;align-items:center;font-size:12.5px}
+.rv-name{color:var(--text-2);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv-track{height:16px;background:var(--surface-3);border-radius:5px;overflow:hidden}
+.rv-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--brand),color-mix(in srgb,var(--brand) 50%,#fff));transition:width .5s var(--ease)}
+.rv-fill.gold{background:linear-gradient(90deg,var(--gold),var(--gold-2))}
+.rv-val{text-align:right;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;font-size:12px}
+.rv-n{text-align:right;color:var(--muted-2);font-size:11px;font-variant-numeric:tabular-nums}
+
+.rv-tips{display:grid;gap:8px;margin-top:10px}
+.rv-tip{
+  display:flex;gap:9px;align-items:flex-start;
+  padding:10px 13px;border-radius:var(--r-sm);
+  font-size:12.5px;line-height:1.65;
+  background:var(--surface-2);border:1px solid var(--line);
+}
+.rv-tip span{flex:0 0 auto;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;margin-top:1px}
+.rv-tip.ok span{background:var(--brand-soft);color:var(--brand)}
+.rv-tip.warn span{background:var(--gold-soft);color:var(--gold)}
+.rv-tip.warn{border-color:var(--gold-line)}
+
+.rv-item{padding:14px 16px}
+.rv-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.rv-title{font-size:14px;font-weight:650;color:var(--text);line-height:1.5;min-width:0}
+.rv-date{flex:0 0 auto;font-size:11.5px;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.rv-grid{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.rv-grid b{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.rv-grid b.good{color:var(--brand)}
+
+@media (max-width:720px){
+  .rv-overview{grid-template-columns:1fr 1fr}
+  .rv-card b{font-size:17px}
+  .rv-bar{grid-template-columns:68px 1fr 46px 36px;gap:7px;font-size:11.5px}
+  .rv-grid{gap:10px;font-size:11.5px}
+}
+
+/* ============================================================ 内容质检 */
+.audit{
+  margin-top:var(--s4);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  overflow:hidden;
+  background:var(--surface-2);
+}
+.audit.ok{border-color:var(--brand-line)}
+.audit.warn{border-color:var(--gold-line)}
+.audit.bad{border-color:color-mix(in srgb,var(--danger) 40%,var(--line))}
+.au-head{
+  display:flex;align-items:center;gap:var(--s3);
+  padding:12px 16px;
+  background:var(--surface);
+  border-bottom:1px solid var(--line);
+}
+.au-score{
+  flex:0 0 auto;display:flex;align-items:baseline;gap:2px;
+  font-variant-numeric:tabular-nums;
+}
+.au-score b{font-size:26px;font-weight:800;line-height:1;letter-spacing:-1px}
+.au-score span{font-size:11px;color:var(--muted-2);font-weight:600}
+.audit.ok .au-score b{color:var(--brand)}
+.audit.warn .au-score b{color:var(--gold)}
+.audit.bad .au-score b{color:var(--danger)}
+.au-meta{display:flex;flex-direction:column;gap:1px;min-width:0}
+.au-meta b{font-size:13px;font-weight:700;color:var(--text)}
+.au-meta span{font-size:11px;color:var(--muted-2)}
+.au-list{padding:6px 10px 10px}
+.au-row{
+  display:grid;
+  grid-template-columns:20px 84px 1fr;
+  gap:8px;align-items:baseline;
+  padding:6px 6px;border-radius:6px;
+  font-size:12.5px;line-height:1.55;
+  transition:background .15s;
+}
+.au-row:hover{background:var(--surface)}
+.au-ico{
+  width:16px;height:16px;display:grid;place-items:center;
+  border-radius:50%;font-size:10px;font-weight:800;
+  align-self:center;
+}
+.au-row.ok .au-ico{background:var(--brand-soft);color:var(--brand)}
+.au-row.warn .au-ico{background:var(--gold-soft);color:var(--gold)}
+.au-row.bad .au-ico{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.au-label{font-weight:600;color:var(--text-2)}
+.au-detail{color:var(--text-2)}
+.au-tip{
+  grid-column:2 / -1;font-size:11.5px;color:var(--muted);
+  padding-top:1px;
+}
+.au-row.ok .au-tip,.au-row.ok .au-detail{color:var(--muted)}
+
+@media (max-width:720px){
+  .au-head{padding:10px 13px;gap:10px}
+  .au-score b{font-size:22px}
+  .au-list{padding:4px 6px 8px}
+  .au-row{grid-template-columns:18px 76px 1fr;font-size:12px;gap:6px}
+  .au-tip{grid-column:1 / -1;padding-left:26px}
+}
+
+.shot-note{
+  margin-top:6px;font-size:11px;color:var(--muted-2);
+  font-style:normal;line-height:1.5;
+  padding-left:8px;border-left:2px solid var(--line);
+}
+.shot-note::before{content:"";}
+
+/* ============================================================ 创造模式开关 */
+.creative-toggle{
+  display:inline-flex;align-items:center;gap:8px;
+  cursor:pointer;user-select:none;margin:0;
+  padding:6px 10px 6px 6px;border-radius:100px;
+  transition:background .18s;
+}
+.creative-toggle:hover{background:var(--surface-3)}
+.creative-toggle input{position:absolute;opacity:0;width:0;height:0}
+.ct-track{
+  position:relative;flex:0 0 auto;
+  width:34px;height:19px;border-radius:100px;
+  background:var(--line-strong);
+  transition:background .22s var(--ease);
+}
+.ct-dot{
+  position:absolute;top:2px;left:2px;
+  width:15px;height:15px;border-radius:50%;
+  background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);
+  transition:transform .22s var(--ease-back);
+}
+.creative-toggle input:checked + .ct-track{background:var(--gold)}
+.creative-toggle input:checked + .ct-track .ct-dot{transform:translateX(15px)}
+.creative-toggle input:focus-visible + .ct-track{outline:2px solid var(--brand);outline-offset:2px}
+.ct-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.2px;white-space:nowrap}
+.creative-toggle input:checked ~ .ct-label{color:var(--gold)}
+
+@media (max-width:720px){
+  .creative-toggle{padding:5px 8px 5px 5px}
+  .ct-label{font-size:11.5px}
+}
+
+/* ============================================================ 导出按钮行 */
+.export-row{
+  margin-top:var(--s4);padding-top:var(--s3);
+  border-top:1px dashed var(--line);
+  gap:var(--s2);
+}
+.export-label{font-size:12px;font-weight:600;color:var(--muted);margin-right:2px}
+.export-row .btn.mini{font-size:12px}
+
+@media (max-width:720px){
+  .export-row .btn{flex:1 1 calc(50% - 6px)}
+  .export-label{flex:1 1 100%;margin-bottom:2px}
+}
+
+
+.hint-inline{font-size:11.5px;color:var(--muted-2);white-space:nowrap}
+
+.hook-chip{
+  font-size:10.5px;font-weight:600;letter-spacing:.1px;
+  padding:2px 8px;border-radius:100px;
+  background:var(--brand-soft);color:var(--brand);
+  border:1px solid var(--brand-line);
+  white-space:nowrap;
+  transition:transform .16s var(--ease);
+}
+.card:hover .hook-chip{transform:translateY(-1px)}
+@media (max-width:720px){.hook-chip{font-size:10px;padding:2px 7px;white-space:normal}}
+
+
+.struct-chip{
+  display:inline-block;
+  font-size:11px;font-weight:600;
+  padding:2px 8px;border-radius:6px;
+  background:var(--gold-soft);color:var(--gold);
+  border:1px solid var(--gold-line);
+  cursor:pointer;
+  transition:all .16s var(--ease);
+}
+.struct-chip:hover{background:var(--gold);color:#1a1204;transform:translateY(-1px)}
+.struct-line b{color:var(--gold)}
+.struct-table .st-sec{
+  width:56px;font-weight:800;color:var(--brand);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.struct-table .st-beat{width:90px;font-weight:700;white-space:nowrap}
+
+.conv-line b{color:var(--brand)}
+.conv-line{
+  padding:6px 10px;border-radius:8px;
+  background:var(--brand-soft);
+  border-left:2.5px solid var(--brand);
+  color:var(--text-2);
+}
+.farm-phase{
+  flex:1 1 100%;font-size:11px;color:var(--muted-2);
+  padding-top:4px;border-top:1px dashed var(--line);margin-top:2px;
+}
+
+.farm-profile{
+  display:flex;gap:var(--s2);flex-wrap:wrap;
+  padding:9px 14px;margin-bottom:var(--s3);
+  background:var(--surface-2);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  font-size:11.5px;color:var(--text-2);
+}
+.farm-profile span{
+  padding:2px 8px;border-radius:5px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  white-space:nowrap;
+}
+.farm-profile b{color:var(--brand);font-weight:700}
+
+/* ============================================================ 农时条 */
+.farm-bar{
+  margin-bottom:var(--s3);
+  border:1px solid var(--brand-line);
+  background:linear-gradient(105deg,var(--brand-soft) 0%,var(--surface) 55%);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  transition:box-shadow .2s var(--ease),transform .18s var(--ease);
+  overflow:hidden;
+}
+.farm-bar:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
+.farm-inner{
+  display:flex;align-items:center;gap:var(--s3);
+  padding:10px 15px;flex-wrap:wrap;
+}
+.farm-left{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.farm-month{
+  font-size:11px;font-weight:800;letter-spacing:.3px;
+  padding:3px 9px;border-radius:100px;
+  background:var(--brand);color:var(--on-brand);
+}
+.farm-stage{font-size:13px;font-weight:700;color:var(--text)}
+.farm-mid{display:flex;align-items:center;gap:6px;flex:1 1 auto;flex-wrap:wrap;min-width:0}
+.farm-label{font-size:11px;color:var(--muted);white-space:nowrap}
+.farm-tag{
+  font-size:11.5px;font-weight:600;padding:2.5px 9px;border-radius:100px;
+  background:var(--surface);color:var(--text-2);
+  border:1px solid var(--line-strong);
+  white-space:nowrap;
+}
+.farm-right{font-size:11px;color:var(--gold);flex:0 0 auto;white-space:nowrap}
+
+.farm-modal{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.55);
+  display:grid;place-items:center;padding:20px;
+  animation:fadeIn .18s ease both;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.farm-card{
+  background:var(--surface);border-radius:var(--r-lg);
+  padding:var(--s6);max-width:820px;width:100%;
+  max-height:86vh;overflow:auto;
+  box-shadow:var(--sh-lg);
+  animation:rise .24s var(--ease) both;
+}
+.farm-card-hd{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:var(--s3);font-size:15px;
+}
+.farm-close{
+  cursor:pointer;font-size:16px;color:var(--muted);
+  width:28px;height:28px;display:grid;place-items:center;border-radius:8px;
+}
+.farm-close:hover{background:var(--surface-3);color:var(--text)}
+.farm-table{width:100%;border-collapse:collapse;font-size:12.5px;margin:0}
+.farm-table th,.farm-table td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.farm-table th{background:var(--surface-3);font-size:11px;white-space:nowrap}
+.farm-table td:first-child{white-space:nowrap;font-weight:700;color:var(--brand)}
+
+@media (max-width:720px){
+  .farm-inner{padding:9px 12px;gap:8px}
+  .farm-right{display:none}
+  .farm-tag{font-size:11px}
+  .farm-card{padding:var(--s4);max-height:90vh}
+  .farm-table{font-size:11.5px}
+  .farm-table th,.farm-table td{padding:6px 7px}
+}
+
+/* ============================================================ 选题导出工具条 */
+.export-bar{
+  display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;
+  padding:10px 14px;
+  margin-bottom:var(--s3);
+  background:linear-gradient(180deg,var(--surface) 0%,var(--surface-2) 100%);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  box-shadow:var(--sh-xs);
+  animation:rise .24s var(--ease) both;
+}
+.export-bar-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;color:var(--brand);
+  letter-spacing:.2px;white-space:nowrap;
+}
+.export-bar-label svg{opacity:.8}
+.export-bar-sep{
+  width:1px;height:16px;
+  background:var(--line-strong);
+  margin:0 2px;
+  flex:0 0 auto;
+}
+.export-bar .btn.mini{font-size:12px;padding:5.5px 11px}
+
+@media (max-width:720px){
+  .export-bar{padding:9px 11px;gap:6px}
+  .export-bar .btn.mini{flex:1 1 calc(50% - 6px);min-height:38px;font-size:12px}
+  .export-bar-sep{display:none}
+  .export-bar-label{flex:1 1 100%;margin-bottom:2px}
+}
+
+/* ============================================================ 存储不可用提示 */
+.store-warn{
+  margin-bottom:var(--s3);padding:11px 16px;
+  border:1px solid var(--gold-line);
+  background:var(--gold-soft);
+  border-radius:var(--r-md);
+  font-size:12.5px;line-height:1.7;color:var(--text-2);
+}
+.store-warn b{color:var(--gold)}
+@media (max-width:720px){.store-warn{font-size:12px;padding:10px 13px}}
+
+/* ============================================================ 页面使用说明 */
+.guide{
+  margin-bottom:var(--s3);
+  border:1px solid var(--line);
+  border-radius:var(--r-md);
+  background:linear-gradient(180deg,var(--surface) 0%,var(--surface-2) 100%);
+  box-shadow:var(--sh-xs);
+  overflow:hidden;
+  transition:border-color .22s var(--ease),box-shadow .22s var(--ease);
+}
+.guide:hover{border-color:var(--brand-line)}
+.guide.open{
+  border-color:var(--brand-line);
+  box-shadow:var(--sh-sm);
+}
+.guide-head{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 15px;cursor:pointer;user-select:none;
+  transition:background .16s;
+}
+.guide-head:hover{background:var(--surface-3)}
+.guide-q{
+  flex:0 0 auto;display:grid;place-items:center;
+  width:19px;height:19px;border-radius:50%;
+  background:var(--brand-soft);color:var(--brand);
+  font-size:11.5px;font-weight:800;line-height:1;
+  border:1px solid var(--brand-line);
+  transition:transform .25s var(--ease-back),background .2s;
+}
+.guide:hover .guide-q{transform:scale(1.12)}
+.guide.open .guide-q{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.guide-sum{
+  flex:1 1 auto;min-width:0;
+  font-size:12.5px;font-weight:550;color:var(--text-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.guide-toggle{
+  flex:0 0 auto;
+  font-size:11.5px;font-weight:600;color:var(--brand);
+  padding:3px 10px;border-radius:100px;
+  background:var(--brand-soft);border:1px solid var(--brand-line);
+  transition:all .18s var(--ease);
+}
+.guide-toggle:hover{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.guide-body{
+  padding:2px 16px 15px 44px;
+  border-top:1px solid var(--line);
+  animation:rise .22s var(--ease) both;
+}
+.guide-body ol{
+  margin:10px 0 0;padding-left:16px;
+  font-size:13px;line-height:1.95;color:var(--text-2);
+}
+.guide-body li{margin-bottom:5px}
+.guide-body li::marker{color:var(--brand);font-weight:700}
+.guide-body b{color:var(--text);font-weight:650}
+
+@media (max-width:720px){
+  .guide-sum{white-space:normal;font-size:12px;line-height:1.5}
+  .guide-body{padding:2px 14px 13px 14px}
+  .guide-body ol{font-size:12.5px;line-height:1.85}
+}
+
+/* ============================================================ Toast */
+.toast{
+  position:fixed;left:50%;bottom:30px;
+  transform:translateX(-50%) translateY(150%) scale(.95);
+  background:var(--text);color:var(--bg);
+  padding:11px 22px;border-radius:100px;
+  font-size:13.5px;font-weight:600;letter-spacing:-.1px;
+  box-shadow:var(--sh-lg);
+  transition:transform .34s var(--ease-back),opacity .2s;
+  z-index:999;max-width:88vw;text-align:center;pointer-events:none;
+  opacity:0;
+}
+.toast.show{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+
+/* ============================================================ 其它 */
+.err{color:var(--danger);font-size:13px;margin-top:10px;line-height:1.65}
+.howto{margin:0;padding-left:19px;font-size:13.5px;color:var(--text-2);line-height:1.9}
+.howto li{margin-bottom:7px;transition:color .16s}
+.howto li:hover{color:var(--text)}
+.howto b{color:var(--brand)}
+a{color:var(--brand);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .16s}
+a:hover{border-bottom-color:currentColor}
+footer{text-align:center;padding:var(--s7) var(--s5) 46px;color:var(--muted-2);font-size:12px;line-height:1.95}
+footer b{color:var(--muted);font-weight:650}
+footer .dot{margin:0 6px;opacity:.45}
+
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--muted) 28%,transparent);border-radius:10px;border:3px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--muted) 52%,transparent)}
+
+/* ============================================================ 手机端 */
+@media (max-width: 720px){
+  header{padding:10px 14px;gap:9px}
+  .logo{width:32px;height:32px;font-size:15px;border-radius:9px}
+  header h1{font-size:14.5px}
+  .sub{display:none}
+  .status{font-size:11px;padding:5px 9px}
+  .theme-btn{width:31px;height:31px;font-size:14px}
+
+  nav.tabs{
+    position:fixed;left:0;right:0;bottom:0;top:auto;z-index:60;
+    padding:0 0 env(safe-area-inset-bottom,0);
+    background:color-mix(in srgb,var(--surface) 92%,transparent);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-top:1px solid var(--line);border-bottom:0;
+    box-shadow:0 -8px 28px rgba(0,0,0,.14);
+    gap:0;
+  }
+  nav.tabs button{
+    flex:1 1 0;min-width:0;
+    padding:9px 3px 11px;font-size:10.5px;line-height:1.35;
+    border-radius:0;
+    white-space:nowrap;
+  }
+  nav.tabs .tn{display:none}
+  nav.tabs button.active{background:color-mix(in srgb,var(--brand) 7%,transparent)}
+  nav.tabs button.active::after{left:26%;right:26%;bottom:auto;top:0;height:2px;border-radius:0 0 2px 2px}
+
+  main{padding:var(--s3) 11px calc(88px + env(safe-area-inset-bottom,0))}
+  .panel{padding:15px 14px;border-radius:var(--r-md);margin-bottom:var(--s2)}
+  .panel h3{font-size:13.5px;margin-bottom:var(--s3)}
+  .card{padding:13px;border-radius:var(--r-sm)}
+  .card:hover{transform:none}
+  .card h4{font-size:14.5px}
+  .list{gap:var(--s2)}
+
+  input,textarea,select{font-size:16px;padding:12px 13px}
+  label{font-size:11.5px;margin-bottom:11px}
+
+  .row{gap:var(--s2);margin:11px 0}
+  .row .btn{flex:1 1 calc(50% - 8px);min-height:44px}
+  .btn{min-height:42px;padding:10px 14px;font-size:13.5px}
+  .btn.ghost{flex:0 0 auto!important}
+  .actions .btn{flex:1 1 calc(50% - 6px);min-height:40px}
+  .chip{padding:7.5px 13px;font-size:12.5px}
+  .empty-tip{padding:var(--s7) var(--s4);font-size:13px}
+
+  table.dt,table.kv{display:block;border:0;background:transparent}
+  table.dt thead,table.dt tr:first-child{display:none}
+  table.dt tr{
+    display:block;background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--r-sm);
+    margin-bottom:var(--s2);overflow:hidden;box-shadow:var(--sh-xs);
+  }
+  table.dt td{display:block;border:0;border-bottom:1px dashed var(--line);padding:10px 13px;font-size:13px}
+  table.dt td:last-child{border-bottom:0}
+  table.dt td:first-child{background:var(--surface-3);color:var(--brand);font-weight:700;font-size:12px;border-bottom:1px solid var(--line)}
+  table.dt.shot td:nth-child(2)::before{content:"画面";display:block;color:var(--muted-2);font-weight:700;font-size:10.5px;margin-bottom:3px;letter-spacing:.3px}
+  table.dt.shot td:nth-child(3)::before{content:"台词";display:block;color:var(--muted-2);font-weight:700;font-size:10.5px;margin-bottom:3px;letter-spacing:.3px}
+  table.dt.styles td:nth-child(3){font-weight:700;color:var(--brand)}
+  table.dt.fetch td:nth-child(2){font-weight:700;color:var(--brand);font-size:12.5px}
+
+  table.kv tbody{display:block}
+  table.kv tr{display:block;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);margin-bottom:var(--s2);padding:var(--s3);box-shadow:var(--sh-xs)}
+  table.kv th{display:block;background:transparent;border:0;padding:0 0 5px;font-size:11px;color:var(--muted-2);letter-spacing:.4px}
+  table.kv td{display:block;border:0;padding:0;font-size:14px;line-height:1.7}
+
+  .bar{grid-template-columns:64px 1fr 26px;gap:var(--s2);font-size:11.5px}
+  .bar .fill{height:16px;border-radius:4px}
+  .score-detail{font-size:10.5px;flex:1 1 100%;order:9;margin-top:3px}
+  .actions{gap:6px}
+
+  pre{font-size:12px;padding:14px;line-height:1.65}
+  .codebox .btn.copy{position:static;width:100%;margin-bottom:9px;background:var(--brand);color:var(--on-brand);border-color:transparent}
+
+  .row.between{flex-direction:column;align-items:stretch;gap:10px}
+  .seg{width:100%}
+  .seg-btn{flex:1;padding:10px 6px;font-size:12px}
+  .row.between > .btn.primary{width:100%}
+
+  .toast{bottom:calc(88px + env(safe-area-inset-bottom,0));font-size:12.5px;padding:10px 18px;border-radius:13px;max-width:92vw}
+  footer{padding:var(--s5) var(--s4) 30px;font-size:11px}
+  .tag{font-size:10.5px;padding:2.5px 7px}
+  .meta{font-size:12.5px}
+  .howto{font-size:13px}
+  .hist-bar{padding:11px 14px}
+  .hist-bar-r{display:none}
+  .hist-head{padding:10px 12px;flex-wrap:wrap;gap:6px}
+  .hist-title{width:100%}
+  .hist-topic{white-space:normal}
+  .hist-meta{width:100%;justify-content:space-between}
+  .hist-body{padding:2px 12px var(--s3)}
+  .two-col .card:hover{transform:none}
+}
+
+@media (max-width: 380px){
+  nav.tabs button{min-width:64px;font-size:10px;padding:8px 6px 10px}
+  main{padding-left:9px;padding-right:9px}
+  .card h4{font-size:13.5px}
+}
+
+/* 减少动效偏好 */
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .card:hover,.btn:hover{transform:none!important}
+}
+
+</style>
+</head>
+<body>
+
+<div id="jsWarn" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;background:#0b1a12;color:#e8f5ee;font:15px/1.8 -apple-system,'PingFang SC',sans-serif;text-align:center">
+  <div style="max-width:420px">
+    <div style="font-size:38px;margin-bottom:14px">⚠️</div>
+    <div style="font-size:17px;font-weight:700;margin-bottom:12px">这个页面没有运行起来</div>
+    <div style="opacity:.85;margin-bottom:16px">
+      你看到这行字，说明当前环境<b style="color:#5fe0a0">没有执行 JavaScript</b>。<br>
+      常见原因：在 iOS「文件」App 或微信里直接<b>预览</b>了它。
+    </div>
+    <div style="text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.9">
+      <b style="color:#5fe0a0">怎么打开才对：</b><br>
+      💻 <b>电脑</b>：双击这个文件，用浏览器打开 → 正常<br>
+      📱 <b>iPhone</b>：在「文件」里长按文件 → 共享 → 用 <b>Safari</b> 打开<br>
+      🌐 <b>任何人都能用</b>：把它部署成网址（链接），手机点开就行
+    </div>
+  </div>
+</div>
+<header>
+  <div class="brand">
+    <span class="logo">稳</span>
+    <div>
+      <h1>稳稳AI选题库<span class="ver" id="verTag" title="点开设置页可看构建时间"></span></h1>
+      <p class="sub">选题 · 文案 · 脚本 · 爆款拆解</p>
+    </div>
+  </div>
+  <div class="hd-right">
+    <div class="status" id="status">检测中…</div>
+    <button class="theme-btn" id="themeBtn" title="切换深浅色">◐</button>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="topics" class="active"><span class="tn">①</span>出选题</button>
+  <button data-tab="paste"><span class="tn">②</span>手动分析</button>
+  <button data-tab="copy"><span class="tn">③</span>写文案</button>
+  <button data-tab="script"><span class="tn">④</span>写脚本</button>
+  <button data-tab="teardown"><span class="tn">⑤</span>拆解视频</button>
+  <button data-tab="review"><span class="tn">⑥</span>发布复盘</button>
+  <button data-tab="pick"><span class="tn">⑦</span>精选联盟选品</button>
+  <button data-tab="settings"><span class="tn">⚙</span>设置</button>
+</nav>
+
+<main>
+  <!-- ========== 选题 ========== -->
+  <section id="tab-topics" class="tab active">
+    <div class="guide" data-guide="topics">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">填行业 + 产品 → 点本地生成 → 挑一条写文案或脚本</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol><li>填「行业」（必填），例：<b>草莓电商</b>、烧烤店、教培</li><li>填「具体产品」（强烈建议填），例：<b>草莓</b>、羊肉串。行业和产品分开填，标题才通顺</li>
+<li>选「<b>生意类型</b>」——这个很关键：实物商品能拍"卖相最差"，服务行业不能，选了它会自动过滤</li><li>人群、地域选填——地域只对同城生意有用</li><li>点「<b>本地生成</b>」免费秒出；点「AI 增强」更具体，需要 Key</li><li>结果<b>按分数从高到低</b>排（满分 25），<b>19 分以上优先拍</b>，14 分以下一般别拍</li><li>看中哪条，点「写文案 →」或「写脚本 →」，选题和行业会自动带过去</li></ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="grid3">
+        <label>行业 / 赛道
+          <input id="t-industry" placeholder="例：草莓、烧烤、教培、宠物殡葬">
+        </label>
+        <label>生意类型
+          <select id="t-biztype">
+            <option value="其他">不确定 / 其他</option>
+            <option value="实物商品">实物商品（服装/家居/食品/数码）</option>
+            <option value="本地服务">本地服务（餐饮/美业/维修/教培/门店）</option>
+            <option value="知识付费">知识付费（线上课/咨询/个人IP）</option>
+            <option value="农产品">农产品（种植/养殖/生鲜）</option>
+          </select>
+        </label>
+        <label>目标人群
+          <input id="t-audience" placeholder="例：宝妈、90后、同城家庭">
+        </label>
+        <label>地域
+          <input id="t-locale" placeholder="例：辽宁东港·孤山镇">
+        </label>
+        <label>具体产品（可不填）
+          <input id="t-obj" placeholder="例：草莓、蓝莓、3斤装礼盒">
+        </label>
+      </div>
+      <div class="row">
+        <div class="chips" id="formChips"></div>
+      </div>
+      <div class="row">
+        <div class="chips" id="elChips"></div>
+      </div>
+      <div class="row">
+        <label class="inline">本地条数 <input id="t-count" type="number" value="20" min="4" max="60" style="width:72px"></label>
+        <span class="hint-inline">AI 固定出 10 条</span>
+        <button class="btn primary" id="btnLocal">本地生成（免费·秒出）</button>
+        <button class="btn" id="btnAI">AI 增强（更具体·用 key）</button>
+        <button class="btn ghost" id="btnClear">清空</button>
+      </div>
+      <p class="hint">本地生成只用你的 36 词根公式拼装，不花钱、不联网；AI 增强会结合行业实情写得更具体。</p>
+    </div>
+    <div class="export-bar" id="topicExportRow" hidden>
+      <span class="export-bar-label">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 2v8m0 0L5 7m3 3l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 12v1a1 1 0 001 1h8a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        导出本地栏
+      </span>
+      <span class="export-bar-sep"></span>
+      <button class="btn mini" id="btnExportTopics">导出 WPS（可打印）</button>
+      <button class="btn mini" id="btnSchedule" style="display:none">排 30 天</button>
+    </div>
+
+    <div class="two-col">
+      <div class="col">
+        <div class="col-head">
+          <span class="col-title">本地生成<span class="col-badge">免费</span></span>
+          <span class="col-actions"><span id="localCount" class="col-count"></span><button class="btn ghost mini" id="clearLocal">清空</button></span>
+        </div>
+        <div id="topicListLocal" class="list"><div class="empty-tip"><b>还没出选题</b>填好行业和人群，点「本地生成」<br>免费、不联网、秒出</div></div>
+      </div>
+      <div class="col">
+        <div class="col-head">
+          <span class="col-title">AI 增强<span class="col-badge ai">用 Key</span></span>
+          <span class="col-actions"><span id="aiCount" class="col-count"></span><button class="btn ghost mini" id="clearAI">清空</button></span>
+        </div>
+        <div id="topicListAI" class="list"><div class="empty-tip"><b>还没生成</b>点「AI 增强」，会结合行业实情写得更具体<br>需要先在设置里填 Key</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 手动分析 ========== -->
+  <section id="tab-paste" class="tab">
+    <div class="guide" data-guide="paste">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">粘 30 条同行标题 → 统计高频词和句式 → 重组选题</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol><li>打开抖音，搜你的行业关键词（例：草莓怎么挑）</li><li>找点赞高的视频，把<b>标题</b>一行一条复制下来，<b>30 条以上最准</b></li><li>粘进框里，点「统计高频词和句式」</li><li>看同行反复在用哪些词、哪些句式最多（疑问开头／数字招法／避坑警示…）</li><li>点「用这些词重组 15 条选题」，套他们的句式，换成你的产品</li></ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>手动粘贴 · 唯一的爆款研究入口</h3>
+      <p class="hint">去抖音搜同赛道高赞，把标题一行一条粘进来。30 条以上统计才靠谱。<br><b>为什么只能手动：</b>抖音有登录墙和反爬，任何自动抓取都拿不到它的数据，抓到的是网页文章不是视频标题。</p>
+      <textarea id="p-titles" rows="10" placeholder="一行一条，例如：&#10;草莓别用盐水泡，越泡越难吃&#10;3个挑草莓的方法，超市老板最不想让你知道&#10;为什么你买的草莓不甜"></textarea>
+      <label class="block" style="margin-top:12px">要套用的行业（重组时用）
+        <input id="p-industry" placeholder="例：草莓电商">
+      </label>
+      <div class="row">
+        <button class="btn primary" id="pAnalyze">统计高频词和句式</button>
+        <button class="btn" id="pRecombine">用这些词重组 15 条选题</button>
+        <button class="btn ghost" id="pClear">清空</button>
+      </div>
+    </div>
+
+    <div class="hist-inline" id="histTopicWrap"></div>
+    <div id="pasteOut"><div class="empty-tip"><b>还没统计</b>把同行标题粘到上面，一行一条<br>30 条以上统计最准</div></div>
+  </section>
+
+  <!-- ========== 文案 ========== -->
+  <section id="tab-copy" class="tab">
+    <div class="guide" data-guide="copy">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">选档位 → 填补充信息 → 生成 → 一键复制</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol><li>从选题页点「写文案 →」会自动带过来，也可以手填选题</li><li>选档位：<b>短</b>（配 15–30 秒）／<b>标准</b>（45–60 秒）／<b>长</b>（1 分钟以上）</li><li>填「补充信息」——真实数字、卖点、产地，<b>越多越准</b></li><li>点「生成文案」，出：首句钩子／正文／行动指令／封面大字／置顶评论</li><li>点「复制全文」直接粘到抖音发布框</li></ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <label class="block">选题
+        <input id="c-topic" placeholder="从选题页点『写文案』会自动带过来">
+      </label>
+      <div class="grid3">
+        <label>形式<input id="c-form" placeholder="晒过程"></label>
+        <label>词根<input id="c-root" placeholder="差评最多、坑最多"></label>
+        <label>行业<input id="c-industry" placeholder="和选题页同步，改一处即可"></label>
+      </div>
+      <label class="block">补充信息（真实数字、细节，越多越准）
+        <textarea id="c-extra" rows="3" placeholder="例：3斤净重109元、真空包装、京东发货、东港孤山镇"></textarea>
+      </label>
+      <div class="row between">
+        <div class="seg" id="copySeg">
+          <button class="seg-btn active" data-len="short">短文案<span>15–30s</span></button>
+          <button class="seg-btn" data-len="standard">标准<span>45–60s</span></button>
+          <button class="seg-btn" data-len="long">长文案<span>1分钟以上</span></button>
+        </div>
+        <label class="creative-toggle" title="打开后 AI 不套模板，按自己的想法写">
+          <input type="checkbox" id="copyCreative">
+          <span class="ct-track"><span class="ct-dot"></span></span>
+          <span class="ct-label">创造模式</span>
+        </label>
+        <button class="btn primary" id="btnCopy">生成文案</button>
+      </div>
+    </div>
+    <div id="copyOut"><div class="empty-tip"><b>还没写文案</b>填好选题，点「生成文案」</div></div>
+    <div class="hist-inline" id="histCopyWrap"></div>
+  </section>
+
+  <!-- ========== 脚本 ========== -->
+  <section id="tab-script" class="tab">
+    <div class="guide" data-guide="script">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">选档位 → 生成 → 出分镜表</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol><li>从选题页点「写脚本 →」会自动带过来</li><li>选档位，决定镜头数和字数：<b>短</b>1–3 镜／<b>标准</b>4–6 镜／<b>长</b>8–15 镜</li><li>「想强调的点」可以填一句，比如：3 斤净重更实在</li><li>点「生成脚本」，出分镜表：时间／画面／台词</li><li>点「复制口播」，只复制要念的台词，方便打印或贴提词器</li></ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <label class="block">选题
+        <input id="s-topic" placeholder="从选题页点『写脚本』会自动带过来">
+      </label>
+      <div class="grid2">
+        <label>行业<input id="s-industry" placeholder="和选题页同步，改一处即可"></label>
+        <label>形式
+          <select id="s-form">
+            <option>晒过程</option><option>教知识</option><option>讲故事</option><option>聊观点</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid2">
+        <label>词根<input id="s-root" placeholder="身份反差"></label>
+        <label>想强调的点<input id="s-point" placeholder="例：3斤净重更实在"></label>
+      </div>
+      <label class="block">补充信息
+        <textarea id="s-extra" rows="3" placeholder="真实数字、场景、道具"></textarea>
+      </label>
+      <div class="row between">
+        <div class="seg" id="scriptSeg">
+          <button class="seg-btn active" data-len="short">短脚本<span>15–30s</span></button>
+          <button class="seg-btn" data-len="standard">标准<span>45–60s</span></button>
+          <button class="seg-btn" data-len="long">长视频<span>1–3分钟</span></button>
+        </div>
+        <label class="creative-toggle" title="打开后 AI 不套模板，按自己的想法写">
+          <input type="checkbox" id="scriptCreative">
+          <span class="ct-track"><span class="ct-dot"></span></span>
+          <span class="ct-label">创造模式</span>
+        </label>
+        <button class="btn primary" id="btnScript">生成脚本</button>
+      </div>
+    </div>
+    <div id="scriptOut"><div class="empty-tip"><b>还没写脚本</b>填好选题，点「生成脚本」</div></div>
+    <div class="hist-inline" id="histScriptWrap"></div>
+  </section>
+
+  <!-- ========== 拆解 ========== -->
+  <section id="tab-teardown" class="tab">
+    <div class="guide" data-guide="teardown">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">粘别人爆款的口播 → 拆解 → 出对标选题</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol><li>找一个你想对标的爆款视频</li><li>把<b>口播／字幕／标题</b>复制下来，粘进大框里（粘得越全拆得越准）</li><li>填你的行业和身份（例：草莓／98 年返乡、3 个棚）</li><li>点「拆解」，出：钩子类型／中间痛点／结构骨架／结尾引导／情绪价值／用户画像</li><li>最后看「哪些能抄、哪些抄不了」，以及给你的 3 条对标选题</li></ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <label class="block">视频链接（可只填链接，能填就把文案/口播也粘上）
+        <input id="d-link" placeholder="https://v.douyin.com/xxxx/">
+      </label>
+      <label class="block">视频内容 / 口播文案
+        <textarea id="d-raw" rows="8" placeholder="把视频里的口播、字幕、标题都粘进来，拆得最准"></textarea>
+      </label>
+      <div class="grid2">
+        <label>你的行业<input id="d-industry" placeholder="草莓"></label>
+        <label>你的身份<input id="d-audience" placeholder="98年返乡、3个棚"></label>
+      </div>
+      <button class="btn primary" id="btnTeardown">拆解 + 出对标选题</button>
+    </div>
+    <div id="teardownOut"><div class="empty-tip"><b>还没拆解</b>把别人的爆款口播粘进来</div></div>
+  </section>
+
+  <!-- ========== 精选联盟选品 ========== -->
+  <section id="tab-pick" class="tab">
+    <div class="guide" data-guide="pick">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">录一个品 → 看值不值得带 → 一键出带货脚本</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol>
+          <li>抖音 → 商品 → <b>精选联盟</b>，找你想带的品</li>
+          <li>把<b>价格、佣金率、预估销量、退货率</b>抄下来，填进下面</li>
+          <li>系统自动算：<b>一单赚几块、值不值得带、有什么坑</b></li>
+          <li>录 3 个以上，会按性价比排序，告诉你先带哪个</li>
+          <li>看中一个，点「出带货内容」→ 生成选题和脚本</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>录入一个品</h3>
+
+      <div class="pk-group">
+        <div class="pk-group-hd">① 基础信息</div>
+        <div class="grid2">
+          <label>商品名<input id="pk-name" placeholder="例：东北冻梨 5斤装"></label>
+          <label>品类
+            <select id="pk-cat">
+              <option value="普通">普通（日用/百货/食品）</option>
+              <option value="生鲜">生鲜（水果/肉/海鲜）</option>
+              <option value="服装">服装 / 鞋帽</option>
+              <option value="美妆">美妆 / 个护</option>
+              <option value="数码">数码 / 家电</option>
+              <option value="保健">保健 / 器械</option>
+            </select>
+          </label>
+        </div>
+        <label>商品链接（选填）<input id="pk-link" placeholder="https://..."></label>
+      </div>
+
+      <div class="pk-group">
+        <div class="pk-group-hd">② 收益（最关键的三个数）</div>
+        <div class="grid3">
+          <label>售价（元）<input id="pk-price" type="number" min="0" step="0.01" placeholder="59"></label>
+          <label>佣金率（%）<input id="pk-rate" type="number" min="0" max="90" step="0.1" placeholder="20"></label>
+          <label>30天销量（件）<input id="pk-sales" type="number" min="0" placeholder="1000"></label>
+        </div>
+      </div>
+
+      <div class="pk-group">
+        <div class="pk-group-hd">③ 市场（明细后台可查）</div>
+        <div class="grid3">
+          <label>商品评分<input id="pk-score" type="number" min="0" max="5" step="0.1" placeholder="4.8"></label>
+          <label>评价数<input id="pk-reviews" type="number" min="0" placeholder="3000"></label>
+          <label>带货人数<input id="pk-comp" type="number" min="0" placeholder="500"></label>
+        </div>
+        <div class="grid2">
+          <label>退货率（%，留空按品类估）<input id="pk-return" type="number" min="0" max="100" step="0.1" placeholder="5"></label>
+          <label>库存（件，留空=充足）<input id="pk-stock" type="number" min="0" placeholder=""></label>
+        </div>
+      </div>
+
+      <div class="pk-group">
+        <div class="pk-group-hd">④ 适配与风险（这三项决定“你能不能带得动”）</div>
+        <div class="grid3">
+          <label>和你的账号人群匹配吗
+            <select id="pk-match">
+              <option value="高">高（就是我粉丝要的）</option>
+              <option value="中" selected>中（沾边）</option>
+              <option value="低">低（完全不相干）</option>
+            </select>
+          </label>
+          <label>你能讲清楚这个品吗
+            <select id="pk-explain">
+              <option value="能">能（懂行、用过）</option>
+              <option value="勉强" selected>勉强（知道一点）</option>
+              <option value="不能">不能（完全不懂）</option>
+            </select>
+          </label>
+          <label>有内容可做吗
+            <select id="pk-content">
+              <option value="多">多（能拍很多条）</option>
+              <option value="一般" selected>一般（几条）</option>
+              <option value="少">少（只能硬广）</option>
+            </select>
+          </label>
+        </div>
+        <div class="grid2">
+          <label>需要资质吗
+            <select id="pk-license">
+              <option value="否" selected>不需要</option>
+              <option value="有">需要，我已经有</option>
+              <option value="没有">需要，我没有</option>
+            </select>
+          </label>
+          <label>品牌授权 / 侵权风险
+            <select id="pk-brand">
+              <option value="无风险" selected>无品牌、无风险</option>
+              <option value="有授权">有品牌，有授权</option>
+              <option value="无授权">有品牌，无授权</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="btn primary" id="btnAddPick">录进去，出评估</button>
+        <button class="btn ghost" id="btnClearPicks">清空全部</button>
+      </div>
+    </div>
+
+    <div id="pickStats"></div>
+    <div id="pickList" class="list"></div>
+  </section>
+
+  <!-- ========== 发布复盘 ========== -->
+  <section id="tab-review" class="tab">
+    <div class="guide" data-guide="review">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">发完把数据填进来 → 看哪种内容真的有用</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol>
+          <li>视频发出去 <b>24 小时后</b>，去抖音创作者中心看数据</li>
+          <li>把播放、点赞、评论、收藏、转发、涨粉填进来</li>
+          <li>填满 <b>5 条以上</b>，下面的分析才有意义</li>
+          <li>看「哪类内容收藏率最高」——那是你该多拍的</li>
+          <li>看「哪个钩子涨粉最好」——下次开头就用那个</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>记一条发布</h3>
+      <div class="grid2">
+        <label>标题 / 选题<input id="rv-title" placeholder="粘贴你发的那条标题"></label>
+        <label>发布日期<input id="rv-date" type="date"></label>
+      </div>
+      <div class="grid2">
+        <label>类型
+          <select id="rv-element">
+            <option value="">不确定</option>
+            <option>农时</option><option>土地</option><option>人情</option><option>乡愁</option>
+            <option>品质</option><option>价格</option><option>身份</option><option>反差</option>
+            <option>内幕</option><option>成本</option><option>人群</option><option>猎奇</option>
+            <option>最差</option><option>头牌</option><option>怀旧</option><option>荷尔蒙</option>
+          </select>
+        </label>
+        <label>用的钩子
+          <select id="rv-hook">
+            <option value="">不确定</option>
+            <option>结果前置</option><option>打断预期</option><option>具体数字</option>
+            <option>开放悬念</option><option>点名人群</option><option>大胆断言</option>
+            <option>清单承诺</option><option>中途切入</option><option>动作冷开场</option>
+            <option>反差身份</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid3">
+        <label>播放<input id="rv-views" type="number" min="0" placeholder="0"></label>
+        <label>点赞<input id="rv-likes" type="number" min="0" placeholder="0"></label>
+        <label>评论<input id="rv-comments" type="number" min="0" placeholder="0"></label>
+      </div>
+      <div class="grid3">
+        <label>收藏<input id="rv-collects" type="number" min="0" placeholder="0"></label>
+        <label>转发<input id="rv-shares" type="number" min="0" placeholder="0"></label>
+        <label>涨粉<input id="rv-follows" type="number" min="0" placeholder="0"></label>
+      </div>
+      <div class="row">
+        <button class="btn primary" id="btnAddReview">记录这条</button>
+        <button class="btn ghost" id="btnExportReview">导出全部数据</button>
+        <button class="btn primary" id="btnDeriveTopics" title="看你哪类内容数据好，按那个方向再出 10 条新选题">按数据倒推选题 →</button>
+      </div>
+    </div>
+
+    <div id="reviewStats"></div>
+    <div id="reviewList" class="list"></div>
+  </section>
+
+  <!-- ========== 设置 ========== -->
+  <section id="tab-settings" class="tab">
+    <div class="guide" data-guide="settings">
+      <div class="guide-head">
+        <span class="guide-q">?</span>
+        <span class="guide-sum">填 DeepSeek Key，右上角变绿就能用 AI</span>
+        <span class="guide-toggle">怎么用</span>
+      </div>
+      <div class="guide-body" hidden>
+        <ol>
+          <li>点下面的链接去 DeepSeek 拿 Key（<b>sk-</b> 开头）</li>
+          <li>粘到「DeepSeek API Key」框里，点保存</li>
+          <li>右上角状态变成绿色「API 已连接」就通了</li>
+          <li>Key 只存在<b>你这个浏览器</b>里，不写文件、不传服务器</li>
+          <li>不想用了点「清除 Key」</li>
+        </ol>
+      </div>
+    </div>
+    <div class="panel" id="phonePanel" style="display:none">
+      <h3>手机 / 平板访问</h3>
+      <p class="hint" style="margin-top:0">手机和电脑连同一个 WiFi，用手机浏览器打开下面这个地址：</p>
+      <div class="phone-url" id="phoneUrl"></div>
+      <p class="hint">打开后和电脑上一模一样，能出选题、写文案、导出 WPS。</p>
+    </div>
+
+    <div class="panel">
+      <label class="block">DeepSeek API Key
+        <input id="cfg-key" type="password" placeholder="sk-...">
+      </label>
+      <label>模型<input id="cfg-model" placeholder="deepseek-chat"></label>
+      <div class="row">
+        <button class="btn primary" id="btnSaveCfg">保存</button>
+        <a class="btn ghost" href="https://platform.deepseek.com/api_keys" target="_blank" rel="noreferrer">去拿 key</a>
+      </div>
+      <div class="row">
+        <button class="btn ghost" id="btnClearKey">清除 Key</button>
+      </div>
+      <p class="hint">Key 只存在你这个浏览器里（localStorage），页面直接连 DeepSeek，不经过任何第三方服务器。</p>
+    </div>
+    <div class="panel">
+      <h3>这个工具怎么用</h3>
+      <ol class="howto">
+        <li><b>出选题</b>：填行业 + 人群，点本地生成，先拿 20 条骨架。</li>
+        <li><b>手动分析</b>：去抖音搜同赛道高赞，把标题粘进来，看高频词和句式，再重组。</li>
+        <li><b>写文案</b>：选题卡片上点「写文案」，出标题/正文/话题/封面/置顶评论。</li>
+        <li><b>写脚本</b>：点「写脚本」，出分镜表和台词。</li>
+        <li><b>拆解</b>：把别人的爆款口播粘进来，拆开钩子/痛点/结构/情绪。</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <b>稳稳AI选题库</b><span class="dot">·</span>《四大形式 × 八大元素 × 36 词根》本地化工具 · v1.1 · 构建于 2026-11-22 13:45:16<br>
+  数据只存在你自己的浏览器里<span class="dot">·</span>AI 由你自己的 DeepSeek Key 驱动
+</footer>
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+window.__BUILD__ = '2026-11-22 13:45:16';
+
+
+/* ===== 选题引擎 ===== */
+// 选题引擎 · 纯本地，不需要联网、不花钱
+// 严格按《选题脚本详细指令》+《四大视频形式+八大元素》构建
+const FORMS = {
+  '晒过程': {
+    subs: ['制作过程', '测评产品', '任务挑战', '改造对比', '事件体验', '产品特色'],
+    hint: '观众要"看见"，必须有画面、有过程、有结果'
+  },
+  '教知识': {
+    subs: ['解决难题', '案例引入', '推荐建议', '揭秘避坑', '深度还原', '假如真话'],
+    hint: '观众要"存下来"，必须能截图、能照做'
+  },
+  '讲故事': {
+    subs: ['小有成就', '苦难经历', '成功案例', '平凡英雄'],
+    hint: '观众要"记住你"，必须有具体的人、具体的事'
+  },
+  '聊观点': {
+    subs: ['我要批判', '我要站队'],
+    hint: '观众要"站队"，必须有人会反对'
+  }
+}
+
+// 八大元素 × 36 词根（你的原始资产，一字未改）
+const ELEMENTS = {
+  '成本': ['花小钱办大事', '花大钱办小事', '极致省钱', '省时省力低成本', '便宜又有面子', '怎么偷懒'],
+  '人群': ['弱势群体', '初次体验', '不懂内行爱抬杠', '特定星座/属相圈层', '身份悬殊对比人群', '正在发愁的人', '想要却做不到的人'],
+  '猎奇': ['常人想不到', '从未见过的小众事物', '反常脑回路操作', '冷门罕见内幕', '信息缺口'],
+  '反差': ['身份反差', '贫富反差', '南北/地域反差', '古今操作反差', '反向套路操作'],
+  '最差': ['最丑/最难看', '最丢脸、没面子', '贬值最多', '差评最多、坑最多', '又贵又难用', '行业黑心内幕/最差选择'],
+  '头牌': ['行业最贵标杆', '明星/名人同款', '大牌名企对比', '口碑顶流、生意天花板'],
+  '怀旧': ['20年前老做法', '童年回忆旧物件', '老一辈传统手艺', '80/90年代流行风潮'],
+  '荷尔蒙': ['提升相亲魅力', '讨长辈/丈母娘欢心', '脱单恋爱技巧', '形象气质加分改造']
+}
+
+// 三农赛道专属元素（不放进通用版，农业/乡村号可单独启用）
+const AGRI_ELEMENTS = {
+}
+
+// 三有原则（薛辉体系的内容判断标准）：有用处 / 有兴趣 / 有共鸣
+const THREE_HAVES = {
+  '有用处': { desc: '看完能学到、能解决问题、能获得方法', elements: ['成本', '人群'] },
+  '有兴趣': { desc: '有悬念、有反差、有反常识，让人想看完', elements: ['猎奇', '反差', '最差'] },
+  '有共鸣': { desc: '说出他想说但没说出口的话，让人觉得"这就是我"', elements: ['怀旧', '荷尔蒙', '头牌'] }
+}
+
+
+// ============================================================
+// 3 秒钩子公式（10 种，搬自主流编导方法论）
+// 每条选题会推荐 2–3 种最容易做的
+// ============================================================
+const HOOKS = {
+  '结果前置': {
+    desc: '把终点直接甩出来，不铺垫',
+    tpl: '这一筐，昨天还在地里，今晚在你家锅里',
+    fit: ['晒过程', '教知识']
+  },
+  '打断预期': {
+    desc: '说一句和他认知相反的话，让他停一下',
+    tpl: '菜市场的西红柿，越红越不能买',
+    fit: ['聊观点', '教知识', '晒过程']
+  },
+  '具体数字': {
+    desc: '给一个精确到不信的数字',
+    tpl: '四万三千朵花',
+    fit: ['晒过程', '教知识']
+  },
+  '开放悬念': {
+    desc: '把问题抛出去，答案藏起来',
+    tpl: '这块地我们荒了三年，就为了一个东西',
+    fit: ['讲故事', '教知识']
+  },
+  '点名人群': {
+    desc: '一句话把某一类人圈出来',
+    tpl: '家里有老人天天买菜的，这条看完',
+    fit: ['教知识', '聊观点']
+  },
+  '大胆断言': {
+    desc: '不留余地地说死，让人想反驳',
+    tpl: '9 块 9 包邮的草莓，我劝你别买',
+    fit: ['聊观点']
+  },
+  '清单承诺': {
+    desc: '明说有几个点，让人觉得值得看完',
+    tpl: '买草莓记住这 5 个字，少花一半冤枉钱',
+    fit: ['教知识']
+  },
+  '中途切入': {
+    desc: '不从开头讲，从最紧张那一幕讲',
+    tpl: '这是我爸第一次跟我说软话',
+    fit: ['讲故事']
+  },
+  '动作冷开场': {
+    desc: '一上来就在干一件具体的事，不说话',
+    tpl: '（镜头里只有手在掰开一颗草莓）',
+    fit: ['晒过程']
+  },
+  '反差身份': {
+    desc: '身份和行为对不上，让人想知道为什么',
+    tpl: '985 毕业的，现在在棚里数花',
+    fit: ['讲故事', '聊观点']
+  }
+}
+
+
+// ============================================================
+// 转化设计：从"看完"到"下单"那一段
+// 三件事：让他做什么（CTA）、凭什么信你（信任）、怕什么（门槛）
+// ============================================================
+const CONVERT = {
+  '成本':   { cta: '算完账，让他去橱窗比一比', trust: '把成本一项项列出来，别怕他算', barrier: '先买最小规格试一次' },
+  '人群':   { cta: '告诉他"说的就是你"，然后问一句', trust: '用同类人的原话，不用你的评价', barrier: '按他这类人的用法给一条具体建议' },
+  '猎奇':   { cta: '留个悬念，让他收藏或关注看下一条', trust: '把过程和证据摆出来，不靠嘴说', barrier: '不用买，先看完再说' },
+  '反差':   { cta: '让他评论站队，评论区就是流量', trust: '敢露真实身份和真实场景', barrier: '不催单，只聊观点' },
+  '最差':   { cta: '让他信任你不糊弄，先关注等开摘', trust: '把不合格的主动挑出来给他看', barrier: '承诺不满意怎么处理' },
+  '头牌':   { cta: '让他拿你的去对标，心里有把尺', trust: '把对比摆在明面上，不贬低对手', barrier: '告诉他"贵在哪"，不解释价格' },
+  '怀旧':   { cta: '让他想起自己，评论里说一句', trust: '老人的手、老物件、老地方，别摆拍', barrier: '不卖情怀，卖能吃到的东西' },
+  '荷尔蒙': { cta: '给一个马上能用的小建议', trust: '你自己做到过，不是听来的', barrier: '低门槛，先试一次' },
+}
+
+// 按农时判断当前处于哪个阶段，决定 CTA 走"预约"还是"成交"
+function convertPhase(month) {
+  // 草莓 12–5 月、蓝莓 6–7 月为采摘期
+  if (month >= 12 || month <= 5) return { phase: 'in', label: '采摘期', rule: '直接引导下单或预约采摘' }
+  if (month >= 6 && month <= 7) return { phase: 'in', label: '蓝莓采摘期', rule: '直接引导下单' }
+  return { phase: 'pre', label: '铺垫期', rule: '不催单，只做两件事：让人关注、让人记住你是谁' }
+}
+
+// ============================================================
+// 脚本结构模型（8 种）
+// 编导能力 = 选题 × 结构 × 情绪。形式只给大类，结构才告诉你怎么摆段落
+// 每段：名称 / 干什么 / 建议秒数
+// ============================================================
+const STRUCTURES = {
+  '痛点-放大-解决-证据': {
+    best: '最短时间抓住有同样问题的人',
+    fit: ['教知识', '聊观点'],
+    els: ['成本', '人群', '最差'],
+    beats: [
+      ['痛点', '说出他正在经历的具体麻烦', 3],
+      ['放大', '不说会怎样，代价是什么', 12],
+      ['解决', '给方法，一步一句', 25],
+      ['证据', '案例、数据、或者我自己试过的结果', 15],
+      ['行动', '让他现在做一件具体的事', 5]
+    ]
+  },
+  '反常识-解释-举例-结论': {
+    best: '让人第一秒就想反驳，然后想看下去',
+    fit: ['聊观点', '教知识'],
+    els: ['反差', '猎奇', '最差'],
+    beats: [
+      ['反常识', '说一句和他认知相反的话', 3],
+      ['解释', '为什么反常识是对的', 18],
+      ['举例', '一个具体的、能看见的例子', 25],
+      ['结论', '所以他该怎么做', 12]
+    ]
+  },
+  '清单式': {
+    best: '收藏率最高，观众会存下来',
+    fit: ['教知识'],
+    els: ['成本', '最差', '头牌'],
+    beats: [
+      ['承诺', '明说有几个点，值得看完', 3],
+      ['逐条讲', '每条一句结论 + 一句解释', 45],
+      ['总结', '把N条压成一句话', 8],
+      ['行动', '让他记住最关键的哪一条', 4]
+    ]
+  },
+  '故事式': {
+    best: '涨粉最快，让人记住你是谁',
+    fit: ['讲故事'],
+    els: ['乡愁', '人情', '反差', '怀旧'],
+    beats: [
+      ['切入', '从最紧张那一幕开始，不铺垫', 5],
+      ['背景', '交代人物和处境', 15],
+      ['转折', '发生了什么变化', 20],
+      ['结果', '最后怎么样了', 15],
+      ['启发', '这件事让我明白了什么', 5]
+    ]
+  },
+  '对比式': {
+    best: '冲突感强，评论区会站队',
+    fit: ['聊观点', '教知识', '晒过程'],
+    els: ['反差', '头牌', '成本'],
+    beats: [
+      ['抛对象', 'A 和 B，摆出来', 3],
+      ['A 是什么样', '具体描述，让人有画面', 20],
+      ['B 是什么样', '具体描述', 20],
+      ['差别', '差在哪个关键点', 12],
+      ['选哪个', '我的判断和理由', 5]
+    ]
+  },
+  '揭秘式': {
+    best: '天然高完播，人人都想知道内情',
+    fit: ['教知识', '晒过程'],
+    els: ['猎奇', '最差', '头牌'],
+    beats: [
+      ['抛现象', '一个反常的、说不通的现象', 3],
+      ['追问', '为什么会这样', 15],
+      ['真相', '内行才知道的原因', 25],
+      ['内行视角', '那懂行的人怎么做', 12],
+      ['建议', '给他一个能用的建议', 5]
+    ]
+  },
+  '挑战式': {
+    best: '过程感强，适合晒过程类',
+    fit: ['晒过程'],
+    els: ['土地', '农时', '最差'],
+    beats: [
+      ['下战书', '我要做一件具体的事', 3],
+      ['过程1', '遇到第一个坎', 18],
+      ['过程2', '又出岔子 / 找到办法', 22],
+      ['结果', '成了没有，摆出来看', 12],
+      ['感受', '这一趟值不值', 5]
+    ]
+  },
+  '答疑式': {
+    best: '精准接住搜索流量，评论最活跃',
+    fit: ['教知识', '聊观点'],
+    els: ['人群', '最差', '成本'],
+    beats: [
+      ['抛问题', '有人问我一个问题（真问题）', 3],
+      ['先给答案', '别废话，先说结论', 8],
+      ['为什么', '解释背后的原因', 25],
+      ['补充', '这一条的例外情况', 18],
+      ['延伸', '还有一件事你得知道', 6]
+    ]
+  }
+}
+
+// 按元素推荐结构
+const STRUCT_BY_EL = {
+  '成本': ['痛点-放大-解决-证据', '清单式'],
+  '人群': ['痛点-放大-解决-证据', '答疑式'],
+  '猎奇': ['揭秘式', '反常识-解释-举例-结论'],
+  '反差': ['对比式', '反常识-解释-举例-结论'],
+  '最差': ['反常识-解释-举例-结论', '揭秘式'],
+  '头牌': ['对比式', '清单式'],
+  '怀旧': ['故事式', '对比式'],
+  '荷尔蒙': ['答疑式', '清单式'],
+}
+
+
+// ============================================================
+// 行业类型：不同生意的打法不一样，不能一套词根套所有行业
+// 来源：业内普遍共识——零售重"看到就能买"，服务重"让人相信你"
+// ============================================================
+const BIZ_TYPES = {
+  '实物商品': {
+    label: '实物商品（服装/家居/食品/数码）',
+    rule: '重点是"看到就想买"：突出商品本身、使用场景、价格透明',
+    blockEls: [],              // 全部元素可用
+    extra: ['避坑指南', '价格透明', '老板故事']
+  },
+  '本地服务': {
+    label: '本地服务（餐饮/美业/维修/教培/门店）',
+    rule: '重点是"让人相信你"：讲过程和结果，把人拍出来',
+    blockEls: ['最差最丑'],    // 服务没有"卖相"这个概念
+    extra: ['避坑指南', '老板故事', '人', '场']
+  },
+  '知识付费': {
+    label: '知识付费（线上课/咨询/个人IP）',
+    rule: '重点是"证明你懂"：给方法、给结果、给对比',
+    blockEls: ['最差最丑'],
+    extra: ['避坑指南', '老板故事']
+  },
+  '农产品': {
+    label: '农产品（种植/养殖/生鲜）',
+    rule: '重点是"让人信得过"：产地、过程、真实',
+    blockEls: [],
+    extra: ['避坑指南', '价格透明', '老板故事']
+  },
+  '其他': {
+    label: '其他 / 不确定',
+    rule: '',
+    blockEls: [],
+    extra: []
+  }
+}
+
+// ============================================================
+// 同城获客三板斧（实体店通用，比通用词根更直接）
+// ============================================================
+const LOCAL_FORMULAS = {
+  '避坑指南': [
+    '在{loc}买{ob}，这 3 个坑别踩',
+    '{in}这行，新手最容易吃亏的地方',
+    '花冤枉钱之前，先看这一条'
+  ],
+  '价格透明': [
+    '{in}这个价，钱都花在哪了我给你算',
+    '为什么同样的{ob}，有人报 30 有人报 80',
+    '这个价格，到底贵在哪'
+  ],
+  '老板故事': [
+    '我在{loc}做{in}第几个年头了',
+    '为什么我不肯在这上面省钱',
+    '这摊事，是我一个人撑起来的'
+  ],
+  '人': [
+    '做{in}这些年，最难忘的一个客人',
+    '店里那个干了十年的老师傅',
+    '我为什么自己站柜台'
+  ],
+  '货': [
+    '{ob}这行的门道，从头给你看',
+    '这一批{ob}，光挑就用了一下午',
+    '同样叫{ob}，差在哪一步'
+  ],
+  '场': [
+    '带你看一眼我这儿到底什么样',
+    '{in}这地方，第一次来都会愣一下',
+    '每天开门第一件事，我先做什么'
+  ]
+}
+
+// 六组对立轴
+const OPPOSITES = [
+  ['穷人', '富人'],
+  ['南方人', '北方人'],
+  ['男人', '女人'],
+  ['中国人', '外国人'],
+  ['古代', '现代'],
+  ['有良心的', '没良心的']
+]
+
+// 观点型：4 视角 × 4 方向
+const PERSPECTIVES = ['行业', '产品', '从业者', '消费者']
+const DIRECTIONS = [
+  { name: '误解', logic: '大家以为…其实不是' },
+  { name: '批判', logic: '这个现象有问题' },
+  { name: '支持', logic: '这件事该被理解' },
+  { name: '建议', logic: '你该这么做' }
+]
+
+// 三层关系（观点型必用）
+const RELATIONS = {
+  '家庭关系': ['父母', '子女', '夫妻', '兄弟姐妹', '公婆'],
+  '工作关系': ['老板', '下属', '同行', '客户', '供应商'],
+  '社会关系': ['朋友', '同学', '邻居', '陌生人', '网友']
+}
+
+
+// 元素 × 形式 适配矩阵：哪些元素天生适合哪种形式，避免乱配
+const FIT = {
+  '成本':   { '晒过程': ['制作过程', '产品特色'], '教知识': ['推荐建议', '解决难题'] },
+  '人群':   { '教知识': ['解决难题', '推荐建议', '案例引入'], '聊观点': ['我要站队', '我要批判'], '晒过程': ['事件体验'] },
+  '猎奇':   { '晒过程': ['产品特色', '事件体验', '测评产品'], '教知识': ['深度还原', '假如真话', '揭秘避坑'] },
+  '反差':   { '聊观点': ['我要站队', '我要批判'], '讲故事': ['小有成就', '平凡英雄', '成功案例'], '晒过程': ['事件体验', '改造对比'] },
+  '最差':   { '晒过程': ['测评产品', '产品特色'], '教知识': ['揭秘避坑', '案例引入'], '聊观点': ['我要批判'] },
+  '头牌':   { '晒过程': ['测评产品', '产品特色'], '教知识': ['深度还原', '推荐建议'] },
+  '怀旧':   { '讲故事': ['苦难经历', '小有成就'], '晒过程': ['制作过程', '产品特色'], '教知识': ['深度还原'] },
+  '荷尔蒙': { '聊观点': ['我要站队'], '教知识': ['推荐建议'], '讲故事': ['成功案例'] },
+
+}
+
+function pickFormSub(element, wantForms, seed) {
+  const fit = FIT[element] || {}
+  const all = Object.keys(fit)
+  if (!all.length) return null
+  const prefer = all.filter(f => wantForms.includes(f))
+  const pool = prefer.length ? prefer : all
+  const form = pool[Math.abs(seed) % pool.length]
+  const subs = fit[form]
+  return [form, subs[Math.abs(seed >> 3) % subs.length]]
+}
+
+// 标题模板库：每个词根 2 条，口语化、带钩子
+// 占位符：{in}=行业 {au}=人群 {sub}=子类 {oppA}/{oppB}=对立轴 {loc}=地域
+const TITLE_TPL = {
+  '花小钱办大事': ['{in}这件事，花小钱也能办成——{N}个办法', '花小钱把{in}办明白，我是这么干的'],
+  '花大钱办小事': ['{in}上花了大钱，效果反而一般', '为了{in}里的一件小事，我砸了不少钱'],
+  '极致省钱': ['{in}花得最少的人，是怎么做的', '在{in}上省钱，能省到什么程度'],
+  '省时省力低成本': ['{in}最省力的做法，我试了很多次', '不用那么费劲，{in}可以这么干'],
+  '便宜又有面子': ['{in}里最便宜的那种，拿出来一点都不丢人', '便宜归便宜，{in}这东西不跌份'],
+  '怎么偷懒': ['{in}这件事，能省的力气我全省了', '别人累半天，我做{in}只花了十分钟'],
+
+  '弱势群体': ['{in}这件事上，最难的是{au}', '{au}在{in}这件事上，几乎没人替他们说话'],
+  '初次体验': ['{au}第一次碰{in}，90%会栽在这几点', '{au}第一次接触{in}，最容易错在哪'],
+  '不懂内行爱抬杠': ['外行一句“{in}都差不多”，我听过太多遍', '不懂{in}还爱抬杠的人，最让人无奈'],
+  '特定星座/属相圈层': ['给{N}座挑{ob}，得挑到什么程度', '不同星座的人，在{in}上差多少'],
+  '身份悬殊对比人群': ['月薪差十倍的人，在{in}上的选择完全不同', '同一件{in}的事，两种人做法差在哪'],
+  '正在发愁的人': ['{in}这件事搞不定的人，先别急着花钱', '那天有人问我{in}，我才知道这事有多难'],
+  '想要却做不到的人': ['想做{in}但一直没开始的，问题多半在这一步', '{in}想要的那个结果，其实差一个前提'],
+
+  '常人想不到': ['{in}里最反常识的一件事', '没人告诉过你：{in}其实是这样的'],
+  '从未见过的小众事物': ['这种{ob}，见过的人不到一成', '一个很少人见过的{ob}样本'],
+  '反常脑回路操作': ['我故意反着做了一次{in}，结果……', '把{in}用错方法做，会怎样'],
+  '冷门罕见内幕': ['{in}这行的暗语，你听不懂就会被宰', '{in}里没人明说的几条规矩'],
+  '信息缺口': ['{in}这件事，我只说一半，剩下的你自己看', '{in}里有个东西，我一直没搞明白'],
+
+  '身份反差': ['别人看我的样子，不太像干{in}的', '谁都觉得我不该做{in}'],
+  '贫富反差': ['{oppA}看{in}只看一件事，{oppB}要问三句', '{oppA}和{oppB}，在{in}上差在哪'],
+  '南北/地域反差': ['{oppA}和{oppB}，在{in}上的做法完全不同', '同一件{in}的事，{oppA}这么做，{oppB}那么做'],
+  '古今操作反差': ['{oppA}用的{in}方法，{oppB}根本不认', '{in}的老办法，现在没人用了'],
+  '反向套路操作': ['别人都在夸，我偏要说{in}的问题', '{in}里所有人都在做的事，我偏不做'],
+
+  '最丑/最难看': ['{ob}里最丑的那{N}个，我全留下了', '这一批{ob}卖相最差，但我不打算处理掉'],
+  '最丢脸、没面子': ['{in}这件事，我栽过一次，很丢人', '我在{in}上犯的错，被{au}当面指出来了'],
+  '贬值最多': ['{in}放一天掉多少价？我算了', '{in}最容易贬值的环节，就在这一步'],
+  '差评最多、坑最多': ['{in}里差评最多的{N}类，我全踩过', '{au}在{in}上最容易踩的坑'],
+  '又贵又难用': ['{in}里最贵的那种，我拆开看了', '花大价钱买的{ob}，值不值'],
+  '行业黑心内幕/最差选择': ['{in}里最差的几种做法，我见过', '这行里不能明说的事，我说说'],
+
+  '行业最贵标杆': ['{in}里最贵的那种，凭什么', '行业天花板级别的{in}，长什么样'],
+  '明星/名人同款': ['明星同款的{ob}，和我手里的差多少', '名人都在用的{ob}，普通人真需要吗'],
+  '大牌名企对比': ['大牌的{ob}和普通人做的，差在哪', '同一个{ob}，大厂和小作坊的区别'],
+  '口碑顶流、生意天花板': ['{in}做到顶是什么样子', '{loc}一个镇，靠{in}能做到多大'],
+
+  '20年前老做法': ['20年前做{in}的老办法，现在还有用吗', '{in}这20年，变的最多的是哪一步'],
+  '童年回忆旧物件': ['小时候的{ob}，和现在完全不一样', '记忆里的那个{ob}，现在找不到了'],
+  '老一辈传统手艺': ['这门{in}的老手艺，是上一辈传下来的', '{in}里那些快失传的手法'],
+  '80/90年代流行风潮': ['八九十年代流行的{in}，现在没人做了', '当年最火的{in}，为什么消失了'],
+
+  '提升相亲魅力': ['第一次去对方家，带{ob}比带烟酒强在哪', '{in}这件事，在相亲时能加什么分'],
+  '讨长辈/丈母娘欢心': ['给长辈送{ob}，我踩过一次雷', '想讨长辈欢心，{ob}别选错'],
+  '脱单恋爱技巧': ['约会时带对方接触{ob}，比看电影强在哪', '{in}这件事，能看出一个人什么'],
+  '形象气质加分改造': ['会{in}的人，为什么更受欢迎', '靠{in}给自己加分，真的有用吗']
+}
+
+// ============================================================
+// 冲突与互动：按「元素大类」分组，保证和标题在同一个语义域
+// 之前是全局随机池，所以出现「标题讲卖相、冲突讲同行劝我别干」
+// ============================================================
+const CONFLICT_BY_EL = {
+  '成本': [
+    '{au}觉得贵，我把账一项项算给他，他不说话了',
+    '同样的东西，一个卖便宜一个卖贵，差在哪我琢磨了很久',
+    '省下来的那点钱，最后又花到别的地方去了'
+  ],
+  '人群': [
+    '同一件事，{au}的做法和别人的完全两样',
+    '外行一句话，把我问住半天',
+    '我照{au}的说法改了一次，结果有点出乎意料'
+  ],
+  '猎奇': [
+    '我以为我懂，结果完全想反了',
+    '这事我问了一圈，十个人里九个不知道',
+    '第一次见到的时候，我自己都不太信'
+  ],
+  '反差': [
+    '所有人都以为我该干别的，我偏干这个',
+    '别人觉得理所当然，我自己心里犯嘀咕，这事该不该这样',
+    '同样的动作，换个人做，评价就变了'
+  ],
+  '最差': [
+    '同行劝我别留，我偏留了',
+    '客户看了直摇头，我还是照原样发了',
+    '这批东西，我宁可自己赔也不想含糊过去'
+  ],
+  '头牌': [
+    '行业里最好的那家这么做，我只学到一半',
+    '看完人家的，我才知道自己差在哪',
+    '学了个皮毛，反而把自己原来的做法弄拧了'
+  ],
+  '怀旧': [
+    '老人说以前不这么干，我试了一次',
+    '现在几乎没人这么做了，我还在用',
+    '老办法看着笨，但有一样新办法比不了'
+  ],
+  '荷尔蒙': [
+    '对方一句话，我把做法全改了',
+    '长辈看完说，早该这样',
+    '第一次见面那一下，决定了后面所有事'
+  ]
+}
+
+const INTERACT_BY_EL = {
+  '成本': ['你猜这一单我赚几块？', '你家一个月在这上面花多少？'],
+  '人群': ['你属于哪一种？', '你身边有没有这种人？'],
+  '猎奇': ['你猜为什么？', '这个你之前知道吗？'],
+  '反差': ['换你你会怎么选？', '你觉得哪边说得对？'],
+  '最差': ['你踩过哪个坑？', '你能看出哪几个不能要吗？'],
+  '头牌': ['你觉得值不值？', '你买过最贵的是多少？'],
+  '怀旧': ['你们那儿现在还这么做吗？', '你小时候是不是也这样？'],
+  '荷尔蒙': ['你会怎么选？', '第一次去对方家你带了什么？']
+}
+
+const rand = (arr, seed) => arr[Math.abs(seed) % arr.length]
+const fill = (tpl, ctx) =>
+  tpl
+    .replace(/\{in\}/g, ctx.industry)
+    .replace(/\{au\}/g, ctx.audience)
+    .replace(/\{loc\}/g, ctx.locale || '我们这儿')
+    .replace(/\{ob\}/g, ctx.hasObj ? ctx.obj : ('这种' + ctx.industry))
+    .replace(/\{oppA\}/g, ctx.oppA)
+    .replace(/\{oppB\}/g, ctx.oppB)
+    .replace(/\{N\}/g, ctx.n)
+
+/**
+ * 生成选题
+ * @param {object} o {industry, audience, locale, count, forms, elements}
+ */
+function generateTopics(o = {}) {
+  const ctx = {
+    industry: (o.industry || '这个行业').trim(),
+    audience: (o.audience || '普通人').trim(),
+    locale: (o.locale || '').trim(),
+    obj: (o.obj || '').trim().split(/[、,，\/|]/)[0].trim(),
+    hasObj: !!(o.obj || '').trim(),
+    n: 3
+  }
+  const wantForms = o.forms && o.forms.length ? o.forms : Object.keys(FORMS)
+
+  // 行业类型决定哪些元素能用
+  const biz = BIZ_TYPES[o.bizType] || BIZ_TYPES['其他']
+  const blocked = new Set(biz.blockEls || [])
+  let wantEls = o.elements && o.elements.length ? o.elements.slice() : Object.keys(ELEMENTS)
+
+  // 服务类没有"卖相"，剔除最丑
+  if (blocked.has('最差最丑')) {
+    wantEls = wantEls.filter(e => e !== '最差')
+  }
+  const target = Math.min(Math.max(parseInt(o.count) || 20, 4), 60)
+
+  // 元素流量权重：最差/反差最强，保证强词根优先出现
+  const W = {
+    '最差': 6, '反差': 5, '农时': 4.5, '土地': 4, '人情': 3.5, '乡愁': 3.5,
+    '猎奇': 4, '头牌': 3, '人群': 3, '成本': 2, '怀旧': 1.5, '荷尔蒙': 1
+  }
+  const pool = {}
+  for (const el of wantEls) pool[el] = [...(ELEMENTS[el] || [])]
+
+  // 同城获客公式优先（比通用词根更直接，实体店/本地生意最好用）
+  const localOut = []
+  if (biz.extra && biz.extra.length) {
+    for (const name of biz.extra) {
+      const tpls = LOCAL_FORMULAS[name]
+      if (!tpls) continue
+      for (let k = 0; k < 2; k++) {
+        const tpl = tpls[k % tpls.length]
+        const title = tpl
+          .replace(/\{loc\}/g, ctx.locale || '本地')
+          .replace(/\{ob\}/g, ctx.hasObj ? ctx.obj : ctx.industry)
+          .replace(/\{in\}/g, ctx.industry)
+        if (title && !localOut.some(x => x.title === title)) {
+          const sc0 = scoreTopic({ title, root: name, form: '聊观点', element: '反差', lens: '' })
+          localOut.push({
+            id: 0, title, form: '聊观点', sub: name, element: name, root: name,
+            lens: '', conflict: '（同城获客公式，直接照拍）', interaction: '你那边有这种情况吗？',
+            hooks: ['打断预期', '点名人群'], savePoint: '一份避坑/价格对照', structures: ['痛点-放大-解决-证据', '揭露式'],
+            convert: null, score: sc0, total: sc0.shoot + sc0.debate + sc0.persona + sc0.convert + sc0.save
+          })
+        }
+      }
+    }
+  }
+  const elOrder = wantEls.slice().sort((a, b) => (W[b] || 1) - (W[a] || 1))
+  // 各类交错取用，避免前几条全挤在同一类
+  const roots = []
+  while (roots.length < target * 3) {
+    let picked = false
+    for (const el of elOrder) {
+      if (pool[el] && pool[el].length) { roots.push({ el, root: pool[el].shift() }); picked = true }
+    }
+    if (!picked) break
+  }
+  if (!roots.length) return []
+
+  const out = []
+  let seed = Date.now() % 9973
+
+  // 保证每种形式都出，且词根轮流用
+  let i = 0
+  while (out.length < target && i < target * 6) {
+    const el = roots[i % roots.length]
+    const fs = pickFormSub(el.el, wantForms, i * 7 + seed)
+    if (!fs) { i++; continue }
+    const [form, sub] = fs
+    let tpls = TITLE_TPL[el.root] || ['关于{in}的{root}']
+    if (!ctx.hasObj) {
+      // 没有具体产品时，跳过「这一批{ob}卖相最差」这类必须点名产品的句子
+      const ok = tpls.filter(t => !t.includes('{ob}'))
+      if (!ok.length) { i++; continue }
+      tpls = ok
+    }
+    const tpl = rand(tpls, i * 13 + seed)
+    const opp = rand(OPPOSITES, i * 17 + seed)
+    ctx.oppA = opp[0]; ctx.oppB = opp[1]
+
+    const title = fill(tpl, ctx)
+    const conflict = fill(rand(CONFLICT_BY_EL[el.el] || CONFLICT_BY_EL['最差'], i * 19 + seed), ctx)
+    const interaction = rand(INTERACT_BY_EL[el.el] || INTERACT_BY_EL['最差'], i * 23 + seed)
+
+    // 观点型补视角×方向
+    let lens = null
+    if (form === '聊观点') {
+      const p = rand(PERSPECTIVES, i * 29 + seed)
+      const d = rand(DIRECTIONS, i * 31 + seed)
+      lens = `${p}×${d.name}（${d.logic}）`
+    }
+
+    // 去重
+    if (out.some(x => x.title === title)) { i++; continue }
+
+    const sc = scoreTopic({ title, root: el.root, form, element: el.el, lens })
+    out.push({
+      id: out.length + 1,
+      title,
+      form,
+      sub,
+      element: el.el,
+      root: el.root,
+      lens,
+      conflict,
+      interaction,
+      hooks: sc.hooks || [],
+      savePoint: sc.savePoint || '',
+      structures: (STRUCT_BY_EL[el.el] || []).slice(0, 2),
+      convert: CONVERT[el.el] || null,
+      save: sc.save || 0,
+      threeHaves: sc.threeHaves || [],
+      score: sc,
+      total: sc.shoot + sc.debate + sc.persona + sc.convert + sc.save
+    })
+    i++
+  }
+
+  // 同城公式 + 元素生成的合并
+  const merged = [...localOut, ...out]
+  merged.sort((a, b) => b.total - a.total)
+  merged.forEach((t, i) => { t.id = i + 1 })
+  return merged.slice(0, target)
+}
+
+function scoreTopic({ title, root, form, element, lens }) {
+  // 四项各 5 分，和 AI 生成保持同一套标准
+  let shoot = 5      // 可拍性
+  let debate = 2     // 争议性
+  let persona = 2    // 人设贴合
+  let convert = 2    // 转化落点
+
+  // —— 可拍性：越不需要额外条件越高
+  if (form === '晒过程') shoot = 5
+  else if (form === '聊观点') shoot = 5
+  else if (form === '教知识') shoot = 4
+  else shoot = 3                    // 讲故事通常要等真实事件
+
+  // —— 争议性：最差、反差、荷尔蒙天生有人会反对
+  if (element === '最差') debate = 5
+  else if (element === '反差') debate = 4
+  else if (element === '荷尔蒙') debate = 4
+  else if (element === '人群') debate = 3
+  else if (element === '头牌') debate = 3
+  else if (element === '猎奇') debate = 3
+  else debate = 2
+
+  // —— 人设贴合：第一人称、身份反差、亲历感
+  if (/我/.test(title)) persona += 2
+  if (element === '反差' || element === '怀旧') persona += 1
+  if (/我爸|我家|我们这儿|我的手/.test(title)) persona += 1
+
+  // —— 转化落点：有数字、提到具体东西、能落到"去买"
+  if (/\d|几|多少/.test(title)) convert += 1
+  if (/草莓|蓝莓|果|苗|棚|箱/.test(title)) convert += 1
+  if (form === '教知识' || element === '成本') convert += 1
+
+  // —— 收藏价值：观众只会收藏"以后还用得上"的东西
+  let save = 2
+  if (form === '教知识') save += 2          // 方法/知识最容易收藏
+  if (form === '讲故事') save -= 1          // 故事给的是情绪，收藏少
+  if (element === '成本') save += 1         // 省钱清单必收藏
+  if (element === '猎奇') save += 1         // 冷知识收藏率高
+  if (element === '头牌') save += 1         // 标杆参考值得存
+  if (/\d/.test(title)) save += 1           // 有具体数字
+  if (/清单|步骤|方法|标准|几个|条|招|判断/.test(title)) save += 1
+  if (/最|第一|唯一/.test(title)) save -= 1  // 纯情绪表达，收藏低
+
+  // 收藏点：这条内容里能让人"存下来"的具体东西
+  const SAVE_POINT = {
+    '成本': '一份省钱对照清单（哪几项能省、省多少）',
+    '人群': '一张"你是不是这种人"的判断表',
+    '猎奇': '一个多数人不知道的冷知识',
+    '反差': '一句能拿去转述的观点',
+    '最差': '一套"怎么辨别好坏"的标准',
+    '头牌': '一份"好到什么程度算好"的对照',
+    '怀旧': '一个老做法的具体步骤',
+    '荷尔蒙': '一条能直接照做的建议',
+  }
+
+  const clamp = n => Math.max(1, Math.min(5, n))
+
+  // 三有判定：根据元素归属 + 标题特征
+  const th = []
+  for (const [name, cfg] of Object.entries(THREE_HAVES)) {
+    if (cfg.elements.includes(element)) th.push(name)
+  }
+  if (/\d|几|多少|怎么|为什么/.test(title) && !th.includes('有用处')) th.push('有用处')
+  if (/我|你|咱|家/.test(title) && !th.includes('有共鸣')) th.push('有共鸣')
+
+  // 钩子推荐：元素专属优先，再补一个形式适配的
+  const HOOK_BY_EL = {
+    '最差': ['打断预期', '大胆断言'],
+    '反差': ['反差身份', '打断预期'],
+    '成本': ['清单承诺', '具体数字'],
+    '人群': ['点名人群', '开放悬念'],
+    '猎奇': ['开放悬念', '具体数字'],
+    '头牌': ['结果前置', '具体数字'],
+    '怀旧': ['中途切入', '开放悬念'],
+    '荷尔蒙': ['点名人群', '反差身份'],
+  }
+  const hookList = (HOOK_BY_EL[element] || []).slice(0, 1)
+  for (const [name, cfg] of Object.entries(HOOKS)) {
+    if (hookList.length >= 2) break
+    if (cfg.fit.includes(form) && !hookList.includes(name)) hookList.push(name)
+  }
+
+  return {
+    hooks: hookList.slice(0, 2),
+    savePoint: SAVE_POINT[element] || '',
+    shoot: clamp(shoot),
+    debate: clamp(debate),
+    persona: clamp(persona),
+    convert: clamp(convert),
+    save: clamp(save),
+    threeHaves: th.slice(0, 2)
+  }
+}
+
+/**
+ * 标题清洗：去掉来源后缀和噪音
+ */
+const SOURCE_RE = /\s*[-_|—–]\s*(知乎|百度知道|百度百科|哔哩哔哩|bilibili|微博|小红书|抖音|快手|搜狐|网易|新浪|腾讯|简书|CSDN|豆瓣|果识|一看|淘宝|京东|拼多多|小红书|公众号|百家号).*$/i
+const NOISE_WORDS = new Set([
+  '视频', '百度', '影视', '平台', '官网', '下载', '在线', '观看', '免费', '高清', '大全',
+  '网站', '首页', '登录', '注册', '百科', '知道', '回答', '提问', '链接', '点击', '广告',
+  '最新', '全部', '相关', '推荐', '搜索', '结果', '更新', '时间', '编辑', '浏览'
+])
+
+// 明显不是"标题"的内容：影视导航、下载站、相关搜索词
+const DROP_RE = /在线观看|免费观看|全集|电影|电视剧|直播回放|高清下载|迅雷|磁力|播放器|优酷|爱奇艺|芒果tv/i
+function cleanTitle(t) {
+  const c = String(t)
+    .replace(SOURCE_RE, '')
+    .replace(/[（(][^）)]{0,6}[）)]\s*$/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (c.length < 6) return ''        // 太短的多半是导航词，不是标题
+  if (DROP_RE.test(c)) return ''     // 影视站噪音，整条丢
+  return c
+}
+
+/**
+ * 标题高频词 / 句式统计
+ */
+function analyzeTitles(titles = []) {
+  const raw = titles.map(t => String(t).trim()).filter(Boolean)
+  const clean = [...new Set(raw.map(cleanTitle).filter(t => t.length >= 4))]
+  const stop = new Set(['的','了','是','在','我','你','他','她','它','这','那','和','就','都','也','还','把','被','给','跟','一个','什么','怎么','为什么','吗','呢','啊','吧','呀','有','要','会','能','不','很','太','个','种','条','点','最','更','又','再','让','对','从','到','说','看','买','卖','吃','做','用','上','下','里','中','后','前','时候','自己','我们','你们','他们'])
+
+  // 1. 高频词（2-4 字滑窗）
+  const freq = new Map()
+  for (const t of clean) {
+    const chars = [...t.replace(/[^\u4e00-\u9fa5A-Za-z0-9]/g, '')]
+    for (let n = 2; n <= 4; n++) {
+      for (let i = 0; i + n <= chars.length; i++) {
+        const w = chars.slice(i, i + n).join('')
+        if (stop.has(w) || NOISE_WORDS.has(w)) continue
+        freq.set(w, (freq.get(w) || 0) + 1)
+      }
+    }
+  }
+  const words = [...freq.entries()].filter(([w, c]) => c >= 2 && !NOISE_WORDS.has(w))
+  const filtered = words.filter(([w, c]) => {
+    for (const [w2, c2] of words) {
+      if (w2 !== w && w2.includes(w) && c2 >= c) return false   // 被更长词包含且不更少
+    }
+    return true
+  })
+  const topWords = filtered.sort((a, b) => b[1] - a[1]).slice(0, 40).map(([word, count]) => ({ word, count }))
+
+  // 2. 高频句式
+  const patterns = [
+    { name: '疑问开头', re: /^(怎么|怎样|如何|为什么|为啥|哪些|多少|哪个|能不能|要不要)/, tpl: '{疑问词}{对象}？' },
+    { name: '数字招法', re: /(\d+|[一二三四五六七八九十]+)\s*(个|招|步|种|点|条|招数|秘诀|技巧)/, tpl: '{数字}{量词}{对象}，{结果}' },
+    { name: '避坑警示', re: /别|不要|千万|小心|踩坑|避雷|智商税|翻车|坑人/, tpl: '{别做}的{事}，我踩过' },
+    { name: '内行人设', re: /内行|行内|从业|果农|老板|老师傅|老农|十年|年经验|专家/, tpl: '{身份}告诉你{结论}' },
+    { name: '最X断言', re: /最好|最甜|最差|最贵|最坑|最难|最怕|最大|最强/, tpl: '最{形容词}的{对象}' },
+    { name: '对比差异', re: /vs|VS|对比|区别|差在哪|不一样|哪种|还是/, tpl: '{A}和{B}差在哪' },
+    { name: '真相反转', re: /真相|其实|原来|居然|竟然|没想到|不一定/, tpl: '你以为{认知}，其实{真相}' },
+    { name: '攻略教程', re: /教程|攻略|指南|方法|技巧|秘诀|诀窍|清单|汇总/, tpl: '{对象}的{N}个{方法}' },
+    { name: '时间跨度', re: /\d+\s*(年|天|小时|个月|年经验)/, tpl: '{数字}{单位}，我{结论}' },
+    { name: '问句收尾', re: /[？?]\s*$/, tpl: '{现象}吗？' },
+    { name: '感叹强调', re: /[！!]/, tpl: '{结论}！' }
+  ]
+  const styleHits = patterns.map(p => ({
+    name: p.name,
+    tpl: p.tpl,
+    count: clean.filter(t => p.re.test(t)).length
+  })).filter(x => x.count > 0).sort((a, b) => b.count - a.count)
+
+  return {
+    total: clean.length,
+    samples: clean.slice(0, 40),
+    topWords,
+    styleHits,
+    avgLen: clean.length ? Math.round(clean.reduce((s, t) => s + t.length, 0) / clean.length) : 0
+  }
+}
+
+/**
+ * 用高频词/句式重组新选题（本地，不调 AI）
+ */
+function recombine(titles = [], industry = '', count = 15) {
+  const a = analyzeTitles(titles)
+  const ctx = { industry: industry || '这个行业', audience: '目标客户', n: 3, oppA: '穷人', oppB: '富人' }
+  const out = []
+  for (let i = 0; i < count; i++) {
+    const w = a.topWords[i % Math.max(a.topWords.length, 1)]?.word || industry
+    const s = a.styleHits[i % Math.max(a.styleHits.length, 1)] || { tpl: '{行业}里的{词}', name: '常规' }
+    let title = s.tpl
+      .replace('{数字}', String([3, 5, 7, 9, 10][i % 5]))
+      .replace('{名词}', w)
+      .replace('{形容词}', ['坑', '贵', '差', '难', '值'][i % 5])
+      .replace('{行业}', ctx.industry)
+      .replace('{词}', w)
+      .replace('{行为}', `${w}这件事`)
+      .replace('{现象}', w)
+      .replace('{怎么}', '怎么看')
+      .replace('{经历}', '干这行')
+      .replace('{结论}', w)
+      .replace('{单位}', ['天', '年', '个月'][i % 3])
+      .replace(/\{.*?\}/g, w)
+    out.push({ id: i + 1, title, style: s.name, keyword: w })
+  }
+  return { analysis: a, topics: out }
+}
+const META = { FORMS, ELEMENTS, OPPOSITES, PERSPECTIVES, DIRECTIONS, RELATIONS }
+
+
+/* ===== 提示词 ===== */
+// 提示词库 —— 严格来自《选题脚本详细指令》《AI文案指令优化》《脚本优化指令》
+// 这里是你方法论的"固化"，改这里等于改工具的脑子
+
+const KNOWLEDGE = `
+【四大视频形式】
+1. 晒过程：制作过程、测评产品、任务挑战、改造对比、事件体验、产品特色
+2. 教知识：解决难题、案例引入、推荐建议、揭秘避坑、深度还原、假如真话
+3. 讲故事：小有成就、苦难经历、成功案例、平凡英雄
+4. 聊观点：我要批判、我要站队
+
+【八大元素 × 36 个词根】
+成本（花小钱办大事／花大钱办小事／极致省钱／省时省力低成本）
+人群（弱势群体／初次体验／不懂内行爱抬杠／特定星座属相圈层／身份悬殊对比人群）
+猎奇（常人想不到／从未见过的小众事物／反常脑回路操作／冷门罕见内幕）
+反差（身份反差／贫富反差／南北·地域反差／古今操作反差／反向套路操作）
+最差（最丑最难看／最丢脸没面子／贬值最多／差评最多坑最多／又贵又难用／行业黑心内幕·最差选择）
+头牌（行业最贵标杆／明星名人同款／大牌名企对比／口碑顶流·生意天花板）
+怀旧（20年前老做法／童年回忆旧物件／老一辈传统手艺／80·90年代流行风潮）
+荷尔蒙（提升相亲魅力／讨长辈丈母娘欢心／脱单恋爱技巧／形象气质加分改造）
+
+【聊观点的两个发力面】
+行业选题：行业／产品／从业者／消费者 × 误解／批判／支持／建议
+人群选题：家庭关系（父母子女夫妻兄弟姐妹公婆）／工作关系（老板下属同行客户供应商）／社会关系（朋友同学邻居网友）× 冲突事件
+
+【六组对立轴】
+穷人VS富人／南方人VS北方人／男人VS女人／中国人VS外国人／古代VS现代／有良心的VS没良心的
+
+【观点型 6 种论据】
+权衡利弊／无奈之举／不同视角／人身攻击（慎用）／倒打一耙／维度升级（从历史时间线或未来社会影响看）
+
+【开篇 5 招】美好愿景／负面后果／制造对立／颠覆认知／找人背锅
+
+【三有原则 —— 一条内容至少要占一样，占两样才算合格】
+· 有用处：看完能学到、能解决问题、能获得方法（最基础的价值锚点）
+· 有兴趣：有悬念、有反差、有反常识，让人想看到底
+· 有共鸣：说出他想说但没说出口的话，让他觉得"这就是我"
+
+【收藏率 —— 现在比完播率更值钱】
+观众只会收藏"以后还用得上"的东西。一条内容必须至少给观众一样能存下来的实体：
+· 一份清单（几个要点、几个步骤、几张对照）
+· 一个标准（怎么判断好坏、怎么挑、什么情况算不合格）
+· 一组数字（价格、比例、时间、数量）
+· 一句能拿去转述的话
+
+反面例子（收藏率极低）：
+· 只有情绪没有信息 →"我们家草莓真的太好吃了"
+· 只有态度没有标准 →"我觉得新鲜最重要"
+· 只有故事没有落点 →"那年冬天特别冷"
+
+【情绪曲线 —— 决定完播率】
+· 每 3–4 秒切换一种情绪，不能全程单一情绪
+· 开头优先组合：好奇+焦虑 / 惊喜+对比 / 愤怒+揭秘（完播率最高的三种）
+· 一条视频至少要有 3 个情绪起伏：起 → 压 → 放
+`
+
+// 只有两条是硬规则，其余全部降级为"默认风格"（用户 2026-11-21 定）
+const HARD_RULES = `
+【硬规则 · 只有两条，任何情况下不得违反】
+1. 禁止虚构数据，也禁止留占位符。
+   · 不知道具体数字 → 用模糊但通顺的说法：「好些年了」「十几个」「大半天」「不少」「前几年」
+   · 绝对不许留空位或待填提示（不要用下划线、省略号、方括号提示用户来补）
+   · 要列举时用 ①②③ 或 1. 2. 3.，不要用方括号，避免被误认为占位符
+   · 算不准的就说约数或感觉，不要留坑
+   · 用户如果在"补充信息"里给了数字，就用他给的，别自己编
+2. 禁止绝对化用语：「最甜／第一／纯天然／无农药／零添加／100%」一律不许出现。
+`
+
+// 逻辑连贯：这是"前言不搭后语"的根因，三条生成都要用
+const COHERENCE = `
+【人称 —— 必须第一人称】
+· 口播全程用「我」，就像在跟朋友说话
+· 禁止出现「女主」「男主」「主角」「他/她」来指代你自己
+· 画面描述里也别写「女主」——直接写「我」或者写具体动作
+· 别人可以出现：「我爸」「隔壁大叔」「一个老客户」，但主角永远是「我」
+
+【逻辑连贯 —— 输出前必须自检三问】
+1. 最后一句和第一句，说的是同一件事吗？不是，就重写。
+2. 中间有没有一句话删掉，观众会看不懂？没有，就删掉它。
+3. 每一个转折，上一句是否为它铺好了理由？没有，就补上或去掉这个转折。
+
+【禁止的操作】
+- 禁止一句一个话题：这本来是A，突然跳到B，又跳回A
+- 禁止结论先行再补理由：结论必须由前面的内容推出来
+- 禁止用"首先/其次/最后/另外/而且"硬撑结构，靠内容本身承接
+- 禁止把标题里的承诺，在正文里换成另一件事
+- 禁止画面和台词各说各话：画面必须是这句话的视觉化
+
+【正确做法】
+动笔前先在脑子里列一条线：我想让他先信什么 → 再信什么 → 最后做什么。
+每个段落都问：这段在为哪个"信"服务？答不上来就删。
+`
+
+// 以下不是死规则，是默认倾向；用户有要求时可以覆盖
+const STYLE_HINTS = `
+【默认风格（可调整）】
+- 一条内容聚焦一个词根，别吃大锅饭
+- 点名具体同行、做功效暗示：法规上风险较高，非必要不用
+- 开头避免「大家好我是」「今天给大家分享」这类空转
+- 说人话，短句，一句一行
+`
+
+// 时长档位：短文案 / 标准 / 长视频，三套完全不同的结构与语感
+const LENGTH_MODES = {
+  short: {
+    key: 'short', name: '短版', range: '15–30 秒', words: '50–100 字',
+    shots: '1–3 个镜头', line: '单句不超过 12 字',
+    rule: `【短版硬约束】
+- 全片只有一个信息点，不许铺陈，不许解释背景
+- 0–3 秒必须是钩子，一句就把话说死
+- 第 4 秒直接给结论或画面，不要过渡句
+- 结尾 3 秒落地，一句话收，不加总结
+- 禁止用"首先/其次/另外/而且"这类连接词，短版没有第二个段落`
+  },
+  standard: {
+    key: 'standard', name: '标准', range: '45–60 秒', words: '150–210 字',
+    shots: '4–6 个镜头', line: '单句不超过 16 字',
+    rule: `【标准版硬约束】
+- 钩子(3s) + 递进两段 + 收尾，结构清晰
+- 每段必须有信息增量，不许重复同一个意思
+- 60% 位置放一句可被引用的话`
+  },
+  long: {
+    key: 'long', name: '长视频', range: '90–180 秒', words: '315–630 字',
+    shots: '8–15 个镜头', line: '单句不超过 20 字，但允许一句分两个短句',
+    rule: `【长视频硬约束】
+- 必须有完整的故事线或论证线，不能是短版的拉长
+- 开头 3 秒钩子之后，10 秒内要给出"这条视频要解决什么"
+- 中段至少 3 个信息台阶，每个台阶都要有新事实/新画面/新场景
+- 每 20–30 秒埋一个"回来的理由"（悬念、反转、承诺）
+- 允许出现真实的停顿、犹豫、反问，那是长视频的呼吸
+- 结尾可以落情绪，不要急着喊关注
+- 严禁为了凑时长加废话，任何一句删掉不影响理解的，删掉`
+  }
+}
+const SYS_TOPIC = `你是顶级短视频选题策划，深刻理解抖音的推荐逻辑和用户心理。
+${KNOWLEDGE}
+${HARD_RULES}
+${STYLE_HINTS}
+${COHERENCE}
+${COHERENCE}
+${COHERENCE}
+
+【你要做的】
+根据用户给的行业／人群／地域，产出选题。每条必须包含：
+- 标题（≤20字，前3秒钩子，能让人停下或想反驳）
+- 形式 + 子类
+- 主词根（1个）+ 元素大类
+- 三维叠加：行业维度 × 人群维度 × 人的维度（至少叠两层）
+- 冲突四问：谁和谁、在哪、因为什么、结果如何
+- 互动机关：一句话，让观众必须留言
+- 评分（可拍性／争议性／人设贴合／转化落点，各5分）
+- 三有标注：这条占"有用处／有兴趣／有共鸣"里的哪几样（至少一样，写数组）
+- 收藏点：这条内容里能让人收藏的具体东西（一句话，如"一份怎么挑的标准"）
+
+【输出格式】严格输出 JSON 数组，不要任何解释文字、不要 markdown 代码块：
+[{"title":"","form":"","sub":"","element":"","root":"","overlay":"","conflict":"","interaction":"","score":{"shoot":0,"debate":0,"persona":0,"convert":0,"save":0,"threeHaves":["有用处"]},"savePoint":"一份怎么挑的标准"}]`
+const SYS_COPY = `你是顶级转化文案师 + 用户注意力研究专家 + 内容删改编辑。
+${KNOWLEDGE}
+${HARD_RULES}
+${STYLE_HINTS}
+${COHERENCE}
+${COHERENCE}
+${COHERENCE}
+
+【必须留一个"可收藏点"】
+正文里至少要有一处是观众会想截图/收藏的：
+· 清单型：3 个判断标准 / 5 个坑
+· 数字型：具体价格、比例、时间、克重
+· 对照型：好的什么样 / 差的什么样
+没有这一处，观众看完就走，收藏率为零。
+
+【收尾 —— 从"看完"到"下单"最容易掉人】
+结尾不要只说"关注我"这种废话。按阶段选：
+
+铺垫期（开摘前，不催单）：
+· 让人先关注，开摘当天通知他
+· 让人收藏，说清具体哪天回来看（例：开卖那天回来看）
+· 让人评论一个具体问题（不是"你们觉得呢"）
+
+采摘期（有货可发）：
+· 直接指路：橱窗／小黄车／私信
+· 给一个"现在买"的理由：限量、这批就这些、按顺序发
+
+必须带一样**信任道具**（农产品最难的就是信任）：
+· 检测报告／食品备案号
+· 产地实拍（大棚、地头、真实环境）
+· 老客户的原话（不是你的自夸）
+· 主动挑出不合格的给他看
+· 数量说死（比如"3 斤净重，真空包装不加冰袋"）
+
+【发布前用三有自检】
+- 有用处吗？看完他能学到/解决什么
+- 有兴趣吗？前三行有没有让人想知道后面
+- 有共鸣吗？有没有一句是"这就是我"的感觉
+三样里至少占两样，只占一样就重写。
+
+【文案的承接关系】
+- 首句钩子抛出的那个具体东西，正文第一句必须立刻接住它，不能换话题
+- 正文里每一句都要能被上一句"推出来"，读者不能有一步是跳着走的
+- 行动指令必须和正文最后一层意思直接相关，不能是硬贴上去的
+
+【文案长短】
+- short（短文案）：正文 30–50 字，只留一个点，适合配 15–30 秒视频
+- standard：正文 60–90 字，两个层次
+- long（长文案）：正文 150–260 字，适合一分钟以上的视频，要有段落感和展开
+
+【你的工作方法】
+1. 先扮演一个没有耐心的目标用户，把会让人划走的地方挑出来：没有关系／没有冲突／没有新信息／没有画面／结果不明确。
+2. 开头直接进入目标用户熟悉的具体场景，用反常识或强冲突打破预期。
+3. 中间持续给新信息和具体细节，删掉所有不能推动阅读的句子。
+4. 结尾给出明确结果，但留一个没完全说满的空间，引导评论／点赞。
+
+【平台写法】
+- 抖音文案分三段：① 首句（推荐流只露出这一行，前20字决定点不点开）② 补充说明 ③ 行动指令
+- 短句、多说人话，不用书面语和官话
+- 每段不超过3行
+- 关键句用【】标出
+- 结尾留一个具体的互动动作，不要写"点赞关注"
+
+【输出格式】严格输出 JSON，不要解释文字：
+{"hook":"首句（≤20字）","body":"补充说明（40-80字，可分3行）","cta":"行动指令（≤20字）","full":"可直接复制的完整文案","hashtags":["话题1","话题2"],"cover":"封面大字（≤10字）","pinned":"置顶评论（可含一个补充事实或报名方式）"}`
+const SYS_SCRIPT = `你是精通新媒体传播、擅长制造爆款抖音的编导。
+${KNOWLEDGE}
+${HARD_RULES}
+${STYLE_HINTS}
+${COHERENCE}
+${COHERENCE}
+${COHERENCE}
+
+【结构 —— 先定骨架，再填台词】
+写之前先选一个结构，按段落摆。常用的八种：
+· 痛点-放大-解决-证据：最短时间抓住有同样问题的人
+· 反常识-解释-举例-结论：让人第一秒就想反驳
+· 清单式：收藏率最高
+· 故事式：涨粉最快，让人记住你是谁
+· 对比式：冲突感强，评论区会站队
+· 揭秘式：天然高完播
+· 挑战式：过程感强，适合晒过程
+· 答疑式：精准接住搜索流量
+
+每个镜头要落在某一段上，标注在 note 里，如「段落：痛点」。
+
+【情绪曲线 —— 每个镜头都要有明确情绪，相邻镜头不能同一种】
+- 标注方式：在镜头的 note 里写情绪词（好奇／焦虑／心疼／解气／惊喜／愤怒／向往／优越感）
+- 开头三秒用"好奇+焦虑"或"惊喜+对比"
+- 全片至少三个起伏，不能一路平
+
+【镜头推进逻辑 —— 每个镜头必须能回答"为什么是下一个"】
+- 镜头 N+1 的存在理由，必须来自镜头 N 留下的信息缺口或情绪
+- 画面描述要写"观众看到什么"，不是"我们要表达什么"
+- 台词里出现的每个数字、每个动作，画面里必须能看见对应的东西
+- 如果一个镜头删掉，故事依然完整，那它就该删
+
+【时长档位 —— 严格按用户指定的档位写，不许自己加长】
+- 短版 15–30 秒：50–100 字，1–3 个镜头，一个信息点，没有第二段
+- 标准版 45–60 秒：150–210 字，4–6 个镜头，钩子+两段递进+收尾
+- 长视频 90–180 秒：315–630 字，8–15 个镜头，完整的论证线或故事线，每 20–30 秒一个回头钩子
+
+写短版时，宁可少讲一件事，也不要塞两件事。写长版时，每一句都要能推动理解，删掉不影响的就删。
+
+【脚本结构（按形式选择）】
+- 晒过程 → 火车节模型：起因【必须带钩子】→ 转场 → 经过 → 转场 → 经过 → 结果
+- 教知识 → 解题型：困难场景·放大危机 + 低行动成本 + 具体操作过程
+- 讲故事 → 两轮结构：一轮困境 → 一轮转场 → 二轮困境 → 二轮转场 → 感悟
+- 聊观点 → 争议话题 + 归纳论证（论据1/2/3）或正反论证 → 直接表达观点
+
+【写法要求】
+- 一句一行，每行说完停半拍（后期剪辑要靠这个间隙）
+- 单句不超过 20 字，能删就删
+- 前 3 秒必须是钩子，不是铺垫
+- 60% 位置放金句（点赞高发区）
+- 结尾不总结、不感谢、不说"点赞关注"，用具体动作收尾
+- 口播字数：3.5 字／秒，按目标时长换算
+
+【输出格式】严格输出 JSON，不要解释文字：
+{"title":"","form":"","root":"","duration":0,"wordcount":0,"structure":"痛点-放大-解决-证据","shots":[{"no":1,"time":"0-3s","visual":"画面描述","line":"台词","note":"段落：痛点｜情绪：好奇+焦虑"}],"hook":"","goldenLine":"","cta":"","caption":"发布文案","hashtags":["话题"]}`
+const SYS_TEARDOWN = `你是短视频拆解分析师。
+${KNOWLEDGE}
+
+【拆解维度】
+1. 开头钩子：前3秒用了哪一招（惊人事安／痛点问题／强共鸣场景／颠覆常识观点），原话是什么
+2. 中间痛点：他戳的是什么痛，几层痛
+3. 结构：属于四大形式的哪一种，走的是哪条骨架
+4. 结尾引导：怎么让用户留话／关注／下单
+5. 情绪价值：看完是什么感觉（焦虑／解气／向往／优越感／归属感）
+6. 用户画像：年龄／性别／职业／收入／城市／痛点／消费动机
+7. 元素拆解：用了八大元素里的哪几个，词根是哪个
+8. 可复制点 & 不可复制点（哪些能学，哪些是别人的天赋/资源）
+
+【输出要求】
+先给结论，再给改进建议。最后给 3 条基于同一逻辑、但换成用户自己身份的新选题。
+
+【输出格式】严格输出 JSON：
+{"summary":"一句话结论","hook":{"type":"","quote":"","why":""},"pain":"","structure":"","ending":"","emotion":"","audience":{"age":"","gender":"","job":"","city":"","pain":"","motivation":""},"elements":[""],"copyable":[""],"uncopyable":[""],"newTopics":[{"title":"","reason":""}]}`
+const SYS_OPTIMIZE = `你是文案抢救医生。用户会给你一段已有的文案/脚本，你要把它改成能在抖音跑起来的样子。
+${KNOWLEDGE}
+${HARD_RULES}
+${STYLE_HINTS}
+${COHERENCE}
+${COHERENCE}
+${COHERENCE}
+
+【先诊断，再改】
+1. 逐句标出"我会在哪划走"，并说明原因：没关系／没冲突／没新信息／没画面／结果不明
+2. 删掉所有不能推动阅读的句子
+3. 重写开头（必须强钩子）
+4. 重排结构，短句化
+5. 补一个互动动作
+
+【输出格式】严格输出 JSON：
+{"diagnosis":[{"line":"原句","risk":"会被划走的原因","level":"高/中/低"}],"removed":["删掉的内容"],"rewritten":{"hook":"","body":"","cta":""},"titles":["8个不同风格的爆款标题"],"changes":"改了什么，为什么"}`
+function buildUserPrompt(type, payload) {
+  const { industry, audience, locale, extra, titles, count, topic, form, root, duration, raw } = payload || {}
+  const base = `行业：${industry || '未填'}\n人群：${audience || '未填'}\n地域：${locale || '不限（不要编造地名）'}`
+  switch (type) {
+    case 'topic':
+      return `${base}\n${extra ? '补充信息：' + extra + '\n' : ''}\n请生成 ${count || 20} 条选题，覆盖四大形式，每条打一个词根。`
+    case 'copy': {
+      const m = LENGTH_MODES[payload.lengthMode || 'standard'] || LENGTH_MODES.standard
+      return `${base}\n选题：${topic}\n形式：${form || ''}\n词根：${root || ''}\n文案档位：${m.name}（配合 ${m.range} 视频，正文 ${m.words}）\n${extra ? '补充：' + extra : ''}${payload.creative ? '\n【创造模式：不套模板，自己判断怎么写最好】' : ''}\n请写这条的发布文案。`
+    }
+    case 'script': {
+      const m = LENGTH_MODES[payload.lengthMode || 'standard'] || LENGTH_MODES.standard
+      return `${base}\n选题：${topic}\n形式：${form || '晒过程'}\n词根：${root || ''}\n视频档位：${m.name}（${m.range}）\n口播字数：${m.words}\n镜头数：${m.shots}\n${m.rule}\n${extra ? '补充：' + extra : ''}${payload.creative ? '\n【创造模式：不套模板，自己决定结构和镜头怎么摆】' : ''}\n请严格按这个档位写分镜脚本。`
+    }
+    case 'teardown':
+      return `${base}\n${payload.link ? '视频链接：' + payload.link + '\n' : ''}\n视频内容／文案：\n${raw || ''}\n请按维度拆解，并给出 3 条适配我身份的新选题。`
+    case 'optimize':
+      return `${base}\n待优化的原文：\n${raw || ''}\n请先诊断再重写。`
+    default:
+      return base
+  }
+}
+
+// ============================================================
+// 自由创作：用户给一句话，直接出完整脚本
+// ============================================================
+const SYS_FREEFORM = `你是资深短视频编导，帮一个真实的人把"一句话想法"变成能直接拍的短视频。
+
+${HARD_RULES}
+${STYLE_HINTS}
+${COHERENCE}
+
+${KNOWLEDGE}
+
+【你的任务】
+用户会给你一句话，描述他今天遇到的、想拍的东西。
+你要判断：这句话里最有传播价值的点是什么，然后设计一条完整的短视频。
+
+【判断标准】
+先想清楚三件事，再动笔：
+1. 这句话里，什么事最反常 / 最打动 / 最有信息量？
+2. 这条视频让人看完想做什么？（评论 / 收藏 / 关注 / 下单）
+3. 开头三秒怎么让人停下来？
+
+如果这句话太普通，就自己找一个角度切入——从细节、从对比、从结果倒推。
+
+【输出格式 · 严格 JSON】
+{
+  "idea": "你提炼的核心角度（一句话）",
+  "titles": ["标题1", "标题2", "标题3"],
+  "hook": {"type": "钩子类型", "line": "第一句台词"},
+  "structure": "用的结构名",
+  "duration": 60,
+  "shots": [
+    {"no":1,"time":"0-3s","visual":"画面（第一人称写法，不要写'女主'）","line":"台词","note":"段落：xx｜情绪：xx"}
+  ],
+  "goldenLine": "金句",
+  "cta": "收尾",
+  "caption": "发布文案（3-5 行，第一人称）",
+  "hashtags": ["话题1","话题2","话题3"]
+}
+
+【要求】
+- 台词是第一人称口播，像跟朋友说话
+- 每个镜头都要能拍出来，不写"想象一下""可以这样"
+- 不确定的数字用模糊说法，不留空位
+- 总时长按用户选的档位`
+
+// ============================================================
+// 创造模式：打开后不套模板，让 AI 自己判断怎么拍最好
+// ============================================================
+const CREATIVE_MODE = `
+
+【创造模式 · 已开启】
+这次不要套用固定的元素、结构、钩子、段落框架。
+你就是一个干了十年的编导，看完这些信息，自己判断：
+· 这件事里最有意思的是什么？
+· 怎么拍才让人想看下去？
+· 用什么开头、怎么收尾，你自己定
+
+允许打破常规。但必须守住三条底线：
+1. 能拍出来（写具体动作，不写"可以这样""想象一下"）
+2. 能听懂（观众不需要背景知识）
+3. 有人愿意看完（开头三秒必须抓住）
+
+输出格式不变，还是按 JSON 给。只是内容怎么组织，你说了算。
+`
+
+
+/* ===== 界面逻辑 ===== */
+
+
+/* 通用版无农场专属代码 */
+
+// 是否为草莓农场专属版（打包时注入）
+const FARM = false
+
+/* ============================================================
+   安全存储层
+   file:// 协议下 Safari / 部分 Chrome 会禁用 localStorage，
+   直接调用会抛 SecurityError，导致整个脚本崩溃。
+   所有读写都必须走这里。
+   ============================================================ */
+const store = (() => {
+  let ok = false
+  try {
+    const probe = '__probe__'
+    window.localStorage.setItem(probe, '1')
+    window.localStorage.removeItem(probe)
+    ok = true
+  } catch (e) { ok = false }
+
+  const mem = Object.create(null)
+
+  return {
+    ok,
+    get(k, d) {
+      if (d === undefined) d = ''
+      if (ok) {
+        try {
+          const v = window.localStorage.getItem(k)
+          return v === null ? d : v
+        } catch (e) {}
+      }
+      return (k in mem) ? mem[k] : d
+    },
+    set(k, v) {
+      mem[k] = String(v)
+      if (ok) { try { window.localStorage.setItem(k, String(v)) } catch (e) {} }
+      return ok
+    },
+    del(k) {
+      delete mem[k]
+      if (ok) { try { window.localStorage.removeItem(k) } catch (e) {} }
+    }
+  }
+})()
+
+// 元素缺失时返回安全占位对象 —— 避免某个 ID 对不上导致整站脚本崩掉
+const SAFE_EL = {
+  innerHTML: '', textContent: '', value: '', className: '', title: '',
+  style: {}, dataset: {}, disabled: false, onclick: null, _html: '',
+  classList: { add(){}, remove(){}, toggle(){}, contains(){ return false } },
+  addEventListener(){}, removeEventListener(){},
+  querySelector(){ return SAFE_EL }, querySelectorAll(){ return [] },
+  insertAdjacentHTML(){}, appendChild(){}, remove(){},
+  setAttribute(){}, getAttribute(){ return null }, removeAttribute(){},
+  hasAttribute(){ return false }, scrollIntoView(){}, focus(){}, closest(){ return null }
+}
+const $ = s => document.querySelector(s) || SAFE_EL
+const $$ = s => [...document.querySelectorAll(s)]
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+
+const LS_KEY = 'dsk_key', LS_MODEL = 'dsk_model', LS_IND = 'dsk_industry', LS_LOC = 'dsk_locale'
+const getKey = () => store.get(LS_KEY, '')
+const getModel = () => store.get(LS_MODEL, 'deepseek-chat')
+
+const state = { local: [], ai: [], fetched: [] }
+
+// ---------------- 本地持久化（刷新不丢） ----------------
+const LS_DATA = 'dsk_data_v1'
+const EMPTY_LOCAL = '<div class="empty-tip"><b>还没出选题</b>填好行业和人群，点「本地生成」<br>免费、不联网、秒出</div>'
+const EMPTY_AI = '<div class="empty-tip"><b>还没生成</b>点「AI 增强」，会结合行业实情写得更具体<br>需要先在设置里填 Key</div>'
+
+function persist() {
+  try {
+    const form = {
+      industry: $('#t-industry').value,
+      audience: $('#t-audience').value,
+      locale: $('#t-locale').value,
+      obj: $('#t-obj').value,
+      count: $('#t-count').value
+    }
+    store.set(LS_DATA, JSON.stringify({
+      local: state.local,
+      ai: state.ai,
+      copyByLen: state.copyByLen,
+      scriptByLen: state.scriptByLen,
+      form,
+      pasteTitles: $('#p-titles').value,
+      copyTopic: $('#c-topic').value,
+      scriptTopic: $('#s-topic').value
+    }))
+  } catch (e) { /* 超配额就算了，不影响使用 */ }
+}
+
+// ---------------- 历史记录（文案/脚本都留档） ----------------
+const LS_HISTORY = 'dsk_history_v1'
+const HISTORY_MAX = 200
+
+state.history = []
+
+function loadHistory() {
+  try {
+    const arr = JSON.parse(store.get(LS_HISTORY, '[]'))
+    state.history = Array.isArray(arr) ? arr : []
+  } catch { state.history = [] }
+}
+
+function saveHistory() {
+  try {
+    store.set(LS_HISTORY, JSON.stringify(state.history))
+  } catch (e) {
+    // 超配额：砍掉最旧的一半再试
+    state.history = state.history.slice(0, Math.floor(state.history.length / 2))
+    try { store.set(LS_HISTORY, JSON.stringify(state.history)) } catch {}
+  }
+}
+
+function addHistory(type, len, topic, industry, data) {
+  const item = {
+    id: type + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+    type, len,
+    topic: topic || '(未命名)',
+    industry: industry || '',
+    createdAt: Date.now(),
+    data
+  }
+  state.history.unshift(item)
+  if (state.history.length > HISTORY_MAX) state.history = state.history.slice(0, HISTORY_MAX)
+  saveHistory()
+  return item
+}
+
+function removeHistory(id) {
+  state.history = state.history.filter(x => x.id !== id)
+  saveHistory()
+}
+
+function fmtTime(ts) {
+  const d = new Date(ts)
+  const p = n => String(n).padStart(2, '0')
+  const today = new Date()
+  const sameDay = d.toDateString() === today.toDateString()
+  const hm = p(d.getHours()) + ':' + p(d.getMinutes())
+  if (sameDay) return '今天 ' + hm
+  return `${d.getMonth() + 1}月${d.getDate()}日 ` + hm
+}
+
+function restore() {
+  let d = null
+  try { d = JSON.parse(store.get(LS_DATA, 'null')) } catch {}
+  if (!d) return
+
+  if (d.form) {
+    if (d.form.industry) $('#t-industry').value = d.form.industry
+    if (d.form.audience) $('#t-audience').value = d.form.audience
+    if (d.form.locale) $('#t-locale').value = d.form.locale
+    if (d.form.obj) $('#t-obj').value = d.form.obj
+    if (d.form.count) $('#t-count').value = d.form.count
+  }
+  if (d.pasteTitles) $('#p-titles').value = d.pasteTitles
+  if (d.copyTopic) $('#c-topic').value = d.copyTopic
+  if (d.scriptTopic) $('#s-topic').value = d.scriptTopic
+
+  if (d.copyByLen) { state.copyByLen = d.copyByLen; const k = Object.keys(d.copyByLen).find(x => d.copyByLen[x]); if (k) { const seg = $('#copySeg'); if (seg) seg.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.len === k)); renderCopy(k) } }
+  if (d.scriptByLen) { state.scriptByLen = d.scriptByLen; const k = Object.keys(d.scriptByLen).find(x => d.scriptByLen[x]); if (k) { const seg = $('#scriptSeg'); if (seg) seg.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b.dataset.len === k)); renderScript(k) } }
+
+  if (Array.isArray(d.local) && d.local.length) {
+    state.local = d.local
+    renderTopics('local')
+  }
+  if (Array.isArray(d.ai) && d.ai.length) {
+    state.ai = d.ai
+    renderTopics('ai')
+  }
+}
+
+/* ---------------- 基础 ---------------- */
+function toast(msg, ms = 2400) {
+  const t = $('#toast')
+  t.textContent = msg
+  t.classList.add('show')
+  clearTimeout(t._t)
+  t._t = setTimeout(() => t.classList.remove('show'), ms)
+}
+
+function busy(el, on, text = '处理中…') {
+  if (!el) return
+  if (on) {
+    el._html = el.innerHTML
+    el.innerHTML = `<div class="loading"><span class="spin"></span>${esc(text)}</div>`
+  } else {
+    el.innerHTML = el._html || ''
+  }
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(
+    () => toast('已复制'),
+    () => {
+      const ta = document.createElement('textarea')
+      ta.value = txt
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      ta.remove()
+      toast('已复制')
+    }
+  )
+}
+
+function goTab(name) {
+  if (name === 'review') renderReview()
+  if (name === 'pick') renderPicks()
+  $$('.tabs button').forEach(x => x.classList.toggle('active', x.dataset.tab === name))
+  $$('.tab').forEach(x => x.classList.toggle('active', x.id === 'tab-' + name))
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+
+/* ---------------- 主题切换 ---------------- */
+const LS_THEME = 'dsk_theme'
+
+function applyTheme(mode) {
+  const html = document.documentElement
+  if (mode === 'light' || mode === 'dark') html.setAttribute('data-theme', mode)
+  else html.removeAttribute('data-theme')
+  const btn = $('#themeBtn')
+  if (btn) {
+    const cur = mode || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    btn.textContent = cur === 'dark' ? '☀' : '◐'
+    btn.title = cur === 'dark' ? '切到浅色' : '切到深色'
+  }
+}
+
+function showBuildTag() {
+  try {
+    const tag = document.getElementById('verTag')
+    if (!tag || !window.__BUILD__) return
+    const d = String(window.__BUILD__)
+    const short = d.slice(5, 16).replace('-', '/')
+    tag.textContent = 'v1.0 ' + short
+    tag.title = '构建于 ' + d
+  } catch (e) {}
+}
+
+function initTheme() {
+  const saved = store.get(LS_THEME)
+  applyTheme(saved || null)
+  const btn = $('#themeBtn')
+  if (btn) btn.onclick = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+      (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    const next = isDark ? 'light' : 'dark'
+    store.set(LS_THEME, next)
+    applyTheme(next)
+  }
+}
+
+/* ---------------- AI 直连 DeepSeek ---------------- */
+const SYS_MAP = { topic: SYS_TOPIC, copy: SYS_COPY, script: SYS_SCRIPT, teardown: SYS_TEARDOWN, optimize: SYS_OPTIMIZE }
+
+function extractJSON(text) {
+  if (!text) throw new Error('模型返回为空')
+  let t = String(text).trim()
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/i)
+  if (fence) t = fence[1].trim()
+  const iB = t.indexOf('{'), iA = t.indexOf('[')
+  const first = Math.min(...[iB, iA].filter(i => i >= 0))
+  if (first > 0) t = t.slice(first)
+  t = t.slice(0, Math.max(t.lastIndexOf('}'), t.lastIndexOf(']')) + 1)
+  return JSON.parse(t)
+}
+
+async function aiCall(kind, payload) {
+  const key = getKey()
+  if (!key) throw new Error('还没填 DeepSeek API Key —— 点右上角 ⚙ 设置')
+  const res = await fetch('https://api.deepseek.com/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({
+      model: getModel(),
+      messages: [
+        { role: 'system', content: SYS_MAP[kind] + (payload.creative ? CREATIVE_MODE : '') },
+        { role: 'user', content: buildUserPrompt(kind, payload) }
+      ],
+      temperature: (payload.creative ? 1.0 : kind === 'topic' ? 0.95 : kind === 'teardown' ? 0.6 : 0.75),
+      max_tokens: 4000
+    })
+  })
+  const text = await res.text()
+  if (!res.ok) {
+    let msg = text
+    try { msg = JSON.parse(text)?.error?.message || text } catch {}
+    throw new Error(`DeepSeek 报错 ${res.status}：${String(msg).slice(0, 200)}`)
+  }
+  const data = JSON.parse(text)
+  const content = data?.choices?.[0]?.message?.content || ''
+  let parsed = null, parseError = null
+  try { parsed = extractJSON(content) } catch (e) { parseError = e.message }
+  return { parsed, raw: content, parseError }
+}
+
+/* ---------------- 初始化 ---------------- */
+function setStatus(ok) {
+  const el = $('#status')
+  el.textContent = ok ? 'API 已连接' : '未配置 Key'
+  el.className = 'status ' + (ok ? 'ok' : 'bad')
+}
+
+/* 通用版无农场专属代码 */
+
+function init() {
+  initTheme()
+  showBuildTag()
+  renderChips()
+  setTimeout(restore, 0)
+  loadHistory()
+  renderAllHistories()
+  loadPublish()
+  renderReview()
+  loadPicks()
+  renderPicks()
+  bindIndustrySync()
+  initGuides()
+  initCreativeToggles()
+  initPhoneHint()
+  /* 通用版无农场专属代码 */
+  bindTopicExport()
+  syncTopicExportRow()
+  setStatus(!!getKey())
+  $('#cfg-model').value = getModel()
+  setIndustry(store.get(LS_IND, ''), true)
+  $('#t-locale').value = store.get(LS_LOC, '')
+}
+
+// ---------- 行业：一处填写，三页共用 ----------
+const INDUSTRY_SELECTORS = ['#t-industry', '#c-industry', '#s-industry', '#p-industry', '#d-industry']
+
+let lastIndustry = ''
+
+function setIndustry(val, silent) {
+  lastIndustry = val
+  INDUSTRY_SELECTORS.forEach(sel => {
+    const el = $(sel)
+    if (el && el.value !== val) el.value = val
+  })
+  if (!silent) {
+    try { store.set(LS_IND, val) } catch {}
+  }
+}
+
+function bindIndustrySync() {
+  INDUSTRY_SELECTORS.forEach(sel => {
+    const el = $(sel)
+    if (!el || el.dataset.synced) return
+    el.dataset.synced = '1'
+    el.addEventListener('input', () => {
+      if (el.value === lastIndustry) return
+      setIndustry(el.value)
+      clearTimeout(window.__indT)
+      window.__indT = setTimeout(persist, 400)
+    })
+  })
+}
+
+
+
+/* ============================================================
+   内容质检：拿工具自己的标准去检查生成结果
+   ============================================================ */
+function auditCopy(c, len) {
+  const items = []
+  const full = (c.full || [c.hook, c.body, c.cta].filter(Boolean).join('\n')).trim()
+  const body = c.body || ''
+  const add = (level, label, detail, tip) => items.push({ level, label, detail, tip: tip || '' })
+
+  // 1 钩子长度
+  const hLen = (c.hook || '').length
+  if (!hLen) add('bad', '首句钩子', '没有', '第一句必须抓人，否则 3 秒就划走')
+  else if (hLen <= 26) add('ok', '首句钩子', hLen + ' 字，够短', '')
+  else add('warn', '首句钩子', hLen + ' 字偏长', '压到 25 字内，手机上一行读得完')
+
+  // 2 具体数字
+  // 数字：阿拉伯数字 + 中文数字 + 量词
+  const nums = (full.match(/\d+|[一二三四五六七八九十百千]+[个天年斤块条件步样分秒]/g) || [])
+  if (nums.length >= 2) add('ok', '具体数字', nums.length + ' 处', '')
+  else if (nums.length === 1) add('warn', '具体数字', '只有 1 处', '再加一个（斤数/天数/价格），可信度不一样')
+  else add('warn', '具体数字', '没有', '加一个数字，观众才信')
+
+  // 3 可收藏点
+  // 可收藏点：清单、列举、标准、步骤都算
+  const saveRe = /(【[^】]{1,8}】|[①②③④⑤⑥]|[一二三四五六七八九][点样条招步种]|\n\s*\d+[.、)）]|\d+\s*[个条招步点种]|标准|清单|步骤|判断|记住)/
+  if (saveRe.test(body)) add('ok', '可收藏点', '有干货', '')
+  else add('warn', '可收藏点', '没有', '加一个清单/标准/步骤，观众才会收藏')
+
+  // 4 信任道具
+  const trustRe = /(净重|包装|备案|检测|老客户|当天|产地|不满意|退|称|斤|克)/
+  if (trustRe.test(full)) add('ok', '信任道具', '有', '')
+  else add('bad', '信任道具', '没有', '农产品最难的是信任，加"3 斤净重"或"不满意怎么处理"')
+
+  // 5 空转词
+  const fillers = (full.match(/其实|我觉得|说实话|真的|非常|特别|然后|就是/g) || [])
+  if (fillers.length <= 2) add('ok', '空转词', fillers.length ? fillers.length + ' 处' : '没有', '')
+  else add('warn', '空转词', fillers.length + ' 处偏多', '删掉这些：' + [...new Set(fillers)].slice(0, 4).join('、'))
+
+  // 6 字数匹配档位
+  const n = full.replace(/\s/g, '').length
+  const want = { short: [50, 160], standard: [140, 340], long: [380, 900] }
+  const [lo, hi] = want[len] || [140, 340]
+  if (n >= lo && n <= hi) add('ok', '字数', n + ' 字，匹配档位', '')
+  else if (n < lo) add('warn', '字数', n + ' 字偏短', '撑不满这个时长，容易被划走')
+  else add('warn', '字数', n + ' 字偏长', '超出档位太多，考虑删减或改长版')
+
+  // 占位符残留（最严重，直接不能用）
+  const ph = full.match(/【\s*(待填|待补|补充|未知|空|TBD|XX*)\s*】|待填|待补|＿{2,}|_{3,}|X{2,}/gi)
+  if (ph && ph.length) {
+    items.unshift({ level: 'bad', label: '占位符', detail: ph.slice(0, 3).join('、'), tip: '这是空位，拍的时候会念出来。自己补一句真话，或者重新生成' })
+  }
+
+  const good = items.filter(x => x.level === 'ok').length
+  const bad = items.filter(x => x.level === 'bad').length
+  const score = Math.round(((good + items.filter(x => x.level === 'warn').length * 0.5) / items.length) * 100)
+  return { score, items, good, bad }
+}
+
+function auditScript(sc, len) {
+  const items = []
+  const shots = sc.shots || []
+  const add = (level, label, detail, tip) => items.push({ level, label, detail, tip: tip || '' })
+
+  // 1 镜头数
+  const wantShots = { short: [1, 5], standard: [4, 9], long: [8, 20] }
+  const [lo, hi] = wantShots[len] || [4, 9]
+  if (shots.length >= lo && shots.length <= hi) add('ok', '镜头数', shots.length + ' 个', '')
+  else if (shots.length < lo) add('warn', '镜头数', shots.length + ' 个偏少', `这个档位建议 ${lo}–${hi} 个`)
+  else add('warn', '镜头数', shots.length + ' 个偏多', `这个档位建议 ${lo}–${hi} 个，多了拍不完`)
+
+  // 2 画面+台词完整
+  const empty = shots.filter(x => !x.visual || !x.line).length
+  if (empty === 0) add('ok', '画面台词', '全齐', '')
+  else add('bad', '画面台词', empty + ' 个镜头缺', '每个镜头都要有画面和台词')
+
+  // 3 开头钩子
+  const first = shots[0]?.line || ''
+  if (first.length > 0 && first.length <= 30) add('ok', '开头钩子', first.length + ' 字', '')
+  else if (first.length > 30) add('warn', '开头钩子', first.length + ' 字偏长', '第一句压到 25 字内')
+  else add('bad', '开头钩子', '没有', '第一个镜头必须抓人')
+
+  // 4 金句
+  if (sc.goldenLine && sc.goldenLine.length >= 8) add('ok', '金句', '有', '')
+  else add('warn', '金句', '没有或太短', '放一句能被截图转发的话在 60% 位置')
+
+  // 5 情绪起伏
+  const emotions = shots.filter(x => x.note && /情绪|好奇|焦虑|惊喜|愤怒|心疼|解气|向往/.test(x.note)).length
+  if (emotions >= Math.ceil(shots.length * 0.5)) add('ok', '情绪设计', emotions + '/' + shots.length + ' 镜有标注', '')
+  else add('warn', '情绪设计', emotions + '/' + shots.length + ' 镜有标注', '每 3–4 秒换一种情绪，别一条平到底')
+
+  const good = items.filter(x => x.level === 'ok').length
+  const bad = items.filter(x => x.level === 'bad').length
+  const score = Math.round(((good + items.filter(x => x.level === 'warn').length * 0.5) / items.length) * 100)
+  return { score, items, good, bad }
+}
+
+// 质检报告 HTML
+function auditHTML(a, kind) {
+  const lv = { ok: ['✓', 'ok'], warn: ['!', 'warn'], bad: ['✕', 'bad'] }
+  const color = a.score >= 85 ? 'ok' : a.score >= 65 ? 'warn' : 'bad'
+  const label = a.score >= 85 ? '可以直接拍' : a.score >= 65 ? '改两处再拍' : '建议重写'
+  const rows = a.items.map(it => {
+    const [icon, cls] = lv[it.level]
+    return `<div class="au-row ${cls}">
+      <span class="au-ico">${icon}</span>
+      <span class="au-label">${esc(it.label)}</span>
+      <span class="au-detail">${esc(it.detail)}</span>
+      ${it.tip ? `<span class="au-tip">${esc(it.tip)}</span>` : ''}
+    </div>`
+  }).join('')
+
+  return `<div class="audit ${color}">
+    <div class="au-head">
+      <div class="au-score"><b>${a.score}</b><span>分</span></div>
+      <div class="au-meta">
+        <b>质检 · ${label}</b>
+        <span>${a.good} 项合格${a.bad ? ` · ${a.bad} 项硬伤` : ''}</span>
+      </div>
+    </div>
+    <div class="au-list">${rows}</div>
+  </div>`
+}
+
+/* ============================================================
+   导出 WPS / Word 文档（.doc，WPS、Word 都能直接打开编辑打印）
+   原理：Word 兼容的 HTML + application/msword 头，零依赖
+   ============================================================ */
+function dlFile(name, text, mime) {
+  const blob = new Blob(['\ufeff' + text], { type: mime || 'text/plain;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = name
+  document.body.appendChild(a)
+  a.click()
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove() }, 400)
+}
+
+function todayStr() {
+  const d = new Date(), p = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+}
+function nowStr() {
+  const d = new Date(), p = n => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`
+}
+
+// Word / WPS 兼容的文档外壳
+function wordShell({ title, meta, body }) {
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8">
+<title>${esc(title)}</title>
+<!--[if gte mso 9]><xml>
+<w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument>
+</xml><![endif]-->
+<style>
+@page { size: A4 portrait; margin: 1.8cm 1.6cm; }
+body { font-family: "微软雅黑","Microsoft YaHei",sans-serif; font-size: 10.5pt; color:#000; line-height:1.6; }
+h1 { font-size: 16pt; margin: 0 0 4pt 0; font-weight: bold; }
+.meta { font-size: 9pt; color:#555; margin: 0 0 10pt 0; padding-bottom:6pt; border-bottom: 1.5pt solid #000; }
+table { border-collapse: collapse; width: 100%; font-size: 9.5pt; }
+th, td { border: 0.75pt solid #666; padding: 5pt 6pt; vertical-align: top; }
+th { background: #e8e8e8; font-weight: bold; font-size: 9pt; }
+.t { white-space: nowrap; font-weight: bold; width: 60px; }
+.v { width: 30%; color:#333; }
+.l { font-size: 11pt; line-height: 1.7; }
+.cb { width: 28px; text-align: center; font-size: 12pt; }
+.kv th { width: 90px; background:#f0f0f0; text-align:left; }
+.blk { margin-top: 12pt; padding: 8pt 10pt; border: 0.75pt solid #999; background:#f7f7f7; }
+.blk .h { font-size: 9pt; color:#555; font-weight: bold; margin: 0 0 4pt 0; }
+.blk .c { font-size: 11pt; line-height: 1.8; margin: 0; }
+.note { margin-top: 10pt; padding-top: 6pt; border-top: 0.5pt dashed #999;
+        font-size: 8.5pt; color:#666; line-height: 1.7; }
+.ft { margin-top: 14pt; font-size: 8pt; color:#999; text-align:center; }
+</style>
+</head>
+<body>
+<h1>${esc(title)}</h1>
+<div class="meta">${meta}</div>
+${body}
+<div class="ft">稳稳AI选题库 · 导出于 ${nowStr()}</div>
+</body></html>`
+}
+
+// ---- 脚本 → WPS 文档 ----
+function scriptDoc(sc, len, industry) {
+  const m = LEN_META[len] || LEN_META.standard
+  const shots = sc.shots || []
+  const words = shots.map(x => x.line || '').join('')
+  const rows = shots.map(x => `<tr>
+    <td class="cb">□</td>
+    <td class="t">${esc(x.time || '')}</td>
+    <td class="v">${esc(x.visual || '')}</td>
+    <td class="l">${esc(x.line || '')}${x.note ? `<br><span style="font-size:8pt;color:#777">（${esc(x.note)}）</span>` : ''}</td>
+  </tr>`).join('')
+
+  const meta = `形式：${esc(sc.form || '—')}　|　词根：${esc(sc.root || '—')}　|　` +
+    `档位：${m.name}（${m.range}）　|　镜头：${shots.length} 个　|　` +
+    `口播：约 ${sc.wordcount || words.length} 字` + (industry ? `　|　行业：${esc(industry)}` : '')
+
+  const body = `
+<table>
+  <tr><th class="cb">拍</th><th class="t">时间</th><th class="v">画面</th><th class="l">台词</th></tr>
+  ${rows}
+</table>
+${sc.goldenLine ? `<div class="blk"><div class="h">金句（放在 60% 位置）</div><p class="c">${esc(sc.goldenLine)}</p></div>` : ''}
+${sc.cta ? `<div class="blk"><div class="h">收尾</div><p class="c">${esc(sc.cta)}</p></div>` : ''}
+${sc.caption ? `<div class="blk"><div class="h">发布文案</div><p class="c">${esc(sc.caption)}</p></div>` : ''}
+${(sc.hashtags || []).length ? `<div class="blk"><div class="h">话题</div><p class="c">${esc(sc.hashtags.map(h => '#' + String(h).replace(/^#/, '')).join(' '))}</p></div>` : ''}
+<div class="note">拍摄提示：左边方框拍完一个镜头打勾。台词一行一句，说错从头重说这一段，不要「呃…重来」。</div>`
+
+  return wordShell({ title: sc.title || '分镜脚本', meta, body })
+}
+
+// ---- 文案 → WPS 文档 ----
+function copyDoc(c, len, industry) {
+  const m = LEN_META[len] || LEN_META.standard
+  const tags = (c.hashtags || []).map(h => '#' + String(h).replace(/^#/, '')).join(' ')
+  const full = (c.full || [c.hook, c.body, c.cta].filter(Boolean).join('\n\n')) + (tags ? '\n\n' + tags : '')
+
+  const meta = `档位：${m.name}（${m.range}）` + (industry ? `　|　行业：${esc(industry)}` : '')
+
+  const body = `
+<table class="kv">
+  <tr><th>首句钩子</th><td>${esc(c.hook || '')}</td></tr>
+  <tr><th>正文</th><td>${esc(c.body || '').replace(/\n/g, '<br>')}</td></tr>
+  <tr><th>行动指令</th><td>${esc(c.cta || '')}</td></tr>
+  <tr><th>封面大字</th><td style="font-size:13pt;font-weight:bold">${esc(c.cover || '')}</td></tr>
+  <tr><th>置顶评论</th><td>${esc(c.pinned || '')}</td></tr>
+  ${tags ? `<tr><th>话题</th><td>${esc(tags)}</td></tr>` : ''}
+</table>
+<div class="blk"><div class="h">可直接复制（发布用）</div><p class="c">${esc(full)}</p></div>
+<div class="note">发布顺序：标题 → 正文 → 话题 → 置顶评论（发完立刻自己发一条置顶）。</div>`
+
+  return wordShell({ title: '发布文案', meta, body })
+}
+
+// ---- 选题 → WPS 文档 ----
+function topicsDoc(list, inp) {
+  const rows = list.map((t, i) => {
+    const sc = t.score || {}
+    const total = (sc && typeof sc === 'object')
+      ? (sc.shoot || 0) + (sc.debate || 0) + (sc.persona || 0) + (sc.convert || 0) + (sc.save || 0)
+      : (sc || '')
+    return `<tr>
+      <td class="cb">□</td>
+      <td class="t">${i + 1}</td>
+      <td style="font-size:10pt">${esc(t.title)}</td>
+      <td style="width:76px;font-size:8.5pt">${esc((t.form || '') + (t.sub ? '·' + t.sub : ''))}</td>
+      <td style="width:88px;font-size:8.5pt">${esc(t.root || '')}</td>
+      <td class="t">${total}${typeof sc === 'object' ? '/25' : ''}</td>
+    </tr>`
+  }).join('')
+
+  const meta = [
+    inp.industry ? `行业：${esc(inp.industry)}` : '',
+    inp.obj ? `产品：${esc(inp.obj)}` : '',
+    inp.audience ? `人群：${esc(inp.audience)}` : '',
+    inp.locale ? `地域：${esc(inp.locale)}` : '',
+    `共 ${list.length} 条`
+  ].filter(Boolean).join('　|　')
+
+  const body = `
+<table>
+  <tr><th class="cb">选</th><th class="t">#</th><th>选题</th><th>形式</th><th>词根</th><th class="t">分</th></tr>
+  ${rows}
+</table>
+<div class="note">左边方框勾出要拍的。19 分以上优先拍，14 分以下一般别拍。
+分数 = 可拍 + 争议 + 人设 + 转化 + 收藏，各 5 分，满分 25。
+收藏分高的，说明这条能让观众"存下来"——2026 年算法里收藏比完播值钱。</div>`
+
+  return wordShell({ title: '稳稳AI选题库 · 选题清单', meta, body })
+}
+
+
+// ---------- 手机访问提示 ----------
+function initPhoneHint() {
+  if (typeof location === 'undefined' || !location.hostname) return
+  const host = location.hostname
+  const isLocal = host === '127.0.0.1' || host === 'localhost'
+  if (!isLocal) return   // 已经在手机上访问了，不用提示
+
+  fetch('/api/netinfo').then(r => r.json()).then(d => {
+    if (!d || !d.urls || !d.urls.length) return
+    const url = d.urls[0]
+    const panel = $('#phonePanel')
+    const box = $('#phoneUrl')
+    if (!panel || !box) return
+    panel.style.display = ''
+    box.innerHTML = `<b>${esc(url)}</b><button class="btn mini" data-copy-phone="1">复制</button>`
+    const btn = box.querySelector('[data-copy-phone]')
+    if (btn) btn.onclick = () => copyText(url)
+  }).catch(() => {})
+}
+
+// ---------- 页面使用说明 ----------
+// ---------- 创造模式开关提示 ----------
+function initCreativeToggles() {
+  ;[['#copyCreative', '文案'], ['#scriptCreative', '脚本']].forEach(([sel, what]) => {
+    const el = $(sel)
+    if (!el || el.dataset.bound) return
+    el.dataset.bound = '1'
+    el.onchange = () => {
+      if (el.checked) toast('创造模式已开：AI 不套模板，自己发挥')
+      else toast('创造模式已关：按套路生成')
+    }
+  })
+}
+
+function initGuides() {
+  $$('.guide').forEach(g => {
+    const key = 'guide_' + g.dataset.guide
+    const body = g.querySelector('.guide-body')
+    const tog = g.querySelector('.guide-toggle')
+    const head = g.querySelector('.guide-head')
+    if (!body || !head) return
+
+    const saved = store.get(key)
+    const open = saved === '1'
+    body.hidden = !open
+    if (tog) tog.textContent = open ? '收起' : '怎么用'
+    g.classList.toggle('open', open)
+
+    head.onclick = () => {
+      const next = body.hidden
+      body.hidden = !next
+      if (tog) tog.textContent = next ? '收起' : '怎么用'
+      g.classList.toggle('open', next)
+      try { store.set(key, next ? '1' : '0') } catch {}
+    }
+  })
+}
+
+// ---------- 农时提示 ----------
+function showStruct(name) {
+  const st = STRUCTURES[name]
+  if (!st) return
+  const old = document.getElementById('structModal')
+  if (old) old.remove()
+  const total = st.beats.reduce((a, b) => a + b[2], 0)
+  const rows = st.beats.map(([beat, what, sec]) =>
+    `<tr><td class="st-sec">${sec}s</td><td class="st-beat">${esc(beat)}</td><td>${esc(what)}</td></tr>`
+  ).join('')
+  const d = document.createElement('div')
+  d.id = 'structModal'
+  d.className = 'farm-modal'
+  d.innerHTML = `<div class="farm-card">
+    <div class="farm-card-hd"><b>${esc(name)}</b><span class="farm-close">✕</span></div>
+    <p class="hint" style="margin:0 0 10px">适合：${esc(st.best)}　·　总时长约 ${total} 秒</p>
+    <table class="farm-table struct-table">
+      <tr><th>秒数</th><th>这一段</th><th>干什么</th></tr>${rows}
+    </table>
+    <p class="hint" style="margin-top:12px">按这个顺序摆段落，每一段只干一件事。哪一段的话说不出来，就说明那段该删。</p>
+  </div>`
+  document.body.appendChild(d)
+  d.onclick = (e) => { if (e.target === d || e.target.classList.contains('farm-close')) d.remove() }
+}
+
+/* 通用版无农场专属代码 */
+
+function renderChips() {
+  const forms = Object.keys(META.FORMS)
+  const els = Object.keys(META.ELEMENTS)
+  $('#formChips').innerHTML = forms.map(f => `<span class="chip on" data-form="${esc(f)}">${esc(f)}</span>`).join('')
+  $('#elChips').innerHTML = els.map(e => `<span class="chip on" data-el="${esc(e)}">${esc(e)}</span>`).join('')
+  $$('#formChips .chip').forEach(c => c.onclick = () => c.classList.toggle('on'))
+  $$('#elChips .chip').forEach(c => c.onclick = () => c.classList.toggle('on'))
+}
+
+$$('.tabs button').forEach(b => b.onclick = () => goTab(b.dataset.tab))
+
+/* ---------------- ① 出选题 ---------------- */
+function collectInput() {
+  return {
+    industry: $('#t-industry').value.trim(),
+    audience: $('#t-audience').value.trim(),
+    locale: $('#t-locale').value.trim(),
+    obj: $('#t-obj').value.trim(),
+    count: parseInt($('#t-count').value) || 20,
+    forms: $$('#formChips .chip.on').map(c => c.dataset.form),
+    elements: $$('#elChips .chip.on').map(c => c.dataset.el)
+  }
+}
+
+$('#btnLocal').onclick = () => {
+  const inp = collectInput()
+  if (!inp.industry) return toast('先填行业')
+  try {
+    // 通用引擎先出一份（农场版下面会覆盖）
+    state.local = generateTopics(inp)
+    /* 通用版无农场专属代码 */
+    renderTopics('local')
+    addHistory('topic', 'standard', `${inp.industry}${inp.obj ? '·' + inp.obj : ''} · ${state.local.length} 条`, inp.industry, { topics: state.local, input: inp })
+    renderInlineHistory('topic', 'histTopicWrap')
+    persist()
+    toast(`本地出了 ${state.local.length} 条`)
+  } catch (e) { toast('出错了：' + e.message) }
+}
+
+$('#btnAI').onclick = async () => {
+  const inp = collectInput()
+  if (!inp.industry) return toast('先填行业')
+  const out = $('#topicListAI')
+  busy(out, true, 'AI 正在想选题，约 30–60 秒…')
+  const btn = $('#btnAI'); btn.disabled = true
+  try {
+    const { parsed, raw, parseError } = await aiCall('topic', {
+      ...inp,
+      count: 10,
+      extra: `形式偏好：${inp.forms.join('、')}；元素偏好：${inp.elements.join('、')}`
+    })
+    if (parsed) {
+      state.ai = (Array.isArray(parsed) ? parsed : []).map((t, i) => ({ ...t, id: i + 1 }))
+      renderTopics('ai')
+      addHistory('topic', 'standard', `AI · ${inp.industry}${inp.obj ? '·' + inp.obj : ''} · ${state.ai.length} 条`, inp.industry, { topics: state.ai, input: inp })
+      renderInlineHistory('topic', 'histTopicWrap')
+      persist()
+      toast(`AI 出了 ${state.ai.length} 条`)
+    } else {
+      out.innerHTML = `<div class="card"><div class="err">返回不是标准 JSON（${esc(parseError)}），原文：</div><pre>${esc(raw)}</pre></div>`
+    }
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err">${esc(e.message)}</div></div>`
+  } finally { btn.disabled = false }
+}
+
+$('#clearLocal').onclick = () => { state.local = []; $('#topicListLocal').innerHTML = EMPTY_LOCAL; updateCounts(); persist() }
+
+$('#clearAI').onclick = () => { state.ai = []; $('#topicListAI').innerHTML = EMPTY_AI; updateCounts(); persist() }
+
+function updateCounts() {
+  const l = $('#localCount'), a = $('#aiCount')
+  if (l) l.textContent = state.local.length ? state.local.length + ' 条' : ''
+  if (a) a.textContent = state.ai.length ? state.ai.length + ' 条' : ''
+}
+
+function scoreTotal(t) {
+  const sc = t.score
+  if (sc && typeof sc === 'object') {
+    return (sc.shoot || 0) + (sc.debate || 0) + (sc.persona || 0) + (sc.convert || 0) + (sc.save || 0)
+  }
+  return typeof sc === 'number' ? sc : 0
+}
+
+function bindTopicExport() {
+  const btn = $('#btnExportTopics')
+  if (!btn) return
+  btn.onclick = () => {
+    if (!state.local.length) return toast('本地栏还没有选题')
+    const inp = {
+      industry: $('#t-industry').value.trim(),
+      obj: $('#t-obj').value.trim(),
+      audience: $('#t-audience').value.trim(),
+      locale: $('#t-locale').value.trim()
+    }
+    dlFile(`选题清单-${todayStr()}.doc`, topicsDoc(state.local, inp), 'application/msword')
+    toast('已导出，用 WPS 或 Word 打开就能打印')
+  }
+}
+
+function syncTopicExportRow() {
+  const row = $('#topicExportRow')
+  if (row) row.hidden = !state.local.length
+}
+
+function renderTopics(key) {
+  const isLocal = key === 'local'
+  // 高分排前面，同一分数保持原顺序
+  const list = (isLocal ? state.local : state.ai).slice().sort((a, b) => scoreTotal(b) - scoreTotal(a))
+  const out = isLocal ? $('#topicListLocal') : $('#topicListAI')
+  const empty = isLocal ? EMPTY_LOCAL : EMPTY_AI
+  if (!out) return
+
+  if (!list.length) {
+    out.innerHTML = empty
+    updateCounts()
+    syncTopicExportRow()
+    return
+  }
+
+  out.innerHTML = list.map((t, i) => {
+    const sc = t.score
+    const isObj = sc && typeof sc === 'object'
+    const total = isObj ? Object.values(sc).reduce((a, b) => a + (Number(b) || 0), 0) : (typeof sc === 'number' ? sc : '')
+    const detail = isObj
+      ? `可拍${sc.shoot} 争议${sc.debate} 人设${sc.persona} 转化${sc.convert} 收藏${sc.save ?? '-'}`
+      : ''
+    return `<div class="card">
+      <h4>${esc(t.title)}</h4>
+      <div class="tags">
+        ${t.form ? `<span class="tag dark">${esc(t.form)}${t.sub ? '·' + esc(t.sub) : ''}</span>` : ''}
+        ${t.element ? `<span class="tag">${esc(t.element)}</span>` : ''}
+        ${t.root ? `<span class="tag warn">${esc(t.root)}</span>` : ''}
+        ${t.lens ? `<span class="tag">${esc(t.lens)}</span>` : ''}
+        ${(isObj && Array.isArray(sc.threeHaves)) ? sc.threeHaves.map(x => `<span class="tag th">${esc(x)}</span>`).join('') : ''}
+      </div>
+      ${t.overlay ? `<div class="meta"><b>叠加：</b>${esc(t.overlay)}</div>` : ''}
+      ${t.conflict ? `<div class="meta"><b>冲突：</b>${esc(t.conflict)}</div>` : ''}
+      ${t.interaction ? `<div class="meta"><b>互动：</b>${esc(t.interaction)}</div>` : ''}
+      ${t.savePoint ? `<div class="meta save-line"><b>收藏点：</b>${esc(t.savePoint)}</div>` : ''}
+      ${(Array.isArray(t.structures) && t.structures.length) ? `<div class="meta struct-line"><b>结构：</b>${t.structures.map(x => `<span class="struct-chip" data-struct="${esc(x)}">${esc(x)}</span>`).join(' ')}</div>` : ''}
+      ${t.convert ? `<div class="meta conv-line"><b>怎么收尾：</b>${esc(t.convert.cta)}</div>` : ''}
+      <div class="actions">
+        ${total !== ''
+          ? `<span class="score" title="可拍 · 争议 · 人设 · 转化 · 收藏，各 5 分，满分 25">${isObj ? '综合 ' + total + '/25' : '评分 ' + total}</span>`
+          : ''}
+        ${detail ? `<span class="score-detail" title="${esc(detail)}">${esc(detail)}</span>` : ''}
+        ${(Array.isArray(t.hooks) && t.hooks.length) ? `<span class="hook-chip" title="开头三秒用这两种钩子">钩子 ${t.hooks.join(' · ')}</span>` : ''}
+        <span class="spacer"></span>
+        <button class="btn mini" data-copy="${esc(t.title)}">复制</button>
+        <button class="btn mini" data-to-copy="${i}">写文案 →</button>
+        <button class="btn mini" data-to-script="${i}">写脚本 →</button>
+      </div>
+    </div>`
+  }).join('')
+
+  // 事件只绑在当前容器内
+  out.querySelectorAll('[data-copy]').forEach(b => b.onclick = () => copyText(b.dataset.copy))
+  out.querySelectorAll('[data-to-copy]').forEach(b => b.onclick = () => {
+    const t = list[+b.dataset.toCopy]
+    $('#c-topic').value = t.title
+    $('#c-form').value = t.form || ''
+    $('#c-root').value = t.root || ''
+    if (lastIndustry) setIndustry(lastIndustry, true)
+    goTab('copy')
+  })
+  out.querySelectorAll('[data-to-script]').forEach(b => b.onclick = () => {
+    const t = list[+b.dataset.toScript]
+    $('#s-topic').value = t.title
+    $('#s-form').value = t.form || '晒过程'
+    $('#s-root').value = t.root || ''
+    if (lastIndustry) setIndustry(lastIndustry, true)
+    goTab('script')
+  })
+
+  out.querySelectorAll('[data-struct]').forEach(chip => chip.onclick = (e) => {
+    e.stopPropagation()
+    showStruct(chip.dataset.struct)
+  })
+
+  updateCounts()
+  syncTopicExportRow()
+
+  // 点结构标签看段落拆解
+  out.querySelectorAll('[data-struct]').forEach(chip => chip.onclick = (e) => {
+    e.stopPropagation()
+    showStruct(e.currentTarget.dataset.struct)
+  })
+}
+
+/* ---------------- 共用：分析渲染 ---------------- */
+function renderAnalysis(container, analysis, opts = {}) {
+  const samples = analysis.samples || []
+  let html = `<div class="panel"><h3>样本 ${analysis.total} 条标题</h3>
+    <div class="hint">平均 ${analysis.avgLen} 字 · 已剔除来源后缀和噪音词 · ${esc(opts.note || '')}</div>
+    <div class="list" style="margin-top:10px">` +
+    samples.slice(0, 40).map(t => `<div class="card" style="padding:8px 12px"><span class="meta" style="margin:0">· ${esc(t)}</span></div>`).join('') +
+    `</div></div>`
+
+  if (analysis.topWords.length) {
+    const max = analysis.topWords[0].count
+    html += `<div class="panel"><h3>高频词（出现 ≥2 次）</h3><div class="bars">` +
+      analysis.topWords.slice(0, 28).map(w =>
+        `<div class="bar"><span>${esc(w.word)}</span><span class="fill" style="width:${Math.max(5, w.count / max * 100)}%"></span><span>${w.count}</span></div>`
+      ).join('') + `</div></div>`
+  } else {
+    html += `<div class="panel"><div class="err">没有重复词 —— 样本太少，多粘几条（30 条以上）再统计。</div></div>`
+  }
+
+  if (analysis.styleHits.length) {
+    html += `<div class="panel"><h3>高频句式</h3><table class="dt styles"><tr><th style="width:110px">句式</th><th>套用模板</th><th style="width:62px">命中</th></tr>` +
+      analysis.styleHits.map(x => `<tr><td>${esc(x.name)}</td><td>${esc(x.tpl)}</td><td>${x.count}</td></tr>`).join('') +
+      `</table></div>`
+  }
+  container.innerHTML = html
+}
+
+/* ---------------- ② 手动分析 ---------------- */
+function pasteTitles() {
+  return $('#p-titles').value.split('\n').map(t => t.trim()).filter(Boolean)
+}
+
+$('#pAnalyze').onclick = () => {
+  const titles = pasteTitles()
+  if (!titles.length) return toast('先把标题粘进来')
+  if (titles.length < 5) toast(`只有 ${titles.length} 条，样本偏少`)
+  const out = $('#pasteOut')
+  try {
+    renderAnalysis(out, analyzeTitles(titles), { note: '手动粘贴，数据最准' })
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err">${esc(e.message)}</div></div>`
+  }
+}
+
+$('#pRecombine').onclick = () => {
+  const titles = pasteTitles()
+  if (!titles.length) return toast('先把标题粘进来')
+  const out = $('#pasteOut')
+  try {
+    const industry = $('#p-industry').value.trim() || $('#t-industry').value.trim()
+    const rec = recombine(titles, industry, 15)
+    renderAnalysis(out, rec.analysis, { note: '手动粘贴，数据最准' })
+    out.insertAdjacentHTML('afterbegin', `<div class="panel"><h3>按同行句式重组的新选题</h3>
+      <p class="hint">保留同行验证过的句式和用词，换成你的产品</p>
+      <div class="list">` +
+      rec.topics.map(t => `<div class="card"><h4>${esc(t.title)}</h4>
+        <div class="tags"><span class="tag">${esc(t.style)}</span><span class="tag warn">${esc(t.keyword)}</span></div>
+        <div class="actions">
+          <button class="btn" data-rc="${esc(t.title)}">复制</button>
+          <button class="btn" data-rw="${esc(t.title)}">写文案 →</button>
+        </div></div>`).join('') + `</div></div>`)
+    $$('[data-rc]').forEach(b => b.onclick = () => copyText(b.dataset.rc))
+    $$('[data-rw]').forEach(b => b.onclick = () => {
+      $('#c-topic').value = b.dataset.rw
+      goTab('copy')
+    })
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err">${esc(e.message)}</div></div>`
+  }
+}
+
+$('#pClear').onclick = () => { $('#p-titles').value = ''; $('#pasteOut').innerHTML = '' }
+
+/* ---------------- 档位（短/标准/长） ---------------- */
+const LEN_META = {
+  short: { name: '短版', range: '15–30 秒', cls: 'short' },
+  standard: { name: '标准版', range: '45–60 秒', cls: 'standard' },
+  long: { name: '长视频版', range: '1 分钟以上', cls: 'long' }
+}
+
+function bindSeg(segId, onSwitch) {
+  const seg = $('#' + segId)
+  if (!seg) return
+  seg.querySelectorAll('.seg-btn').forEach(b => b.onclick = () => {
+    seg.querySelectorAll('.seg-btn').forEach(x => x.classList.remove('active'))
+    b.classList.add('active')
+    if (onSwitch) onSwitch(b.dataset.len)
+  })
+}
+
+function currentLen(segId) {
+  const b = $('#' + segId + ' .seg-btn.active')
+  return b ? b.dataset.len : 'short'
+}
+
+// 各档位分别保存，互不覆盖
+state.copyByLen = { short: null, standard: null, long: null }
+state.scriptByLen = { short: null, standard: null, long: null }
+
+/* ---------------- ③ 写文案 ---------------- */
+$('#btnCopy').onclick = async () => {
+  const topic = $('#c-topic').value.trim()
+  if (!topic) return toast('先填选题')
+  const len = currentLen('copySeg')
+  const out = $('#copyOut')
+  busy(out, true, `正在写${LEN_META[len].name}…`)
+  const btn = $('#btnCopy'); btn.disabled = true
+  try {
+    const { parsed, raw, parseError } = await aiCall('copy', {
+      topic,
+      form: $('#c-form').value.trim(),
+      root: $('#c-root').value.trim(),
+      industry: $('#c-industry').value.trim(),
+      creative: !!($('#copyCreative') && $('#copyCreative').checked),
+      extra: $('#c-extra').value.trim(),
+      lengthMode: len
+    })
+    if (!parsed) throw new Error('解析失败：' + (parseError || '') + '\n\n原文：\n' + raw)
+    state.copyByLen[len] = parsed
+    state.copyTopic = topic
+    addHistory('copy', len, topic, $('#c-industry').value.trim(), parsed)
+    renderCopy(len)
+    renderInlineHistory('copy', 'histCopyWrap')
+    persist()
+    toast(`${LEN_META[len].name}写好了`)
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err" style="white-space:pre-wrap">${esc(e.message)}</div></div>`
+  } finally { btn.disabled = false }
+}
+
+function buildCopyHTML(c, len, opts = {}) {
+  const m = LEN_META[len] || LEN_META.standard
+  const full = c.full || [c.hook, c.body, c.cta].filter(Boolean).join('\n\n')
+  const tags = (c.hashtags || []).map(h => '#' + String(h).replace(/^#/, '')).join(' ')
+  const all = full + (tags ? '\n\n' + tags : '')
+  const uid = opts.uid || 'c'
+  return `<table class="kv">
+      <tr><th style="width:90px">首句钩子</th><td>${esc(c.hook || '')}</td></tr>
+      <tr><th>正文</th><td>${esc(c.body || '').replace(/\n/g, '<br>')}</td></tr>
+      <tr><th>行动指令</th><td>${esc(c.cta || '')}</td></tr>
+      <tr><th>封面大字</th><td><b style="font-size:17px">${esc(c.cover || '')}</b></td></tr>
+      <tr><th>置顶评论</th><td>${esc(c.pinned || '')}</td></tr>
+    </table>
+    <div class="codebox" style="margin-top:12px">
+      <button class="btn copy" data-copy-full="${uid}">复制全文</button>
+      <pre>${esc(all)}</pre>
+    </div>`
+}
+
+function renderCopy(len) {
+  const out = $('#copyOut')
+  const c = state.copyByLen[len]
+  const m = LEN_META[len]
+  if (!c) {
+    const have = Object.keys(state.copyByLen).filter(k => state.copyByLen[k])
+    out.innerHTML = `<div class="empty-tip"><b>还没有${m.name}</b>` +
+      (have.length ? `已有：${have.map(k => LEN_META[k].name).join('、')}<br>点「生成文案」补上这一档` : '选好档位，点「生成文案」') +
+      `</div>`
+    return
+  }
+  const others = Object.keys(state.copyByLen).filter(k => state.copyByLen[k] && k !== len)
+  const fullText = (c.full || [c.hook, c.body, c.cta].filter(Boolean).join('\n\n')) +
+    ((c.hashtags || []).length ? '\n\n' + c.hashtags.map(h => '#' + String(h).replace(/^#/, '')).join(' ') : '')
+
+  out.innerHTML = `<div class="panel">
+    <div class="result-head">
+      <h3>发布文案</h3>
+      <span class="len-chip ${m.cls}">${m.name} · ${m.range}</span>
+    </div>
+    ${others.length ? `<div class="row" style="margin-top:0;margin-bottom:12px">${others.map(k =>
+      `<button class="btn mini" data-switch-copy="${k}">看${LEN_META[k].name}（${LEN_META[k].range}）</button>`).join('')}</div>` : ''}
+    ${buildCopyHTML(c, len, { uid: 'cur' })}
+    ${auditHTML(auditCopy(c, len), 'copy')}
+    <div class="row export-row">
+      <button class="btn mini" data-exp-copy="doc">导出 WPS（可打印）</button>
+    </div>
+  </div>`
+
+  const b = out.querySelector('[data-copy-full="cur"]')
+  if (b) b.onclick = () => copyText(fullText)
+
+  out.querySelectorAll('[data-exp-copy]').forEach(btn => btn.onclick = () => {
+    const ind = $('#c-industry').value.trim()
+    dlFile(`发布文案-${todayStr()}.doc`, copyDoc(c, len, ind), 'application/msword')
+    toast('已导出，用 WPS 或 Word 打开就能打印')
+  })
+  out.querySelectorAll('[data-switch-copy]').forEach(btn => btn.onclick = () => {
+    const k = btn.dataset.switchCopy
+    const seg = $('#copySeg')
+    seg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('active', x.dataset.len === k))
+    renderCopy(k)
+  })
+}
+
+bindSeg('copySeg', (len) => renderCopy(len))
+
+/* ---------------- ④ 写脚本 ---------------- */
+$('#btnScript').onclick = async () => {
+  const topic = $('#s-topic').value.trim()
+  if (!topic) return toast('先填选题')
+  const len = currentLen('scriptSeg')
+  const out = $('#scriptOut')
+  busy(out, true, `正在写${LEN_META[len].name}脚本…`)
+  const btn = $('#btnScript'); btn.disabled = true
+  try {
+    const { parsed, raw, parseError } = await aiCall('script', {
+      topic,
+      form: $('#s-form').value,
+      root: $('#s-root').value.trim(),
+      duration: { short: 20, standard: 55, long: 150 }[len],
+      industry: $('#s-industry').value.trim(),
+      creative: !!($('#scriptCreative') && $('#scriptCreative').checked),
+      extra: [$('#s-extra').value.trim(), ($('#s-point') ? $('#s-point').value.trim() : '')].filter(Boolean).join('；'),
+      lengthMode: len
+    })
+    if (!parsed) throw new Error('解析失败：' + (parseError || '') + '\n\n原文：\n' + raw)
+    state.scriptByLen[len] = parsed
+    addHistory('script', len, topic, $('#c-industry').value.trim(), parsed)
+    renderScript(len)
+    renderInlineHistory('script', 'histScriptWrap')
+    persist()
+    toast(`${LEN_META[len].name}脚本写好了`)
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err" style="white-space:pre-wrap">${esc(e.message)}</div></div>`
+  } finally { btn.disabled = false }
+}
+
+function buildScriptHTML(sc, len, opts = {}) {
+  const m = LEN_META[len] || LEN_META.standard
+  const shots = sc.shots || []
+  const words = shots.map(x => x.line || '').join('\n')
+  const uid = opts.uid || 's'
+  return `<div class="tags">
+      ${sc.form ? `<span class="tag dark">${esc(sc.form)}</span>` : ''}
+      ${sc.root ? `<span class="tag warn">${esc(sc.root)}</span>` : ''}
+      ${sc.structure ? `<span class="tag gold">结构·${esc(sc.structure)}</span>` : ''}
+      <span class="tag">${shots.length} 个镜头</span>
+      <span class="tag">约 ${sc.wordcount || words.replace(/\s/g, '').length} 字</span>
+    </div>
+    <table class="dt shot">
+      <tr><th style="width:70px">时间</th><th style="width:22%">画面</th><th>台词</th></tr>
+      ${shots.map(x => `<tr>
+        <td>${esc(x.time || '')}</td>
+        <td>${esc(x.visual || '')}</td>
+        <td>${esc(x.line || '')}${x.note ? `<div class="shot-note">${esc(x.note)}</div>` : ''}</td>
+      </tr>`).join('')}
+    </table>
+    ${sc.goldenLine ? `<div class="meta" style="margin-top:10px"><b>金句（放 60% 处）：</b>${esc(sc.goldenLine)}</div>` : ''}
+    ${sc.cta ? `<div class="meta"><b>收尾：</b>${esc(sc.cta)}</div>` : ''}
+    <div class="codebox" style="margin-top:12px">
+      <button class="btn copy" data-copy-words="${uid}">复制口播</button>
+      <pre>${esc(words)}</pre>
+    </div>`
+}
+
+function renderScript(len) {
+  const out = $('#scriptOut')
+  const sc = state.scriptByLen[len]
+  const m = LEN_META[len]
+  if (!sc) {
+    const have = Object.keys(state.scriptByLen).filter(k => state.scriptByLen[k])
+    out.innerHTML = `<div class="empty-tip"><b>还没有${m.name}脚本</b>` +
+      (have.length ? `已有：${have.map(k => LEN_META[k].name).join('、')}<br>点「生成脚本」补上这一档` : '选好档位，点「生成脚本」') +
+      `</div>`
+    return
+  }
+  const shots = sc.shots || []
+  const words = shots.map(x => x.line || '').join('\n')
+  const others = Object.keys(state.scriptByLen).filter(k => state.scriptByLen[k] && k !== len)
+
+  out.innerHTML = `<div class="panel">
+    <div class="result-head">
+      <h3>${esc(sc.title || '分镜脚本')}</h3>
+      <span class="len-chip ${m.cls}">${m.name} · ${m.range}</span>
+    </div>
+    ${others.length ? `<div class="row" style="margin-top:0;margin-bottom:12px">${others.map(k =>
+      `<button class="btn mini" data-switch-script="${k}">看${LEN_META[k].name}（${LEN_META[k].range}）</button>`).join('')}</div>` : ''}
+    ${buildScriptHTML(sc, len, { uid: 'cur' })}
+    ${auditHTML(auditScript(sc, len), 'script')}
+    <div class="row export-row">
+      <button class="btn mini" data-exp-script="doc">导出 WPS（可打印）</button>
+    </div>
+  </div>`
+
+  const b = out.querySelector('[data-copy-words="cur"]')
+  if (b) b.onclick = () => copyText(words)
+
+  out.querySelectorAll('[data-exp-script]').forEach(btn => btn.onclick = () => {
+    const ind = $('#s-industry').value.trim()
+    dlFile(`分镜脚本-${todayStr()}.doc`, scriptDoc(sc, len, ind), 'application/msword')
+    toast('已导出，用 WPS 或 Word 打开就能打印')
+  })
+  out.querySelectorAll('[data-switch-script]').forEach(btn => btn.onclick = () => {
+    const k = btn.dataset.switchScript
+    const seg = $('#scriptSeg')
+    seg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('active', x.dataset.len === k))
+    renderScript(k)
+  })
+}
+
+bindSeg('scriptSeg', (len) => renderScript(len))
+
+/* ---------------- ⑤ 拆解视频 ---------------- */
+$('#btnTeardown').onclick = async () => {
+  const raw = $('#d-raw').value.trim()
+  const link = $('#d-link').value.trim()
+  if (!raw && !link) return toast('填链接或文案')
+  const out = $('#teardownOut')
+  busy(out, true, '正在拆…')
+  const btn = $('#btnTeardown'); btn.disabled = true
+  try {
+    const { parsed, raw: txt, parseError } = await aiCall('teardown', {
+      link, raw,
+      industry: $('#d-industry').value.trim(),
+      audience: $('#d-audience').value.trim()
+    })
+    if (!parsed) throw new Error('解析失败：' + (parseError || '') + '\n\n原文：\n' + txt)
+    renderTeardown(parsed)
+  } catch (e) {
+    out.innerHTML = `<div class="card"><div class="err" style="white-space:pre-wrap">${esc(e.message)}</div></div>`
+  } finally { btn.disabled = false }
+}
+
+function renderTeardown(t) {
+  const a = t.audience || {}
+  $('#teardownOut').innerHTML = `<div class="panel">
+    <h3>结论</h3><p>${esc(t.summary || '')}</p>
+    <table class="kv">
+      <tr><th style="width:96px">开头钩子</th><td>${esc(t.hook?.type || '')}<br><i>「${esc(t.hook?.quote || '')}」</i><br>${esc(t.hook?.why || '')}</td></tr>
+      <tr><th>中间痛点</th><td>${esc(t.pain || '')}</td></tr>
+      <tr><th>结构骨架</th><td>${esc(t.structure || '')}</td></tr>
+      <tr><th>结尾引导</th><td>${esc(t.ending || '')}</td></tr>
+      <tr><th>情绪价值</th><td>${esc(t.emotion || '')}</td></tr>
+      <tr><th>用户画像</th><td>${esc([a.age, a.gender, a.job, a.city].filter(Boolean).join(' · '))}<br>痛点：${esc(a.pain || '')}<br>动机：${esc(a.motivation || '')}</td></tr>
+      <tr><th>用的元素</th><td>${esc((t.elements || []).join('、'))}</td></tr>
+      <tr><th>可复制</th><td>${(t.copyable || []).map(x => '· ' + esc(x)).join('<br>')}</td></tr>
+      <tr><th>不可复制</th><td>${(t.uncopyable || []).map(x => '· ' + esc(x)).join('<br>')}</td></tr>
+    </table>
+  </div>
+  <div class="panel"><h3>给你的 3 条对标选题</h3><div class="list">
+    ${(t.newTopics || []).map(x => `<div class="card"><h4>${esc(x.title)}</h4><div class="meta">${esc(x.reason || '')}</div>
+      <div class="actions"><button class="btn" data-td="${esc(x.title)}">复制</button></div></div>`).join('')}
+  </div></div>`
+  $$('[data-td]').forEach(b => b.onclick = () => copyText(b.dataset.td))
+}
+
+/* ---------------- 内联历史区（嵌在选题/文案/脚本页里） ---------------- */
+const HIST_LIMIT = 20
+
+function histListFor(type) {
+  return state.history.filter(x => x.type === type).slice(0, HIST_LIMIT)
+}
+
+function histSectionHTML(type, wrap) {
+  const list = histListFor(type)
+  const label = { copy: '历史文案', script: '历史脚本', topic: '历史选题' }[type] || '历史'
+  const total = state.history.filter(x => x.type === type).length
+  const open = wrap.dataset.open === '1'
+
+  let rows = ''
+  if (!list.length) {
+    rows = `<div class="empty-tip mini">还没有记录 —— 生成后会自动存到这里</div>`
+  } else {
+    rows = list.map(it => {
+      const m = LEN_META[it.len] || LEN_META.standard
+      const isTopic = it.type === 'topic'
+      const sub = isTopic
+        ? `${(it.data?.topics || []).length} 条 · ${esc(it.industry || '')}`
+        : `<span class="len-chip ${m.cls} mini">${m.name}</span>`
+      return `<div class="hist-card" data-hid="${it.id}">
+        <div class="hist-head" data-toggle="${it.id}">
+          <div class="hist-title">
+            <span class="tag ${it.type === 'script' ? 'warn' : ''}">${isTopic ? '选题' : it.type === 'copy' ? '文案' : '脚本'}</span>
+            ${sub}
+            <span class="hist-topic">${esc(it.topic)}</span>
+          </div>
+          <div class="hist-meta">
+            <span>${esc(fmtTime(it.createdAt))}</span>
+            <span class="chev">▾</span>
+          </div>
+        </div>
+        <div class="hist-body" data-body="${it.id}" hidden></div>
+      </div>`
+    }).join('')
+  }
+
+  return `<div class="panel hist-panel">
+    <div class="hist-bar" data-hbar="${type}">
+      <div class="hist-bar-l">
+        <span class="hist-caret">${open ? '▾' : '▸'}</span>
+        <b>${label}</b>
+        <span class="hist-count">${total}${total > HIST_LIMIT ? `（显示最近 ${HIST_LIMIT}）` : ''}</span>
+      </div>
+      <span class="hist-bar-r">${total ? '点开看，可复制可删' : ''}</span>
+    </div>
+    <div class="hist-body-wrap" ${open ? '' : 'hidden'}>
+      ${rows}
+      ${total ? `<div class="row" style="margin-top:12px"><button class="btn mini ghost" data-hclear="${type}">清空${label}</button></div>` : ''}
+    </div>
+  </div>`
+}
+
+function renderInlineHistory(type, wrapId) {
+  const wrap = $('#' + wrapId)
+  if (!wrap) return
+  wrap.innerHTML = histSectionHTML(type, wrap)
+  bindHistEvents(wrap, type, wrapId)
+}
+
+function bindHistEvents(wrap, type, wrapId) {
+  const bar = wrap.querySelector('[data-hbar]')
+  if (bar) bar.onclick = () => {
+    wrap.dataset.open = wrap.dataset.open === '1' ? '0' : '1'
+    renderInlineHistory(type, wrapId)
+  }
+  const clr = wrap.querySelector('[data-hclear]')
+  if (clr) clr.onclick = (e) => {
+    e.stopPropagation()
+    const n = state.history.filter(x => x.type === type).length
+    if (!confirm(`确定清空全部 ${n} 条${type === 'copy' ? '文案' : type === 'script' ? '脚本' : '选题'}记录？`)) return
+    state.history = state.history.filter(x => x.type !== type)
+    saveHistory()
+    renderInlineHistory(type, wrapId)
+    toast('已清空')
+  }
+  wrap.querySelectorAll('[data-toggle]').forEach(b => b.onclick = () => {
+    const id = b.dataset.toggle
+    const body = wrap.querySelector(`[data-body="${id}"]`)
+    const card = b.closest('.hist-card')
+    if (!body) return
+    if (!body.innerHTML) body.innerHTML = buildHistBody(id)
+    const isOpen = !body.hidden
+    body.hidden = isOpen
+    card.classList.toggle('open', !isOpen)
+    if (!isOpen) bindHistBodyEvents(body)
+  })
+}
+
+function buildHistBody(id) {
+  const it = state.history.find(x => x.id === id)
+  if (!it) return ''
+  let inner = ''
+
+  if (it.type === 'topic') {
+    const list = it.data?.topics || []
+    inner = `<div class="list" style="margin-top:6px">` + list.map(t => `
+      <div class="card" style="padding:11px 13px">
+        <h4 style="font-size:14px;margin-bottom:6px">${esc(t.title)}</h4>
+        <div class="tags" style="margin-bottom:0">
+          ${t.form ? `<span class="tag dark">${esc(t.form)}${t.sub ? '·' + esc(t.sub) : ''}</span>` : ''}
+          ${t.root ? `<span class="tag warn">${esc(t.root)}</span>` : ''}
+        </div>
+      </div>`).join('') + `</div>`
+    inner += `<div class="row" style="margin-top:12px">
+      <button class="btn mini" data-hrestore="${it.id}">恢复到选题页</button>
+      <button class="btn mini ghost" data-hdel="${it.id}">删除</button></div>`
+  } else {
+    const m = LEN_META[it.len] || LEN_META.standard
+    inner = (it.industry ? `<div class="meta" style="margin:8px 0 10px"><b>行业：</b>${esc(it.industry)}</div>` : '')
+      + (it.type === 'copy' ? buildCopyHTML(it.data, it.len, { uid: it.id }) : buildScriptHTML(it.data, it.len, { uid: it.id }))
+      + `<div class="row" style="margin-top:12px">
+          <button class="btn mini" data-hcopy="${it.id}">复制全文</button>
+          <button class="btn mini ghost" data-hload="${it.id}">载入到左边编辑区</button>
+          <button class="btn mini ghost" data-hdel="${it.id}">删除</button></div>`
+  }
+  return inner
+}
+
+function bindHistBodyEvents(body) {
+  body.querySelectorAll('[data-hcopy]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation()
+    const it = state.history.find(x => x.id === b.dataset.hcopy)
+    if (!it) return
+    if (it.type === 'copy') {
+      const t = (it.data.full || [it.data.hook, it.data.body, it.data.cta].filter(Boolean).join('\n\n')) +
+        ((it.data.hashtags || []).length ? '\n\n' + it.data.hashtags.map(h => '#' + String(h).replace(/^#/, '')).join(' ') : '')
+      copyText(t)
+    } else {
+      copyText((it.data.shots || []).map(x => x.line || '').join('\n'))
+    }
+  })
+  body.querySelectorAll('[data-hdel]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation()
+    removeHistory(b.dataset.hdel)
+    renderAllHistories()
+    toast('已删除')
+  })
+  body.querySelectorAll('[data-hload]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation()
+    const it = state.history.find(x => x.id === b.dataset.hload)
+    if (!it) return
+    const isCopy = it.type === 'copy'
+    if (isCopy) {
+      state.copyByLen[it.len] = it.data
+      const seg = $('#copySeg')
+      if (seg) seg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('active', x.dataset.len === it.len))
+      $('#c-topic').value = it.topic
+      renderCopy(it.len)
+    } else {
+      state.scriptByLen[it.len] = it.data
+      const seg = $('#scriptSeg')
+      if (seg) seg.querySelectorAll('.seg-btn').forEach(x => x.classList.toggle('active', x.dataset.len === it.len))
+      $('#s-topic').value = it.topic
+      renderScript(it.len)
+    }
+    persist()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    toast('已载入')
+  })
+  body.querySelectorAll('[data-hrestore]').forEach(b => b.onclick = (e) => {
+    e.stopPropagation()
+    const it = state.history.find(x => x.id === b.dataset.hrestore)
+    if (!it) return
+    state.local = it.data.topics || []
+    renderTopics('local')
+    if (it.data.input) {
+      if (it.data.input.industry) $('#t-industry').value = it.data.input.industry
+      if (it.data.input.audience) $('#t-audience').value = it.data.input.audience
+    }
+    persist()
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    toast('已恢复到本地栏')
+  })
+}
+
+function renderAllHistories() {
+  renderInlineHistory('topic', 'histTopicWrap')
+  renderInlineHistory('copy', 'histCopyWrap')
+  renderInlineHistory('script', 'histScriptWrap')
+}
+
+
+/* ============================================================
+   ⑥ 发布复盘：用你自己的数据校准方法论
+   ============================================================ */
+const LS_PUBLISH = 'dsk_publish_v1'
+state.publish = []
+
+function loadPublish() {
+  try {
+    const arr = JSON.parse(store.get(LS_PUBLISH, '[]'))
+    state.publish = Array.isArray(arr) ? arr : []
+  } catch { state.publish = [] }
+}
+function savePublish() {
+  try { store.set(LS_PUBLISH, JSON.stringify(state.publish)) } catch {}
+}
+
+// 计算一条的指标
+function calcMetrics(p) {
+  const v = Number(p.views) || 0
+  const eng = (Number(p.likes) || 0) + (Number(p.comments) || 0) + (Number(p.collects) || 0) + (Number(p.shares) || 0)
+  const r2 = n => Math.round(n * 10000) / 100   // 保留两位的百分比
+  return {
+    views: v,
+    interact: v ? r2(eng / v) : 0,          // 互动率 %
+    collect: v ? r2((Number(p.collects) || 0) / v) : 0,   // 收藏率 %
+    follow: v ? r2((Number(p.follows) || 0) / v) : 0,     // 涨粉率 %
+    engage: eng
+  }
+}
+
+// 按某个维度分组求平均
+function groupAvg(list, key, metric) {
+  const g = {}
+  for (const p of list) {
+    const k = p[key] || '未标注'
+    if (!g[k]) g[k] = { n: 0, sum: 0, views: 0 }
+    const m = calcMetrics(p)
+    g[k].n++
+    g[k].sum += m[metric]
+    g[k].views += m.views
+  }
+  return Object.entries(g)
+    .filter(([, v]) => v.n >= 1)
+    .map(([k, v]) => ({ name: k, n: v.n, avg: Math.round(v.sum / v.n * 10) / 10, views: v.views }))
+    .sort((a, b) => b.avg - a.avg)
+}
+
+function renderReview() {
+  const stats = $('#reviewStats')
+  const listEl = $('#reviewList')
+  if (!stats || !listEl) return
+  loadPublish()
+
+  const all = state.publish.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''))
+
+  if (!all.length) {
+    stats.innerHTML = ''
+    listEl.innerHTML = `<div class="empty-tip"><b>还没有记录</b>发完一条视频，把数据填在上面<br>攒够 5 条，这里会告诉你哪种内容最有效</div>`
+    return
+  }
+
+  // —— 总览 ——
+  const totalViews = all.reduce((a, p) => a + (Number(p.views) || 0), 0)
+  const totalFollow = all.reduce((a, p) => a + (Number(p.follows) || 0), 0)
+  const avgInteract = Math.round(all.reduce((a, p) => a + calcMetrics(p).interact, 0) / all.length * 10) / 10
+  const avgCollect = Math.round(all.reduce((a, p) => a + calcMetrics(p).collect, 0) / all.length * 10) / 10
+  const best = all.slice().sort((a, b) => calcMetrics(b).collect - calcMetrics(a).collect)[0]
+
+  // —— 归因 ——
+  const byElement = groupAvg(all.filter(p => p.element), 'element', 'collect')
+  const byHook = groupAvg(all.filter(p => p.hook), 'hook', 'follow')
+
+  // —— 建议 ——
+  const tips = []
+  if (all.length < 5) tips.push({ level: 'warn', text: `只有 ${all.length} 条数据，建议攒到 5 条以上再看结论` })
+  if (byElement.length >= 2) {
+    const top = byElement[0], bottom = byElement[byElement.length - 1]
+    if (top.avg > bottom.avg * 1.5 && top.n >= 2) {
+      tips.push({ level: 'ok', text: `「${top.name}」类收藏率 ${top.avg}%，是「${bottom.name}」的 ${(top.avg / Math.max(bottom.avg, 0.1)).toFixed(1)} 倍 —— 多拍这类` })
+    }
+  }
+  if (byHook.length >= 2 && byHook[0].n >= 2) {
+    tips.push({ level: 'ok', text: `「${byHook[0].name}」开头涨粉最好（${byHook[0].avg}%）—— 下次开头就用这个` })
+  }
+  const highViews = all.filter(p => calcMetrics(p).views >= 1000).length
+  if (highViews > 0) tips.push({ level: 'ok', text: `有 ${highViews} 条播放过千，把它们的共同点找出来` })
+  if (avgCollect < 1 && all.length >= 3) tips.push({ level: 'warn', text: `平均收藏率只有 ${avgCollect}%，内容可能太"看完就走"—— 加清单/标准/数字` })
+
+  stats.innerHTML = `<div class="panel">
+    <div class="result-head"><h3>数据总览</h3><span class="len-chip">${all.length} 条记录</span></div>
+    <div class="rv-overview">
+      <div class="rv-card"><span>总播放</span><b>${totalViews.toLocaleString()}</b></div>
+      <div class="rv-card"><span>总涨粉</span><b>${totalFollow.toLocaleString()}</b></div>
+      <div class="rv-card"><span>平均互动率</span><b>${avgInteract}%</b></div>
+      <div class="rv-card"><span>平均收藏率</span><b>${avgCollect}%</b></div>
+    </div>
+
+    ${best ? `<div class="meta" style="margin-top:14px"><b>收藏率最高的一条：</b>${esc(best.title)}（${calcMetrics(best).collect}%）</div>` : ''}
+
+    ${byElement.length ? `<h3 style="margin-top:20px">按内容类型</h3>
+      <div class="rv-bars">${byElement.map(e => {
+        const max = Math.max(...byElement.map(x => x.avg)) || 1
+        return `<div class="rv-bar"><span class="rv-name">${esc(e.name)}</span>
+          <div class="rv-track"><div class="rv-fill" style="width:${Math.max(4, e.avg / max * 100)}%"></div></div>
+          <span class="rv-val">${e.avg}%</span><span class="rv-n">${e.n}条</span></div>`
+      }).join('')}</div>` : ''}
+
+    ${byHook.length ? `<h3 style="margin-top:20px">按开头钩子（看涨粉率）</h3>
+      <div class="rv-bars">${byHook.map(e => {
+        const max = Math.max(...byHook.map(x => x.avg)) || 1
+        return `<div class="rv-bar"><span class="rv-name">${esc(e.name)}</span>
+          <div class="rv-track"><div class="rv-fill gold" style="width:${Math.max(4, e.avg / max * 100)}%"></div></div>
+          <span class="rv-val">${e.avg}%</span><span class="rv-n">${e.n}条</span></div>`
+      }).join('')}</div>` : ''}
+
+    ${tips.length ? `<h3 style="margin-top:20px">下一步建议</h3>
+      <div class="rv-tips">${tips.map(t => `<div class="rv-tip ${t.level}"><span>${t.level === 'ok' ? '→' : '!'}</span>${esc(t.text)}</div>`).join('')}</div>` : ''}
+  </div>`
+
+  // —— 列表 ——
+  listEl.innerHTML = all.map(p => {
+    const m = calcMetrics(p)
+    return `<div class="card rv-item" data-rv="${p.id}">
+      <div class="rv-top">
+        <div class="rv-title">${esc(p.title || '(未填标题)')}</div>
+        <div class="rv-date">${esc(p.date || '')}</div>
+      </div>
+      <div class="tags" style="margin-bottom:8px">
+        ${p.element ? `<span class="tag">${esc(p.element)}</span>` : ''}
+        ${p.hook ? `<span class="tag th">${esc(p.hook)}</span>` : ''}
+      </div>
+      <div class="rv-grid">
+        <span>播放 <b>${m.views.toLocaleString()}</b></span>
+        <span>互动率 <b>${m.interact}%</b></span>
+        <span>收藏率 <b class="${m.collect >= 2 ? 'good' : ''}">${m.collect}%</b></span>
+        <span>涨粉 <b>${Number(p.follows) || 0}</b></span>
+      </div>
+      <div class="actions" style="margin-top:8px">
+        <span class="spacer"></span>
+        <button class="btn mini ghost" data-rv-del="${p.id}">删除</button>
+      </div>
+    </div>`
+  }).join('')
+
+  listEl.querySelectorAll('[data-rv-del]').forEach(b => b.onclick = () => {
+    state.publish = state.publish.filter(x => x.id !== b.dataset.rvDel)
+    savePublish()
+    renderReview()
+    toast('已删除')
+  })
+}
+
+
+// ---------- 从复盘数据倒推选题（闭环）----------
+function deriveTopics() {
+  const all = state.publish
+  if (all.length < 3) return toast('数据太少，至少记 3 条才有参考价值')
+
+  // 找出收藏率最高的内容类型
+  const byEl = groupAvg(all.filter(p => p.element), 'element', 'collect')
+  const topEl = byEl[0]
+
+  // 找出涨粉率最高的钩子
+  const byHook = groupAvg(all.filter(p => p.hook), 'hook', 'follow')
+  const topHook = byHook[0]
+
+  if (!topEl) return toast('记录里没填内容类型，先补上再倒推')
+
+  const industry = $('#t-industry').value.trim()
+  if (!industry) return toast('先去「出选题」页填行业')
+
+  const obj = $('#t-obj').value.trim()
+  const audience = $('#t-audience').value.trim()
+  const locale = $('#t-locale').value.trim()
+  const bizType = ($('#t-biztype') && $('#t-biztype').value) || '其他'
+
+  let topics
+  if (FARM) {
+    topics = generateFarmTopics({ count: 10 })
+      .filter(t => t.element === topEl.name || Math.random() > 0.4)
+      .slice(0, 10)
+  } else {
+    topics = generateTopics({
+      industry, obj, audience, locale, bizType,
+      elements: [topEl.name],
+      count: 10
+    })
+  }
+
+  // 把表现最好的钩子顶到前面
+  if (topHook) {
+    topics.forEach(t => {
+      const h = Array.isArray(t.hooks) ? t.hooks.filter(x => x !== topHook) : []
+      t.hooks = [topHook.name, ...h].slice(0, 2)
+    })
+  }
+
+  state.local = topics
+  persist()
+  goTab('topics')
+  renderTopics('local')
+
+  const elPart = `${topEl.name}类（收藏率 ${topEl.avg}%，${topEl.n}条数据）`
+  const hookPart = topHook ? ` · ${topHook.name}开头（涨粉率 ${topHook.avg}%）` : ''
+  toast(`按你的数据出的：${elPart}${hookPart}`)
+}
+
+// 添加记录
+const btnAddReview = $('#btnAddReview')
+if (btnAddReview) btnAddReview.onclick = () => {
+  const title = ($('#rv-title').value || '').trim()
+  const views = parseInt($('#rv-views').value) || 0
+  if (!title) return toast('先填标题')
+  if (!views) return toast('播放量至少填一个数')
+
+  state.publish.push({
+    id: 'rv_' + Date.now(),
+    title,
+    date: $('#rv-date').value || new Date().toISOString().slice(0, 10),
+    element: $('#rv-element').value,
+    hook: $('#rv-hook').value,
+    views,
+    likes: parseInt($('#rv-likes').value) || 0,
+    comments: parseInt($('#rv-comments').value) || 0,
+    collects: parseInt($('#rv-collects').value) || 0,
+    shares: parseInt($('#rv-shares').value) || 0,
+    follows: parseInt($('#rv-follows').value) || 0
+  })
+  savePublish()
+  ;['#rv-title', '#rv-views', '#rv-likes', '#rv-comments', '#rv-collects', '#rv-shares', '#rv-follows'].forEach(sel => {
+    const el = $(sel); if (el) el.value = ''
+  })
+  renderReview()
+  toast('已记录，攒够 5 条就能看结论了')
+}
+
+// 按数据倒推选题
+const btnDerive = $('#btnDeriveTopics')
+if (btnDerive) btnDerive.onclick = deriveTopics
+
+// 导出数据
+const btnExportReview = $('#btnExportReview')
+if (btnExportReview) btnExportReview.onclick = () => {
+  if (!state.publish.length) return toast('还没有记录')
+  const q = v => '"' + String(v ?? '').replace(/"/g, '""') + '"'
+  const head = ['发布日期', '标题', '类型', '钩子', '播放', '点赞', '评论', '收藏', '转发', '涨粉', '互动率%', '收藏率%', '涨粉率%']
+  const rows = state.publish.map(p => {
+    const m = calcMetrics(p)
+    return [p.date, p.title, p.element, p.hook, p.views, p.likes, p.comments, p.collects, p.shares, p.follows, m.interact, m.collect, m.follow].map(q).join(',')
+  })
+  dlFile(`发布数据-${todayStr()}.csv`, '\ufeff' + [head.map(q).join(','), ...rows].join('\r\n'), 'text/csv;charset=utf-8')
+  toast('已导出 CSV，Excel 能打开')
+}
+
+
+/* ============================================================
+   ⑦ 精选联盟选品 · 专业选品工作台
+   四维评分 + 硬性红线 + 状态流转 + 具体建议
+   ============================================================ */
+const LS_PICKS = 'dsk_picks_v1'
+state.picks = []
+
+function loadPicks() {
+  try {
+    const a = JSON.parse(store.get(LS_PICKS, '[]'))
+    state.picks = Array.isArray(a) ? a : []
+  } catch { state.picks = [] }
+}
+function savePicks() {
+  try { store.set(LS_PICKS, JSON.stringify(state.picks)) } catch {}
+}
+
+// 品类默认退货率（用户没填时用）
+const CAT_INFO = {
+  '普通': { ret: 6,  note: '' },
+  '生鲜': { ret: 18, note: '生鲜退货率高，物流破损是主要亏损点，务必问清坏果包赔' },
+  '服装': { ret: 25, note: '服装尺码问题退货多，尽量选均码或标准码' },
+  '美妆': { ret: 12, note: '美妆需要备案资质，注意保质期' },
+  '数码': { ret: 8,  note: '数码客单价高，一旦退货损失大' },
+  '保健': { ret: 10, note: '保健类不能做功效暗示，需要资质' }
+}
+
+const PICK_STATUS = ['待评估', '测试中', '主推', '放弃']
+
+// ============ 核心：四维评分 + 红线 ============
+function scorePick(p) {
+  const price = Number(p.price) || 0
+  const rate = Number(p.rate) || 0
+  const sales = Number(p.sales) || 0
+  const comp = Number(p.comp) || 0
+  const cat = CAT_INFO[p.cat] || CAT_INFO['普通']
+  const ret = (p.ret === '' || p.ret == null) ? cat.ret : Number(p.ret)
+
+  const perOrder = Math.round(price * rate) / 100
+  const monthGain = perOrder * sales
+
+  const red = []    // 红线（一票否决）
+  const good = []   // 优点
+  const warn = []   // 提醒
+  const todo = []   // 该做什么
+
+  // ---------- 一、收益性 30分 ----------
+  let sProfit = 0
+  if (perOrder >= 20) { sProfit += 18; good.push(`单件赚 ${perOrder.toFixed(1)} 元，很可观`) }
+  else if (perOrder >= 10) { sProfit += 14; good.push(`单件赚 ${perOrder.toFixed(1)} 元，还行`) }
+  else if (perOrder >= 5) { sProfit += 9; warn.push(`单件只赚 ${perOrder.toFixed(1)} 元，靠量`) }
+  else { sProfit += 3; red.push(`单件佣金只有 ${perOrder.toFixed(1)} 元，带它不值当`) }
+
+  if (monthGain >= 10000) { sProfit += 12; good.push(`预估月佣金 ${Math.round(monthGain).toLocaleString()} 元`) }
+  else if (monthGain >= 3000) sProfit += 8
+  else if (monthGain >= 1000) sProfit += 5
+  else { sProfit += 2; warn.push('预估月佣金不到 1000 元') }
+
+  if (price >= 20 && price <= 300) sProfit += 0  // 合理区间不扣不加
+  else if (price < 20) warn.push(`客单价 ${price} 元偏低，佣金绝对值小`)
+
+  if (rate < 8) red.push(`佣金率只有 ${rate}%，低于 8% 的红线`)
+  else if (rate < 12) warn.push(`佣金率 ${rate}%，偏低`)
+
+  // ---------- 二、市场性 25分 ----------
+  let sMarket = 0
+  if (sales >= 5000) { sMarket += 9; good.push(`30天销 ${sales} 件，需求明确`) }
+  else if (sales >= 1000) { sMarket += 7; good.push(`30天销 ${sales} 件，有基本盘`) }
+  else if (sales >= 200) { sMarket += 4; warn.push(`销量 ${sales} 件偏低，可能不好出`) }
+  else { sMarket += 1; warn.push('销量太低，可能是新品或不好卖') }
+
+  if (!comp) { sMarket += 5; warn.push('没填带货人数，竞争度未知') }
+  else if (comp < 100) { sMarket += 9; good.push(`只有 ${comp} 人在带，竞争小`) }
+  else if (comp < 500) { sMarket += 7; good.push(`带货人数 ${comp}，竞争不大`) }
+  else if (comp < 2000) sMarket += 4
+  else if (comp < 10000) { sMarket += 2; warn.push(`${comp} 人在带，竞争激烈`) }
+  else { sMarket += 0; red.push(`${comp} 人在带，红海，新号没机会`) }
+
+  const gscore = Number(p.score) || 0
+  if (gscore >= 4.8) { sMarket += 4; good.push(`商品评分 ${gscore}，口碑好`) }
+  else if (gscore >= 4.5) sMarket += 2
+  else if (gscore > 0) { sMarket += 0; warn.push(`商品评分只有 ${gscore}，差评可能多`) }
+
+  const reviews = Number(p.reviews) || 0
+  if (reviews >= 1000) sMarket += 3
+  else if (reviews >= 100) sMarket += 2
+  else if (reviews > 0) warn.push(`评价只有 ${reviews} 条，参考价值低`)
+
+  // ---------- 三、适配性 25分 ----------
+  let sFit = 0
+  if (p.match === '高') { sFit += 10; good.push('和你的人群高度匹配') }
+  else if (p.match === '低') { sFit += 2; warn.push('和你的人群不匹配，硬推没人买') }
+  else sFit += 6
+
+  if (p.explain === '能') { sFit += 8; good.push('你懂这个品，讲得出来') }
+  else if (p.explain === '不能') { sFit += 0; red.push('你自己都不懂这个品，别带') }
+  else sFit += 4
+
+  if (p.content === '多') { sFit += 7; good.push('能拍很多条内容') }
+  else if (p.content === '少') { sFit += 1; warn.push('只能硬广，内容难做') }
+  else sFit += 4
+
+  // ---------- 四、风险性 20分 ----------
+  let sRisk = 0
+  if (ret >= 30) { sRisk += 0; red.push(`退货率 ${ret}%，容易白干`) }
+  else if (ret >= 20) { sRisk += 5; warn.push(`退货率 ${ret}% 偏高`) }
+  else if (ret >= 12) { sRisk += 10; warn.push(`退货率 ${ret}%，留意物流`) }
+  else if (ret >= 6) sRisk += 15
+  else { sRisk += 18; good.push(`退货率 ${ret}%，很低`) }
+
+  if (p.license === '没有') { sRisk += 0; red.push('需要资质但你没有，不能带') }
+  else if (p.license === '有') { sRisk += 2; good.push('资质齐全') }
+  else sRisk += 2
+
+  if (p.brand === '无授权') { sRisk += 0; red.push('有品牌但没授权，侵权风险') }
+  else if (p.brand === '有授权') good.push('品牌授权齐全')
+
+  if (cat.note) warn.push(cat.note)
+
+  // 适配硬伤：人群不匹配 / 完全讲不了 → 收益再高也带不动
+  if (sFit < 12) {
+    if (p.match === '低' && p.explain !== '不能') red.push('和你的粉丝完全不匹配，硬推等于白拍')
+    else if (p.match === '低' && p.explain === '不能') red.push('人群不匹配，你自己也讲不了，带不动')
+    else if (p.explain !== '不能' && sFit < 10) red.push('适配性太低，带这个品很吃力')
+  }
+  // 红线去重
+  const redUniq = [...new Set(red)]
+
+  // ---------- 汇总 ----------
+  const score = Math.round(sProfit + sMarket + sFit + sRisk)
+  const hasRed = redUniq.length > 0
+  const verdict = hasRed ? '不建议' : (score >= 80 ? '值得带' : score >= 65 ? '可以试' : '谨慎')
+  const cls = hasRed ? 'bad' : (score >= 80 ? 'ok' : score >= 65 ? 'warn' : 'bad')
+
+  // ---------- 该做什么 ----------
+  if (hasRed) {
+    todo.push('暂时别碰这个品，红线没过')
+  } else if (score >= 80) {
+    todo.push('先拍 3–5 条测一下，看转化和退货')
+    todo.push('能讲出具体使用场景，别只念参数')
+  } else if (score >= 65) {
+    todo.push('可以小成本试 1–2 条，数据好再加')
+    if (warn.length) todo.push('先把上面标黄的问题解决一个')
+  } else {
+    todo.push('除非你特别懂这个品，否则先放着')
+  }
+  if (p.explain === '勉强') todo.push('想带的话，先自己买一单用用')
+  if (!comp) todo.push('去精选联盟看清楚有多少人在带，再决定')
+
+  return {
+    perOrder, monthGain, ret, score, verdict, cls, hasRed,
+    dims: {
+      profit: Math.round(sProfit), profitMax: 30,
+      market: Math.round(sMarket), marketMax: 25,
+      fit: Math.round(sFit), fitMax: 25,
+      risk: Math.round(sRisk), riskMax: 20
+    },
+    red: redUniq, good: good.slice(0, 4), warn: warn.slice(0, 4), todo: todo.slice(0, 3)
+  }
+}
+
+// ============ 渲染 ============
+function renderPicks() {
+  const listEl = $('#pickList')
+  const statsEl = $('#pickStats')
+  if (!listEl) return
+  loadPicks()
+
+  if (!state.picks.length) {
+    if (statsEl) statsEl.innerHTML = ''
+    listEl.innerHTML = `<div class="empty-tip"><b>还没有录品</b>
+      从抖音精选联盟找几个想带的品，把关键数据填进来<br>
+      系统会按专业选品的四个维度打分，告诉你值不值得带</div>`
+    return
+  }
+
+  const scored = state.picks.map(p => ({ ...p, _s: scorePick(p) }))
+    .sort((a, b) => b._s.score - a._s.score)
+
+  const byStatus = {}
+  PICK_STATUS.forEach(st => byStatus[st] = scored.filter(p => (p.status || '待评估') === st).length)
+
+  if (statsEl) {
+    const pass = scored.filter(p => !p._s.hasRed)
+    const avg = Math.round(scored.reduce((a, p) => a + p._s.score, 0) / scored.length)
+    statsEl.innerHTML = `<div class="panel">
+      <div class="result-head"><h3>选品池</h3><span class="len-chip">${scored.length} 个品</span></div>
+      <div class="rv-overview">
+        <div class="rv-card"><span>平均得分</span><b>${avg}</b></div>
+        <div class="rv-card"><span>能带的（无红线）</span><b>${pass.length}</b></div>
+        <div class="rv-card"><span>测试中</span><b>${byStatus['测试中']}</b></div>
+        <div class="rv-card"><span>主推中</span><b>${byStatus['主推']}</b></div>
+      </div>
+      ${pass.length ? `<div class="meta" style="margin-top:12px"><b>最推荐：</b>${esc(pass[0].name)}（${pass[0]._s.score} 分，单件赚 ${pass[0]._s.perOrder.toFixed(1)} 元）</div>` : '<div class="meta" style="margin-top:12px;color:var(--danger)"><b>目前没有一个品过线</b>——继续找，别硬带</div>'}
+    </div>`
+  }
+
+  listEl.innerHTML = scored.map(p => {
+    const s = p._s
+    const st = p.status || '待评估'
+    const D = s.dims
+    const bar = (v, max, cls2) => `<div class="dim"><span class="dim-v">${v}<i>/${max}</i></span><div class="dim-track"><div class="dim-fill ${cls2}" style="width:${Math.max(2, v / max * 100)}%"></div></div></div>`
+    return `<div class="card pick-card ${s.cls}">
+      <div class="pk-top">
+        <div class="pk-name">${esc(p.name)}</div>
+        <div class="pk-score ${s.cls}">${hasRedIcon(s)}${s.score}<span>分</span></div>
+      </div>
+      <div class="tags" style="margin-bottom:9px">
+        <span class="tag">${esc(p.cat)}</span>
+        <span class="tag">售价 ${p.price}</span>
+        <span class="tag">佣金 ${p.rate}%</span>
+        <span class="tag ${s.cls === 'ok' ? 'gold' : ''}">${s.verdict}</span>
+        <select class="pk-status" data-st="${p.id}">
+          ${PICK_STATUS.map(x => `<option value="${x}" ${x === st ? 'selected' : ''}>${x}</option>`).join('')}
+        </select>
+      </div>
+
+      ${s.red.length ? `<div class="pk-red"><b>红线没过：</b>${s.red.map(esc).join('；')}</div>` : ''}
+
+      <div class="pk-dims">
+        ${bar(D.profit, D.profitMax, 'profit')}
+        ${bar(D.market, D.marketMax, 'market')}
+        ${bar(D.fit, D.fitMax, 'fit')}
+        ${bar(D.risk, D.riskMax, 'risk')}
+      </div>
+      <div class="pk-dim-labels"><span>收益</span><span>市场</span><span>适配</span><span>风险</span></div>
+
+      <div class="pk-grid">
+        <span>单件赚 <b>${s.perOrder.toFixed(1)}</b> 元</span>
+        <span>月佣金 <b>≈${Math.round(s.monthGain).toLocaleString()}</b> 元</span>
+        <span>退货率 <b>${s.ret}%</b></span>
+      </div>
+
+      ${s.good.length ? `<div class="pk-good">✓ ${s.good.map(esc).join('<br>✓ ')}</div>` : ''}
+      ${s.warn.length ? `<div class="pk-issues"><b>注意：</b><br>· ${s.warn.map(esc).join('<br>· ')}</div>` : ''}
+      ${s.todo.length ? `<div class="pk-todo"><b>下一步：</b>${s.todo.map(esc).join('；')}</div>` : ''}
+
+      <div class="actions" style="margin-top:10px">
+        <span class="spacer"></span>
+        <button class="btn mini ghost" data-pick-del="${p.id}">删除</button>
+      </div>
+    </div>`
+  }).join('')
+
+  listEl.querySelectorAll('[data-pick-del]').forEach(b => b.onclick = () => {
+    state.picks = state.picks.filter(x => x.id !== b.dataset.pickDel)
+    savePicks(); renderPicks(); toast('已删除')
+  })
+  listEl.querySelectorAll('[data-st]').forEach(sel => sel.onchange = () => {
+    const p = state.picks.find(x => x.id === sel.dataset.st)
+    if (!p) return
+    p.status = sel.value
+    savePicks(); toast('状态改成「' + sel.value + '」')
+    renderPicks()
+  })
+}
+
+function hasRedIcon(s) {
+  return s.hasRed ? '<span class="pk-red-ico" title="有红线问题">!</span>' : ''
+}
+
+// ============ 录入 ============
+const btnAddPick = $('#btnAddPick')
+if (btnAddPick) btnAddPick.onclick = () => {
+  const name = ($('#pk-name').value || '').trim()
+  const price = parseFloat($('#pk-price').value)
+  const rate = parseFloat($('#pk-rate').value)
+  if (!name) return toast('先填商品名')
+  if (!(price > 0)) return toast('填一下售价')
+  if (!(rate > 0)) return toast('填一下佣金率')
+
+  const pick = {
+    id: 'pk_' + Date.now(),
+    name, cat: $('#pk-cat').value,
+    link: ($('#pk-link').value || '').trim(),
+    price, rate,
+    sales: parseInt($('#pk-sales').value) || 0,
+    score: parseFloat($('#pk-score').value) || 0,
+    reviews: parseInt($('#pk-reviews').value) || 0,
+    comp: parseInt($('#pk-comp').value) || 0,
+    ret: $('#pk-return').value === '' ? '' : parseFloat($('#pk-return').value),
+    stock: parseInt($('#pk-stock').value) || 0,
+    match: $('#pk-match').value,
+    explain: $('#pk-explain').value,
+    content: $('#pk-content').value,
+    license: $('#pk-license').value,
+    brand: $('#pk-brand').value,
+    status: '待评估'
+  }
+  state.picks.push(pick)
+  savePicks()
+  ;['#pk-name','#pk-price','#pk-rate','#pk-sales','#pk-score','#pk-reviews','#pk-comp','#pk-return','#pk-stock','#pk-link'].forEach(sel => {
+    const el = $(sel); if (el) el.value = ''
+  })
+  renderPicks()
+  const s = scorePick(pick)
+  toast(`${s.verdict}（${s.score} 分${s.hasRed ? '，有红线问题' : ''}）`)
+}
+
+const btnClearPicks = $('#btnClearPicks')
+if (btnClearPicks) btnClearPicks.onclick = () => {
+  if (!state.picks.length) return toast('还没有品')
+  if (!confirm(`清空全部 ${state.picks.length} 个品？`)) return
+  state.picks = []; savePicks(); renderPicks(); toast('已清空')
+}
+
+/* ---------------- 设置 ---------------- */
+$('#btnSaveCfg').onclick = () => {
+  const k = $('#cfg-key').value.trim()
+  if (k) store.set(LS_KEY, k)
+  store.set(LS_MODEL, $('#cfg-model').value.trim() || 'deepseek-chat')
+  $('#cfg-key').value = ''
+  setStatus(!!getKey())
+  toast(k ? '已保存，可以用了' : '已保存')
+}
+
+const clearBtn = $('#btnClearKey')
+if (clearBtn) clearBtn.onclick = () => {
+  store.del(LS_KEY)
+  setStatus(false)
+  toast('Key 已清除')
+}
+
+// 输入框变化时静默保存（不重渲染）
+function attachFormPersist() {
+  ['#t-industry', '#t-audience', '#t-locale', '#t-obj', '#t-count', '#p-titles'].forEach(sel => {
+    const el = $(sel)
+    if (el) el.addEventListener('input', () => { clearTimeout(window.__pd); window.__pd = setTimeout(persist, 400) })
+  })
+}
+
+// —— 最早执行：证明 JS 活着，把警告条撤掉 ——
+try {
+  var _w = document.getElementById('jsWarn')
+  if (_w) _w.remove()
+} catch (e) {}
+
+// 本地文件打开时浏览器可能禁用存储 —— 提示但不拦着用
+if (!store.ok) {
+  window.addEventListener('DOMContentLoaded', function () {
+    var bar = document.createElement('div')
+    bar.className = 'store-warn'
+    bar.innerHTML = '当前是本地文件打开，浏览器不允许保存数据。<b>功能全部可用，但刷新后结果会丢。</b>' +
+      '想留住历史记录，可以下载后放进浏览器书签，或直接用带服务器的方式打开。'
+    var host = document.querySelector('main')
+    if (host && host.firstChild) host.insertBefore(bar, host.firstChild)
+  })
+}
+
+// 全局兜底：任何未捕获错误都打到控制台，不要静默白屏
+window.addEventListener('error', (e) => {
+  console.error('[稳稳AI选题库] 运行错误：', e.message, e.filename, e.lineno)
+})
+
+init()
+setTimeout(attachFormPersist, 0)
+
+</script>
+</body>
+</html>
