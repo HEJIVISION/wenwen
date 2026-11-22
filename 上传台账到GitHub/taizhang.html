@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e3323">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="语音台账">
+<title>稳稳农场 · 语音台账</title>
+<style>
+:root{
+  --bg:#f5f7f3;--surface:#fff;--surface-2:#fafbf8;--surface-3:#f1f4ef;
+  --line:#e6ebe4;--line-strong:#d4dcd3;
+  --text:#0d1a13;--text-2:#39463e;--muted:#6c7a71;--muted-2:#9aa59d;
+  --brand:#14663f;--brand-2:#1b7d4e;--brand-soft:#e7f3ec;--brand-line:#cde3d6;
+  --gold:#9c7726;--gold-soft:#fbf4e3;--gold-line:#ecdcb4;
+  --danger:#b4472b;--danger-soft:#fbeae6;
+  --r:14px;--ease:cubic-bezier(.2,.8,.3,1);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#060a08;--surface:#0d1411;--surface-2:#111a16;--surface-3:#16211b;
+    --line:#1d2922;--line-strong:#2b3a31;
+    --text:#e9f2ec;--text-2:#b6c4bb;--muted:#839088;--muted-2:#5c6761;
+    --brand:#4ec58a;--brand-2:#5fd698;--brand-soft:#10241a;--brand-line:#1e3d2c;
+    --gold:#e0b95c;--gold-soft:#241d0e;--gold-line:#3d3218;
+    --danger:#e0755a;--danger-soft:#2a1510;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;padding:0 0 90px;
+  font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  position:sticky;top:0;z-index:50;
+  padding:12px 16px;
+  background:linear-gradient(105deg,#052418,#0d3a26 52%,#145334);
+  color:#fff;
+  box-shadow:0 2px 16px rgba(0,0,0,.25);
+}
+header h1{margin:0;font-size:16px;font-weight:650;letter-spacing:-.2px}
+header p{margin:2px 0 0;font-size:11px;opacity:.7}
+main{padding:14px 12px;max-width:640px;margin:0 auto}
+.card{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:16px;margin-bottom:12px;
+  box-shadow:0 1px 3px rgba(13,32,22,.04);
+}
+.card h2{margin:0 0 4px;font-size:14px;font-weight:650;color:var(--text)}
+.card .sub{margin:0 0 12px;font-size:12px;color:var(--muted);line-height:1.6}
+textarea{
+  width:100%;min-height:110px;padding:13px;
+  border:1px solid var(--line-strong);border-radius:11px;
+  font:inherit;font-size:16px;line-height:1.65;color:var(--text);
+  background:var(--surface-2);resize:vertical;
+  transition:border-color .18s,box-shadow .18s;
+}
+textarea::placeholder{color:var(--muted-2)}
+textarea:focus{
+  outline:none;border-color:var(--brand);background:var(--surface);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--brand) 15%,transparent);
+}
+.examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.ex{
+  font-size:11.5px;padding:5px 10px;border-radius:100px;
+  background:var(--surface-3);border:1px solid var(--line);
+  color:var(--muted);cursor:pointer;
+  transition:all .16s var(--ease);
+}
+.ex:hover{border-color:var(--brand-line);color:var(--brand)}
+.ex:active{transform:scale(.96)}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:13px 20px;border:1px solid var(--line-strong);border-radius:11px;
+  font:inherit;font-size:15px;font-weight:650;color:var(--text-2);
+  background:var(--surface);cursor:pointer;
+  transition:all .16s var(--ease);
+}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.primary{
+  background:linear-gradient(180deg,var(--brand-2),var(--brand));
+  border-color:var(--brand);color:#fff;
+  box-shadow:0 2px 12px color-mix(in srgb,var(--brand) 30%,transparent);
+}
+.btn.full{width:100%;margin-top:10px}
+.btn.mini{padding:7px 12px;font-size:12.5px;border-radius:8px}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.spacer{flex:1}
+
+/* 解析结果 */
+.result{border-color:var(--brand-line);background:var(--brand-soft)}
+.field{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.field:last-child{border-bottom:0}
+.field .k{color:var(--muted);flex:0 0 auto}
+.field .v{font-weight:600;color:var(--text);text-align:right;word-break:break-all}
+.warnbox{
+  margin-top:12px;padding:12px 14px;border-radius:11px;
+  background:var(--danger-soft);border-left:3px solid var(--danger);
+  font-size:13.5px;line-height:1.7;color:var(--danger);font-weight:600;
+}
+.okbox{
+  margin-top:12px;padding:10px 13px;border-radius:10px;
+  background:var(--surface);border-left:3px solid var(--brand);
+  font-size:12.5px;color:var(--text-2);line-height:1.65;
+}
+
+/* 记录列表 */
+.rec{
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:12px;padding:13px 14px;margin-bottom:9px;
+}
+.rec-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.rec-date{font-size:12px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
+.rec-item{font-size:14.5px;font-weight:650;color:var(--text)}
+.rec-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:4px}
+.rec-meta b{color:var(--text-2);font-weight:600}
+.rec-alert{
+  margin-top:8px;padding:7px 10px;border-radius:8px;
+  background:var(--danger-soft);color:var(--danger);
+  font-size:12px;font-weight:600;
+}
+.rec-ok{
+  margin-top:8px;padding:7px 10px;border-radius:8px;
+  background:var(--brand-soft);color:var(--brand);
+  font-size:12px;font-weight:600;
+}
+.empty{
+  text-align:center;padding:30px 20px;color:var(--muted-2);font-size:13px;line-height:1.9;
+  border:1.5px dashed var(--line-strong);border-radius:var(--r);
+  background:var(--surface-2);
+}
+.empty b{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+
+/* toast */
+#toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120%);
+  background:var(--text);color:var(--bg);
+  padding:11px 20px;border-radius:100px;font-size:13.5px;font-weight:600;
+  opacity:0;transition:all .3s var(--ease);z-index:999;pointer-events:none;
+  max-width:90vw;text-align:center;
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* 底部固定操作条 */
+.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:60;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom,0));
+  background:color-mix(in srgb,var(--surface) 92%,transparent);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid var(--line);
+  display:flex;gap:8px;
+}
+.bottom .btn{flex:1}
+
+.spin{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:sp .7s linear infinite;display:inline-block;
+}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>稳稳农场 · 语音台账</h1>
+  <p>说一句话，自动记成台账</p>
+</header>
+
+<main>
+  <div class="card">
+    <h2>今天干了什么？</h2>
+    <p class="sub">直接说或者打，越随便越好。AI 帮你拆成台账。<br>手机上点输入框，键盘上有麦克风可以直接说。</p>
+    <textarea id="say" placeholder="例：28号一号棚打蚜虫，吡虫啉一小瓶，7天后再摘&#10;&#10;或者：今天给2号棚上了复合肥，一袋半"></textarea>
+    <div class="examples">
+      <span class="ex" data-t="28号一号棚打蚜虫，吡虫啉一小瓶，7天后再摘">打药</span>
+      <span class="ex" data-t="今天给2号棚施了复合肥，一袋半">施肥</span>
+      <span class="ex" data-t="3号棚发现白粉病，打了硫磺，5天内不能摘">病害</span>
+      <span class="ex" data-t="今天摘了450斤，一级果380斤，卖了6320块">采收</span>
+    </div>
+    <button class="btn primary full" id="btnParse">帮我记下来</button>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="card" id="listCard" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h2 style="margin:0">台账记录 <span id="count" style="font-size:12px;color:var(--muted);font-weight:500"></span></h2>
+      <button class="btn mini ghost" id="btnClear">清空</button>
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <div class="empty" id="empty">
+    <b>还没有记录</b>
+    在上面说一句，比如「28号一号棚打蚜虫」<br>
+    它会自动拆成台账，还算出几天内不能摘
+  </div>
+</main>
+
+<div class="bottom">
+  <button class="btn" id="btnExport">导出 Excel</button>
+  <button class="btn ghost" id="btnSetting" style="flex:0 0 auto;padding:13px 16px">⚙</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const LS_KEY='dsk_key', LS_REC='dsk_taizhang_v1', LS_MODEL='dsk_model';
+const $=s=>document.querySelector(s);
+
+function getKey(){try{return localStorage.getItem(LS_KEY)||''}catch{return ''}}
+function getModel(){try{return localStorage.getItem(LS_MODEL)||'deepseek-chat'}catch{return 'deepseek-chat'}}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+let records=[];
+function loadRec(){try{records=JSON.parse(localStorage.getItem(LS_REC)||'[]')}catch{records=[]}if(!Array.isArray(records))records=[]}
+function saveRec(){try{localStorage.setItem(LS_REC,JSON.stringify(records))}catch{}}
+
+function todayStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`}
+
+// 日期加天数
+function addDays(dateStr, n){
+  const d=new Date(dateStr+'T00:00:00')
+  d.setDate(d.getDate()+n)
+  const p=x=>String(x).padStart(2,'0')
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`
+}
+function fmtDate(s){
+  if(!s)return ''
+  const m=s.match(/(\d{4})-(\d{2})-(\d{2})/)
+  if(!m)return s
+  return `${Number(m[2])}月${Number(m[3])}日`
+}
+
+// ============ AI 解析 ============
+const SYS = `你是农场台账助手。用户会用口语说今天在棚里做了什么，你要把它拆成结构化的台账记录。
+
+【输出 JSON，不要别的】
+{
+  "date": "YYYY-MM-DD",
+  "house": "棚号，如 1号 或 全部",
+  "category": "农药 | 肥料 | 农事 | 采收 | 其他",
+  "item": "具体用了什么（如 吡虫啉 / 复合肥 / 熊蜂）",
+  "target": "防治对象（如 蚜虫 / 白粉病），没有就空",
+  "amount": "用量（如 一小瓶 / 一袋半），没提就空",
+  "interval": 安全间隔期天数（数字），没提就 null,
+  "detail": "其他补充信息，没提就空"
+}
+
+【规则】
+- 日期：用户说"今天"就用今天（${todayStr()}）；说"28号"就取最近的28号（如果本月28号还没到就本月，否则下月）
+- 农药必须有 interval（安全间隔期）。用户没说就按常见农药估：杀虫剂7天、杀菌剂5天、熏蒸剂10天。宁可保守估长一点
+- 大棚：说"一号棚""1号""1号棚"都记成"1号"
+- 说不清的字段留空字符串，不要编
+
+只输出 JSON。`;
+
+async function parse(text){
+  const key=getKey()
+  if(!key) throw new Error('还没填 Key，点右下角 ⚙ 设置')
+  const res=await fetch('https://api.deepseek.com/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    body:JSON.stringify({
+      model:getModel(),
+      messages:[
+        {role:'system',content:SYS},
+        {role:'user',content:text}
+      ],
+      temperature:0.2,
+      max_tokens:600
+    })
+  })
+  if(!res.ok){
+    const t=await res.text()
+    throw new Error('接口报错 '+res.status+' '+(t.slice(0,80)))
+  }
+  const data=await res.json()
+  const raw=data.choices?.[0]?.message?.content||''
+  const m=raw.match(/\{[\s\S]*\}/)
+  if(!m) throw new Error('AI 返回格式不对：'+raw.slice(0,80))
+  return JSON.parse(m[0])
+}
+
+// ============ 渲染解析结果 ============
+let pending=null
+
+function showResult(r){
+  pending=r
+  const box=$('#result')
+  const isPesticide=r.category==='农药'
+  const interval=Number(r.interval)||0
+  const safeDate=interval>0?addDays(r.date,interval):null
+  const today=todayStr()
+  const canPick = !safeDate || today>=safeDate
+
+  let alertHtml=''
+  if(isPesticide && interval>0){
+    if(canPick){
+      alertHtml=`<div class="rec-ok">✅ 安全间隔期已过，可以采</div>`
+    }else{
+      alertHtml=`<div class="warnbox">⚠️ ${fmtDate(safeDate)}（含当天）之前不能摘<br><span style="font-weight:400;font-size:12.5px">用了 ${esc(r.item||'农药')}，安全间隔 ${interval} 天</span></div>`
+    }
+  }
+
+  box.innerHTML=`<div class="card result">
+    <h2>记下来了，确认一下</h2>
+    <p class="sub">有不对的地方，点「修改」重说一遍</p>
+    <div class="field"><span class="k">日期</span><span class="v">${esc(fmtDate(r.date))}</span></div>
+    <div class="field"><span class="k">棚号</span><span class="v">${esc(r.house||'未填')}</span></div>
+    <div class="field"><span class="k">类型</span><span class="v">${esc(r.category||'其他')}</span></div>
+    <div class="field"><span class="k">用了什么</span><span class="v">${esc(r.item||'未填')}</span></div>
+    ${r.target?`<div class="field"><span class="k">防治对象</span><span class="v">${esc(r.target)}</span></div>`:''}
+    ${r.amount?`<div class="field"><span class="k">用量</span><span class="v">${esc(r.amount)}</span></div>`:''}
+    ${interval>0?`<div class="field"><span class="k">安全间隔</span><span class="v">${interval} 天</span></div>`:''}
+    ${r.detail?`<div class="field"><span class="k">备注</span><span class="v">${esc(r.detail)}</span></div>`:''}
+    ${alertHtml}
+    <div class="row">
+      <button class="btn mini ghost" id="btnRedo">修改</button>
+      <span class="spacer"></span>
+      <button class="btn mini primary" id="btnSave">确认记录</button>
+    </div>
+  </div>`
+
+  $('#btnRedo').onclick=()=>{box.innerHTML='';$('#say').focus()}
+  $('#btnSave').onclick=()=>{
+    records.unshift({...pending,id:'t'+Date.now(),createdAt:Date.now()})
+    saveRec();renderList();box.innerHTML='';$('#say').value=''
+    toast('已记下')
+  }
+  box.scrollIntoView({behavior:'smooth',block:'nearest'})
+}
+
+// ============ 列表 ============
+function renderList(){
+  const list=$('#list'),card=$('#listCard'),empty=$('#empty')
+  if(!records.length){
+    card.style.display='none';empty.style.display='block';return
+  }
+  card.style.display='block';empty.style.display='none'
+  $('#count').textContent=`（${records.length} 条）`
+
+  const today=todayStr()
+  list.innerHTML=records.map(r=>{
+    const interval=Number(r.interval)||0
+    const safeDate=interval>0?addDays(r.date,interval):null
+    const canPick=!safeDate||today>=safeDate
+    return `<div class="rec">
+      <div class="rec-top">
+        <span class="rec-date">${esc(fmtDate(r.date))}</span>
+        <span class="rec-item">${esc(r.item||r.category||'记录')}</span>
+      </div>
+      <div class="rec-meta">
+        ${r.house?`<span>棚号 <b>${esc(r.house)}</b></span>`:''}
+        ${r.target?`<span>治 <b>${esc(r.target)}</b></span>`:''}
+        ${r.amount?`<span>用量 <b>${esc(r.amount)}</b></span>`:''}
+        ${interval>0?`<span>间隔 <b>${interval}天</b></span>`:''}
+      </div>
+      ${interval>0?(
+        canPick
+          ?`<div class="rec-ok">✅ 可以采了</div>`
+          :`<div class="rec-alert">⚠️ ${fmtDate(safeDate)} 之前不能摘</div>`
+      ):''}
+      ${r.detail?`<div class="rec-meta" style="margin-top:6px"><span>${esc(r.detail)}</span></div>`:''}
+      <div style="text-align:right;margin-top:6px">
+        <button class="btn mini ghost" data-del="${r.id}">删除</button>
+      </div>
+    </div>`
+  }).join('')
+
+  list.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    records=records.filter(x=>x.id!==b.dataset.del)
+    saveRec();renderList();toast('已删除')
+  })
+}
+
+// ============ 导出 CSV ============
+$('#btnExport').onclick=()=>{
+  if(!records.length)return toast('还没有记录')
+  const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"'
+  const head=['日期','棚号','类型','品名','防治对象','用量','安全间隔(天)','可以采摘日期','备注']
+  const rows=records.map(r=>{
+    const iv=Number(r.interval)||0
+    return [r.date,r.house,r.category,r.item,r.target,r.amount,iv?iv:'',iv?addDays(r.date,iv):'',r.detail].map(q).join(',')
+  })
+  const csv='\ufeff'+[head.map(q).join(','),...rows].join('\r\n')
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'})
+  const a=document.createElement('a')
+  a.href=URL.createObjectURL(blob)
+  a.download='用药台账-'+todayStr()+'.csv'
+  document.body.appendChild(a);a.click()
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},300)
+  toast('已导出，Excel 能打开')
+}
+
+// ============ 清空 ============
+$('#btnClear').onclick=()=>{
+  if(!records.length)return
+  if(!confirm(`清空全部 ${records.length} 条记录？`))return
+  records=[];saveRec();renderList();toast('已清空')
+}
+
+// ============ 设置 ============
+$('#btnSetting').onclick=()=>{
+  const k=prompt('DeepSeek API Key（sk- 开头）：\n只存你这个浏览器里', getKey())
+  if(k===null)return
+  localStorage.setItem(LS_KEY,k.trim())
+  toast(k.trim()?'Key 已保存':'已清空')
+}
+
+// ============ 解析按钮 ============
+$('#btnParse').onclick=async()=>{
+  const text=($('#say').value||'').trim()
+  if(!text)return toast('先说一句')
+  const btn=$('#btnParse')
+  btn.disabled=true
+  btn.innerHTML='<span class="spin"></span> 在想…'
+  try{
+    const r=await parse(text)
+    showResult(r)
+  }catch(e){
+    toast(e.message||'出错了')
+  }finally{
+    btn.disabled=false
+    btn.textContent='帮我记下来'
+  }
+}
+
+// 示例填空
+document.querySelectorAll('.ex').forEach(el=>el.onclick=()=>{
+  $('#say').value=el.dataset.t
+  $('#say').focus()
+})
+
+// 首次没 key 提示
+loadRec();renderList()
+if(!getKey())setTimeout(()=>toast('第一次用：点右下角 ⚙ 填一下 Key'),600)
+</script>
+</body>
+</html>
